@@ -1,0 +1,35 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+.round {
+  @include border-radius(4px);
+}
+
+
+
+
+$edgeBgColor1: #c3669c;
+$edgeBgColor2: #c2e578;
+$vertexBackgroundColor: #f5c680;
+$linkBgColor: #626ca8;
+
+$bgColor1: rgb(32, 32, 32);
+$bgColor2: rgb(51, 51, 51);
+$bgColor3: rgb(68, 68, 68);
+
+$textColorDark: rgb(32, 32, 32);
+$textColorBright: rgb(100, 100, 100);
+
+.node {
+
+  .vertex {
+    background: $vertexColor;
+  }
+
+  .edge {
+    background: $edgeBgColor1;
+  }
+
+}
