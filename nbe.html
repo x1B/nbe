@@ -1,18 +1,79 @@
 <!doctype html>
 <html>
   <head>
-    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" />
-    <!--[if IE]>
-    <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
-    <![endif]-->
+    <title>NBE</title>
+    <meta charset="UTF-8">
+    <link href="css/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link href="css/dummy.css" media="screen, projection" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div class=".graph">
-      <div class=".node"></div>
-      <div class=".node"></div>
-      <div class=".node"></div>
-      <div class=".node"></div>
-    </div>
+    <section id="theGraph" class="graph">
+
+      <svg id="l0" class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <line class="link" x1="0" y1="0" x2="200" y2="200" />
+        <line class="link" x1="0" y1="0" x2="200" y2="200" />
+      </svg>
+
+      <div class="node vertex"
+           id="v1" data-value="n-v1">
+        <div class="header">Node Title</div>
+        <div class="port-group">
+          <div class="ports in">
+            <div class="port"><i></i>p4</div>
+            <div class="port"><i></i>p5</div>
+          </div>
+          <div class="ports out">
+            <div class="port">p6<i></i></div>
+            <div class="port">p7<i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="node vertex"
+           id="v2" data-value="n-v2">
+      </div>
+
+      <div class="node vertex"
+           id="v3" data-value="n-v3">
+      </div>
+
+      <div class="node vertex"
+           id="v4" data-value="n-v4">
+      </div>
+
+      <div class="node edge FLAG"
+           id="e1">
+      </div>
+
+      <div class="node edge RESOURCE"
+           id="e2">
+      </div>
+
+      <div class="node edge ACTION"
+           id="e3">
+      </div>
+
+
+    </section>
   </body>
+  <script type="text/javascript" src="js/lib/require.js"></script>
+  <script type="text/javascript">
+    require.config({
+      baseUrl: 'js/lib',
+        shim: {
+          underscore: {
+            exports: '_'
+          },
+          "jquery.ui": ["jquery"]
+        },
+        paths: {
+          "jquery": "jquery2",
+          "jquery.ui": "jquery-ui.core.interactions"
+        }
+    });
+  </script>
+  <script type="text/javascript" src="js/nbe.js"></script>
+
 </html>

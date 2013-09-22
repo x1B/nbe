@@ -1,35 +1,172 @@
-/* Welcome to Compass.
- * In this file you should write your main styles. (or centralize your imports)
- * Import this file using the following HTML or equivalent:
- * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+@import "compass/css3";
 
-.round {
-  @include border-radius(4px);
+// Physical colors:
+
+$gray0: #202020;
+$gray1: #333333;
+$gray2: #444444;
+$gray3: #646464;
+$gray4: #a0a0a0;
+$gray5: #c8c8c8;
+$gray6: #e0e0e0;
+$gray7: #f9f9f9;
+
+$paletteA: #c3669c;
+$paletteB: #c2e578;
+$paletteC: #626ca8;
+$paletteD: #f5c680;
+
+
+// Semantic colors:
+
+$graphBgColor: $gray1;
+
+$edgeBgColor1: $paletteA;
+$edgeBgColor2: $paletteB;
+$edgeBgColor3: $paletteC;
+$vertexBgColor: $paletteD;
+
+$fgColorDark: $gray0;
+$vertexBorderColor: $gray4;
+
+$nodeBorderColor: $gray5;
+$nodeShadowColor: $gray0;
+
+$textColor: $gray6;
+
+
+// Sizes:
+$node-title-height: 20px;
+$port-anchor-size: 10px;
+$ports-min-width: 50px;
+
+
+.graph {
+  background: $graphBgColor;
+  width: 80%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  font-family: "Lucida Grande";
+  font-weight: bold;
+  font-size: 12px;
+  color: $textColor;
+  text-shadow: 1px 1px $gray3;
+
+  .node {
+    position: absolute;
+    border: solid $nodeBorderColor 1.5px;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    &.vertex {
+      width: 180px;
+      height: 140px;
+      box-shadow: 4px 4px 6px $nodeShadowColor;
+
+      @include border-radius(10px);
+      background: -moz-linear-gradient(left top, $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
+      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,$vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
+
+      .header {
+        @include border-radius(10px 10px 0px 0px);
+        height: $node-title-height;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.15);
+      }
+
+      .port-group {
+        .ports {
+          min-width: $ports-min-width;
+          display: block;
+          position: absolute;
+          top: $node-title-height + 1px;
+
+          .port {
+            vertical-align: top;
+            background: rgba(0, 0, 0, 0.05);
+            line-height: 16px;
+            i {
+              position: relative;
+              display: inline-block;
+              width: $port-anchor-size;
+              height: $port-anchor-size;
+              background: $edgeBgColor1;
+              margin: 4px;
+              margin-top: 6px;
+              margin-bottom: 0;
+              border: solid $nodeBorderColor 1px;
+              @include border-radius(5px);
+            }
+          }
+
+          &.in {
+            left: 0;
+            .port {
+              text-align: left;
+            }
+          }
+
+          &.out {
+            right: 0;
+            .port {
+              text-align: right;
+            }
+          }
+        }
+
+        border-top: solid $nodeBorderColor 1px;
+
+      }
+
+    }
+
+    // Default edge style;
+    &.edge {
+      width: 30px;
+      height: 30px;
+
+      background: -moz-linear-gradient(left top, $edgeBgColor1 0%, darken($edgeBgColor1, 20%) 100%);
+      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $edgeBgColor1), color-stop(100%, darken($edgeBgColor1, 30%)));
+
+      @include border-radius(30px);
+      box-shadow: 4px 4px 4px $gray0;
+    }
+
+  }
+
+  .links {
+
+    line.link {
+      position: absolute;
+
+      stroke-width: 2;
+      stroke: $edgeBgColor1;
+    }
+  }
 }
 
 
+// API User Theme:
 
+.node.edge.FLAG { }
 
-$edgeBgColor1: #c3669c;
-$edgeBgColor2: #c2e578;
-$vertexBackgroundColor: #f5c680;
-$linkBgColor: #626ca8;
-
-$bgColor1: rgb(32, 32, 32);
-$bgColor2: rgb(51, 51, 51);
-$bgColor3: rgb(68, 68, 68);
-
-$textColorDark: rgb(32, 32, 32);
-$textColorBright: rgb(100, 100, 100);
-
-.node {
-
-  .vertex {
-    background: $vertexColor;
-  }
-
-  .edge {
-    background: $edgeBgColor1;
-  }
-
+.node.edge.ACTION {
+  background: -moz-linear-gradient(left top, $edgeBgColor2 0%, darken($edgeBgColor2, 20%) 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $edgeBgColor2), color-stop(100%, darken($edgeBgColor2, 30%)));
 }
+
+.node.edge.RESOURCE {
+  background: -moz-linear-gradient(left top, $edgeBgColor3 0%, darken($edgeBgColor3, 20%) 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $edgeBgColor3), color-stop(100%, darken($edgeBgColor3, 30%)));
+}
+
+
+.link.edge.FLAG {  }
+
+.link.edge.ACTION { stroke: $edgeBgColor2; }
+
+.link.edge.RESOURCE { stroke: $edgeBgColor3; }
