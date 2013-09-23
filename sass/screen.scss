@@ -19,6 +19,7 @@ $paletteD: #f5c680;
 
 // Semantic colors:
 
+$bgColor: $gray2;
 $graphBgColor: $gray1;
 
 $edgeBgColor1: $paletteA;
@@ -33,93 +34,112 @@ $nodeBorderColor: $gray5;
 $nodeShadowColor: $gray0;
 
 $textColor: $gray6;
-
+$portTextColor: $gray0;
 
 // Sizes:
-$node-title-height: 20px;
-$port-anchor-size: 10px;
-$ports-min-width: 50px;
+$nodeTitleHeight: 18px;
+$portAnchorSize: 12px;
+$portHeight: 20px;
 
+body {
+  background: $bgColor;
+}
 
 .graph {
+
+  .links {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(
+          0deg,
+          transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+          transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+          transparent),
+      linear-gradient(
+          90deg,
+          transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+          transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+          transparent);
+    background-size: 50px 50px;
+  }
+
   background: $graphBgColor;
-  width: 80%;
+  border-radius: 10px;
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
 
   font-family: "Lucida Grande";
-  font-weight: bold;
   font-size: 12px;
   color: $textColor;
   text-shadow: 1px 1px $gray3;
+
+  * {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
+  }
 
   .node {
     position: absolute;
     border: solid $nodeBorderColor 1.5px;
 
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-
     &.vertex {
       width: 180px;
-      height: 140px;
       box-shadow: 4px 4px 6px $nodeShadowColor;
 
-      @include border-radius(10px);
+      border-radius: 10px;
       background: -moz-linear-gradient(left top, $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
-      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,$vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
+      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
 
       .header {
-        @include border-radius(10px 10px 0px 0px);
-        height: $node-title-height;
+        border-radius: 10px 10px 0px 0px;
+        height: $nodeTitleHeight;
         text-align: center;
         background: rgba(0, 0, 0, 0.15);
+        font-weight: bold;
       }
 
       .port-group {
         .ports {
-          min-width: $ports-min-width;
+          min-width: 49%;
           display: block;
-          position: absolute;
-          top: $node-title-height + 1px;
+          top: $nodeTitleHeight + 1px;
 
           .port {
             vertical-align: top;
+            padding-bottom: 2px;
             background: rgba(0, 0, 0, 0.05);
-            line-height: 16px;
+            line-height: $portHeight;
+            color: $portTextColor;
             i {
               position: relative;
               display: inline-block;
-              width: $port-anchor-size;
-              height: $port-anchor-size;
+              width: $portAnchorSize;
+              height: $portAnchorSize;
               background: $edgeBgColor1;
-              margin: 4px;
-              margin-top: 6px;
-              margin-bottom: 0;
-              border: solid $nodeBorderColor 1px;
-              @include border-radius(5px);
+              margin: 7px 5px -2px 5px;
+              border: solid $gray0 1px;
+              border-radius: $portAnchorSize/2;
             }
+            i:hover { opacity: 0.5; }
           }
 
           &.in {
-            left: 0;
-            .port {
-              text-align: left;
-            }
+            float: left;
+            .port { text-align: left; }
           }
 
           &.out {
-            right: 0;
-            .port {
-              text-align: right;
-            }
+            .port { text-align: right; }
           }
         }
 
         border-top: solid $nodeBorderColor 1px;
-
       }
 
     }
@@ -129,10 +149,9 @@ $ports-min-width: 50px;
       width: 30px;
       height: 30px;
 
-      background: -moz-linear-gradient(left top, $edgeBgColor1 0%, darken($edgeBgColor1, 20%) 100%);
-      background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $edgeBgColor1), color-stop(100%, darken($edgeBgColor1, 30%)));
+      background: linear-gradient(135deg, $edgeBgColor1 0%, darken($edgeBgColor1, 20%) 100%);
 
-      @include border-radius(30px);
+      border-radius: 30px;
       box-shadow: 4px 4px 4px $gray0;
     }
 
@@ -140,11 +159,12 @@ $ports-min-width: 50px;
 
   .links {
 
-    line.link {
+    .link {
       position: absolute;
 
       stroke-width: 2;
       stroke: $edgeBgColor1;
+      fill: transparent;
     }
   }
 }
