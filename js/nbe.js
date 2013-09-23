@@ -1,12 +1,24 @@
 require(["underscore", "jquery", "jquery.ui"], function(_, $) {
 
-   $(".graph .node").draggable( { stack: ".graph *" } )
+   $(".graph .node").draggable( { stack: ".graph *", containment: "parent" } )
 
 
    var $origin;
+   var $node, $graph;
+
+   var dragFrom = { };
 
    function handleDragStart( event, ui ) {
-      console.log( event, ui );
+      $node =  ui.helper.offsetParent();
+      var nodePos = $node.position();
+
+      var portPos = $(event.target).position();
+
+      dragFrom.left = nodePos.left + portPos.left;
+      dragFrom.top = nodePos.top + portPos.top;
+
+      console.log( "graph offset:", dragFrom.left, dragFrom.top );
+
 
       // if this is an IN port:
       //    if there is no link here: stop.

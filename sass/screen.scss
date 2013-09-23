@@ -21,6 +21,7 @@ $paletteD: #f5c680;
 
 $bgColor: $gray2;
 $graphBgColor: $gray1;
+$gridColor: $bgColor;
 
 $edgeBgColor1: $paletteA;
 $edgeBgColor2: $paletteB;
@@ -68,7 +69,7 @@ body {
   border-radius: 10px;
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 00px;
   right: 20px;
   bottom: 20px;
 
