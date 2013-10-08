@@ -1,76 +1,82 @@
-/* line 45, ../sass/screen.scss */
+/* line 44, ../sass/screen.scss */
 body {
   background: #444444;
 }
 
-/* line 49, ../sass/screen.scss */
+/* line 48, ../sass/screen.scss */
 .graph {
   background: #333333;
   border-radius: 10px;
   position: absolute;
   top: 20px;
-  left: 00px;
+  left: 20px;
   right: 20px;
   bottom: 20px;
   font-family: "Lucida Grande";
-  font-size: 12px;
   color: #e0e0e0;
-  text-shadow: 1px 1px #646464;
 }
-/* line 51, ../sass/screen.scss */
+/* line 50, ../sass/screen.scss */
 .graph .links {
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
   background-size: 50px 50px;
 }
-/* line 81, ../sass/screen.scss */
+/* line 68, ../sass/screen.scss */
 .graph * {
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   cursor: default;
 }
-/* line 88, ../sass/screen.scss */
+/* line 75, ../sass/screen.scss */
 .graph .node {
   position: absolute;
   border: solid #c8c8c8 1.5px;
 }
-/* line 92, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 .graph .node.vertex {
-  width: 180px;
   box-shadow: 4px 4px 6px #202020;
   border-radius: 10px;
   background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 100, ../sass/screen.scss */
+/* line 86, ../sass/screen.scss */
 .graph .node.vertex .header {
   border-radius: 10px 10px 0px 0px;
   height: 18px;
   text-align: center;
   background: rgba(0, 0, 0, 0.15);
   font-weight: bold;
+  padding: 1px 5px 1px 5px;
+  font-size: 11px;
+  text-shadow: 1px 1px 0.5px #444444;
 }
-/* line 108, ../sass/screen.scss */
+/* line 97, ../sass/screen.scss */
 .graph .node.vertex .port-group {
+  background: rgba(0, 0, 0, 0.05);
+  display: -webkit-flex;
+  -webkit-flex-flow: row;
+  -webkit-align-items: flex-start;
   border-top: solid #c8c8c8 1px;
 }
-/* line 109, ../sass/screen.scss */
+/* line 106, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports {
-  min-width: 49%;
-  display: block;
-  top: 19px;
+  -webkit-flex: 1 auto;
+  width: 50%;
+  display: -webkit-flex;
+  -webkit-flex-flow: column;
+  -webkit-justify-content: stretch;
 }
-/* line 114, ../sass/screen.scss */
+/* line 116, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports .port {
-  vertical-align: top;
-  padding-bottom: 2px;
-  background: rgba(0, 0, 0, 0.05);
-  line-height: 20px;
+  -webkit-flex: 1;
+  line-height: 16px;
   color: #202020;
+  font-size: 10px;
+  text-shadow: 0 0 2px #f9f9f9;
 }
-/* line 120, ../sass/screen.scss */
+/* line 124, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports .port i {
   position: relative;
   display: inline-block;
@@ -81,23 +87,33 @@ body {
   border: solid #202020 1px;
   border-radius: 6px;
 }
-/* line 130, ../sass/screen.scss */
+/* line 134, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports .port i:hover {
   opacity: 0.5;
 }
-/* line 133, ../sass/screen.scss */
-.graph .node.vertex .port-group .ports.in {
-  float: left;
+/* line 139, ../sass/screen.scss */
+.graph .node.vertex .port-group .ports .port {
+  white-space: nowrap;
 }
-/* line 135, ../sass/screen.scss */
+/* line 143, ../sass/screen.scss */
+.graph .node.vertex .port-group .ports.in {
+  -webkit-align-items: flex-start;
+  margin-right: 5px;
+  border-right: 1px dotted #646464;
+}
+/* line 147, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.in .port {
   text-align: left;
 }
-/* line 139, ../sass/screen.scss */
+/* line 152, ../sass/screen.scss */
+.graph .node.vertex .port-group .ports.out {
+  -webkit-align-items: flex-end;
+}
+/* line 154, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.out .port {
   text-align: right;
 }
-/* line 149, ../sass/screen.scss */
+/* line 166, ../sass/screen.scss */
 .graph .node.edge {
   width: 30px;
   height: 30px;
@@ -105,7 +121,7 @@ body {
   border-radius: 30px;
   box-shadow: 4px 4px 4px #202020;
 }
-/* line 163, ../sass/screen.scss */
+/* line 178, ../sass/screen.scss */
 .graph .links .link {
   position: absolute;
   stroke-width: 2;
@@ -113,24 +129,34 @@ body {
   fill: transparent;
 }
 
-/* line 178, ../sass/screen.scss */
+/* line 192, ../sass/screen.scss */
+.node.vertex > .ports > .port.ACTION i {
+  background: #c2e578;
+}
+
+/* line 196, ../sass/screen.scss */
+.node.vertex > .ports > .port.RESOURCE i {
+  background: #626ca8;
+}
+
+/* line 203, ../sass/screen.scss */
 .node.edge.ACTION {
   background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
 
-/* line 183, ../sass/screen.scss */
+/* line 210, ../sass/screen.scss */
 .node.edge.RESOURCE {
   background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
 
-/* line 191, ../sass/screen.scss */
+/* line 220, ../sass/screen.scss */
 .link.edge.ACTION {
   stroke: #c2e578;
 }
 
-/* line 193, ../sass/screen.scss */
+/* line 224, ../sass/screen.scss */
 .link.edge.RESOURCE {
   stroke: #626ca8;
 }

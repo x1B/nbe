@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NBE</title>
+    <meta charset="UTF-8">
+    <link href="css/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/font-awesome/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div data-ng-controller="GraphWidget">
+      <section id="theGraph" class="graph">
+
+        <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
+          <path data-ng-repeat="(id, link) in model.links"
+                class="link"
+                data-ng-class="link.type"
+                data-nbe-link="{{ link.from }}"
+                data-nbe-link-to="{{ link.to }}"
+                d="M0 0 L0 0" />
+        </svg>
+
+        <div data-ng-repeat="(id, vertex) in model.vertices"
+             class="node vertex"
+             data-nbe-vertex="{{ id }}"
+             data-ng-style="layout.vertices[ id ]">
+          <div class="header">{{ vertex.label }}</div>
+          <div class="port-group">
+            <div class="ports in">
+              <div class="port" data-ng-class="port.type" data-ng-repeat="port in vertex.ports.in"><i></i>{{ port.label }}</div>
+            </div
+            ><div class="ports out">
+              <div class="port" data-ng-class="port.type" data-ng-repeat="port in vertex.ports.out">{{ port.label }}<i></i></div>
+            </div>
+          </div>
+        </div>
+
+        <div data-ng-repeat="(id, edge) in model.edges"
+             class="node edge"
+             data-ng-class="edge.type"
+             data-nbe-edge="{{ id }}"
+             data-ng-style="layout.edges[ id ]">
+        </div>
+
+      </section>
+    </div>
+  </body>
+  <script type="text/javascript" src="js/lib/require.js"></script>
+  <script type="text/javascript">
+    require.config( {
+      baseUrl: 'js',
+      shim: {
+        underscore: { exports: '_' },
+        angular: { exports: 'angular' },
+        "jquery.ui": [ 'jquery' ]
+      },
+      paths: {
+        "jquery": 'lib/jquery2',
+        "jquery.ui": 'lib/jquery-ui.core.interactions',
+        "underscore": 'lib/underscore',
+        "angular": 'lib/angular',
+        "domReady": 'lib/require-domReady'
+      },
+      deps: [ './start' ]
+    } );
+  </script>
+
+</html>
