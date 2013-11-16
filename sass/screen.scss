@@ -45,14 +45,43 @@ body {
    background: $bgColor;
 }
 
+
+
 .graph {
 
    .links {
       width: 100%;
       height: 100%;
-      background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+      background:
+         linear-gradient(
+               0deg,
+               transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+               transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+               transparent),
+         linear-gradient(
+               90deg,
+               transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+               transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+               transparent);
       background-size: 50px 50px;
    }
+
+   .port {
+      i {
+         width: $portAnchorSize;
+         height: $portAnchorSize;
+         background: $edgeBgColor1;
+         border: solid $gray2 1px;
+         border-radius: $portAnchorSize/2;
+         margin: 3px 5px -1px 5px;
+         display: inline-block;
+         position: relative;
+      }
+      i:hover {
+         opacity: 0.5;
+      }
+   }
+
 
    background: $graphBgColor;
    border-radius: 10px;
@@ -80,8 +109,10 @@ body {
          box-shadow: 4px 4px 6px $nodeShadowColor;
 
          border-radius: 10px;
-         background: -moz-linear-gradient(left top, $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
-         background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
+         background: -moz-linear-gradient(left top,
+            $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
+         background: -webkit-gradient(linear, left top, right bottom,
+            color-stop(0%, $vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
 
          .header {
             border-radius: 10px 10px 0px 0px;
@@ -100,13 +131,12 @@ body {
 
             // Flex container:
             display: -webkit-flex;
-            -webkit-flex-flow: row;
+            -webkit-flex-direction: row;
             -webkit-align-items: flex-start;
 
             .ports {
                // Flex item:
-               -webkit-flex: 1 auto;
-               width: 50%;
+               -webkit-flex: 0 1 auto;
 
                // Flex container:
                display: -webkit-flex;
@@ -114,25 +144,16 @@ body {
                -webkit-justify-content: stretch;
 
                .port {
-                  -webkit-flex: 1;
+                  -webkit-flex: 0 1 auto;
 
                   // vertical-align: top;
                   line-height: $portHeight;
                   color: $portTextColor;
                   font-size: 10px;
                   text-shadow: 0 0 2px $gray7;
+
                   i {
-                     position: relative;
-                     display: inline-block;
-                     width: $portAnchorSize;
-                     height: $portAnchorSize;
-                     background: $edgeBgColor1;
-                     margin: 7px 5px -2px 5px;
-                     border: solid $gray0 1px;
-                     border-radius: $portAnchorSize/2;
-                  }
-                  i:hover {
-                     opacity: 0.5;
+
                   }
                }
 
@@ -141,19 +162,14 @@ body {
                }
 
                &.in {
+                  border-right: 1px solid $gray4;
                   -webkit-align-items: flex-start;
-                  margin-right: 5px;
-                  border-right: 1px dotted $gray3;
-                  .port {
-                     text-align: left;
-                  }
+                  .port { text-align: left; padding-right: 10px; }
                }
 
                &.out {
                   -webkit-align-items: flex-end;
-                  .port {
-                     text-align: right;
-                  }
+                  .port { text-align: right; padding-left: 10px; }
                }
             }
 
@@ -166,12 +182,15 @@ body {
       &.edge {
          width: 30px;
          height: 30px;
-
          background: linear-gradient(135deg, $edgeBgColor1 0%, darken($edgeBgColor1, 20%) 100%);
          border-radius: 30px;
          box-shadow: 4px 4px 4px $gray0;
       }
 
+   }
+
+   .GHOST {
+      position: absolute;
    }
 
    .links {
@@ -184,43 +203,78 @@ body {
    }
 }
 
+
+// Ghost entries (for ui-handles during active drag operations):
+.graph {
+
+   // Ghosts are made visible on user interaction
+   .GHOST {
+      // display: none;
+   }
+
+   .link.edge.GHOST {
+      // color: greenyellow;
+   }
+
+}
+
+
 // API User Theme:
 
-.node.vertex > .ports > .port.FLAG i {
-}
+.graph {
 
-.node.vertex > .ports > .port.ACTION i {
-   background: $edgeBgColor2;
-}
+   .node.vertex > .port-group > .ports > .port.FLAG > i {
+      // use default
+   }
 
-.node.vertex > .ports > .port.RESOURCE i {
-   background: $edgeBgColor3;
-}
+   .node.vertex > .port-group > .ports > .port.ACTION > i {
+      background: $edgeBgColor2;
+   }
 
-.node.edge.FLAG {
-}
+   .node.vertex > .port-group > .ports > .port.RESOURCE > i {
+      background: $edgeBgColor3;
+   }
 
-.node.edge.ACTION {
-   background: -moz-linear-gradient(left top,
-      $edgeBgColor2 0%, darken($edgeBgColor2, 20%) 100%);
-   background: -webkit-gradient(linear, left top, right bottom,
-      color-stop(0%, $edgeBgColor2), color-stop(100%, darken($edgeBgColor2, 30%)));
-}
+   .node.edge.FLAG {
+      // use default
+   }
 
-.node.edge.RESOURCE {
-   background: -moz-linear-gradient(left top,
-      $edgeBgColor3 0%, darken($edgeBgColor3, 20%) 100%);
-   background: -webkit-gradient(linear, left top, right bottom,
-      color-stop(0%, $edgeBgColor3), color-stop(100%, darken($edgeBgColor3, 30%)));
-}
+   .node.edge.ACTION {
+      background: -moz-linear-gradient(left top,
+         $edgeBgColor2 0%, darken($edgeBgColor2, 20%) 100%);
+      background: -webkit-gradient(linear, left top, right bottom,
+         color-stop(0%, $edgeBgColor2), color-stop(100%, darken($edgeBgColor2, 30%)));
+   }
 
-.link.edge.FLAG {
-}
+   .node.edge.RESOURCE {
+      background: -moz-linear-gradient(left top,
+         $edgeBgColor3 0%, darken($edgeBgColor3, 20%) 100%);
+      background: -webkit-gradient(linear, left top, right bottom,
+         color-stop(0%, $edgeBgColor3), color-stop(100%, darken($edgeBgColor3, 30%)));
+   }
 
-.link.edge.ACTION {
-   stroke: $edgeBgColor2;
-}
+   .link.FLAG {
+      // use default
+   }
 
-.link.edge.RESOURCE {
-   stroke: $edgeBgColor3;
+   .link.ACTION {
+      stroke: $edgeBgColor2;
+   }
+
+   .link.RESOURCE {
+      stroke: $edgeBgColor3;
+   }
+
+
+   .port.FLAG {
+      // use default
+   }
+
+   .port.ACTION i {
+      background: $edgeBgColor2;
+   }
+
+   .port.RESOURCE i {
+      background: $edgeBgColor3;
+   }
 }

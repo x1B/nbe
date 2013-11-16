@@ -8,32 +8,50 @@
     <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div data-ng-controller="GraphWidget">
-      <section id="theGraph" class="graph">
 
+  <!-- Template for the node based editor -->
+  <div data-ng-controller="GraphWidget">
+     <section class="graph" data-nbe-graph>
         <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
-          <path data-ng-repeat="(id, link) in model.links"
-                class="link"
-                data-ng-class="link.type"
-                data-nbe-link="{{ link.from }}"
-                data-nbe-link-to="{{ link.to }}"
-                d="M0 0 L0 0" />
+           <path data-ng-repeat="(id, link) in layout.links"
+                 data-ng-class="link.type"
+                 data-nbe-link="{{ link.from }}"
+                 data-nbe-link-to="{{ link.to }}"
+                 class="link"
+                 d="M0 0 L0 0"/>
+
+           <path class="link GHOST" />
         </svg>
 
         <div data-ng-repeat="(id, vertex) in model.vertices"
-             class="node vertex"
+             data-ng-style="layout.vertices[ id ]"
              data-nbe-vertex="{{ id }}"
-             data-ng-style="layout.vertices[ id ]">
-          <div class="header">{{ vertex.label }}</div>
-          <div class="port-group">
-            <div class="ports in">
-              <div class="port" data-ng-class="port.type" data-ng-repeat="port in vertex.ports.in"><i></i>{{ port.label }}</div>
-            </div
-            ><div class="ports out">
-              <div class="port" data-ng-class="port.type" data-ng-repeat="port in vertex.ports.out">{{ port.label }}<i></i></div>
-            </div>
-          </div>
+             class="node vertex">
+           <div class="header">{{ vertex.label }}</div>
+           <div class="port-group">
+              <div class="ports in">
+                 <div data-ng-class="port.type"
+                      data-ng-repeat="port in vertex.ports.in"
+                      data-nbe-port
+                      class="port"><i></i>{{ port.label }}
+                 </div>
+              </div>
+              <div class="ports out">
+                 <div data-ng-class="port.type"
+                      data-ng-repeat="port in vertex.ports.out"
+                      data-nbe-port
+                      class="port">{{ port.label }}<i></i></div>
+              </div>
+           </div>
         </div>
+
+        <!--
+        <div clas="node vertex GHOST">
+           <div class="header">New {{ ghost.vertex.label }}</div>
+        </div>
+        -->
+
+        <div class="port GHOST"><i></i></div>
 
         <div data-ng-repeat="(id, edge) in model.edges"
              class="node edge"
@@ -42,8 +60,13 @@
              data-ng-style="layout.edges[ id ]">
         </div>
 
-      </section>
-    </div>
+        <!--
+        <div class="node edge GHOST"></div>
+        -->
+
+     </section>
+  </div>
+
   </body>
   <script type="text/javascript" src="js/lib/require.js"></script>
   <script type="text/javascript">

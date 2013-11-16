@@ -1,12 +1,12 @@
 require( ["underscore", "jquery", "jquery.ui"], function( _, $ ) {
 
-   $(".graph .node").draggable( { stack: ".graph *", containment: "parent" } )
-
    var model = {
       links: { },
       vertices: { },
       edges: { }
    }
+
+   $(".graph .node").draggable( { stack: ".graph *", containment: "parent" } )
 
    function setUpPorts() {
 
