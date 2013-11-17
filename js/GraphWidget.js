@@ -62,11 +62,14 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
             this.jqGraph = $( $element[ 0 ] );
 
+            // When ghost links are dropped, the drop target can be accessed here.
+            this.dropInfo = { node: null, port: null };
+
             // nbeLink directives register themselves here
             var linkControllers = this.linkControllers = { };
 
             var nextLinkId = 0;
-            var createLink = this.createLink = function createLink( sourceNode, sourcePort, destNode, destPort, type ) {
+            function createLink( sourceNode, sourcePort, destNode, destPort, type ) {
                var link = {
                   id: nextLinkId++,
                   type: type,
@@ -79,20 +82,50 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                }
                add( sourcePort ? linksByVertex : linksByEdge, sourceNode, link.id, link );
                add( destPort   ? linksByVertex : linksByEdge, destNode,   link.id, link );
-               console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
+               // console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
                links[ link.id ] = link;
             };
+            this.createLink = createLink;
 
-            this.deleteLink = function deleteLink( link ) {
+            function deleteLink( link ) {
                function remove( map, outerKey, innerKey ) {
                   delete map[ outerKey ][ innerKey ];
                }
                remove( link.source.port ? linksByVertex : linksByEdge, link.source.node, link.id );
                remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.node,   link.id );
-               $scope.$apply(function() {
+               $scope.$apply( function() {
                   delete $scope.view.links[ link.id ];
                } );
             };
+            this.deleteLink = deleteLink;
+
+            function connectFromEdge( vertexId, portId, port, edgeId ) {
+               $scope.$apply( function() {
+                  port.edge = edgeId;
+                  createLink( edgeId, null, vertexId, portId, port.type );
+               } );
+            };
+            this.connectFromEdge = connectFromEdge;
+
+            function connectToEdge( vertexId, portId, port, edgeId ) {
+               $scope.$apply( function() {
+                  port.edge = edgeId;
+                  createLink( vertexId, portId, edgeId, null, port.type );
+               } );
+            };
+            this.connectToEdge = connectToEdge;
+
+
+            function disconnect( vertexId, portId, port ) {
+               // delete any existing link from this port
+               if ( !port.edge ) return;
+               var link = linkByPort( vertexId, portId );
+               deleteLink( link );
+               $scope.$apply( function() {
+                  delete port.edge;
+               } );
+            };
+            this.disconnect = disconnect;
 
             this.vertexLinkControllers = function vertexLinkControllers( vertexId ) {
                if ( linksByVertex[ vertexId ] === undefined ) return [ ];
@@ -108,7 +141,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                } );
             };
 
-            this.linkByPort = function linkByPort( vertexId, portId ) {
+            var linkByPort = this.linkByPort = function linkByPort( vertexId, portId ) {
                var links = linksByVertex[ vertexId ];
                for ( var linkId in links ) {
                   var link = links[ linkId ];
@@ -142,8 +175,8 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
          restrict: 'A',
          controller: function EdgeController( $scope, $element ) {
 
-            var graphController = $scope.nbeGraph;
-            var id = $scope.edgeId;
+            var graph = $scope.nbeGraph;
+            var edgeId = $scope.edgeId;
 
             $( $element[ 0 ] ).draggable( {
                stack: '.graph *',
@@ -155,7 +188,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
             var linkControllers = [];
             function handleEdgeDragStart( event, ui ) {
-               linkControllers = graphController.edgeLinkControllers( id );
+               linkControllers = graph.edgeLinkControllers( edgeId );
             }
 
             function handleEdgeDrag( event, ui ) {
@@ -164,8 +197,19 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                } );
             }
 
-            function handleEdgeDrop() {
+            function handleEdgeStop() {
                linkControllers = [];
+            }
+
+            $( $element[ 0 ] ).droppable( {
+               accept: 'i',
+               hoverClass: 'drop-hover',
+               drop: handleEdgeDrop
+            } );
+
+            function handleEdgeDrop() {
+               graph.dropInfo.node = edgeId;
+               graph.dropInfo.port = null;
             }
 
             this.jqGraph = $( $element[ 0 ].parentNode );
@@ -189,13 +233,13 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                containment: 'parent',
                start: handleVertexDragStart,
                drag: handleVertexDrag,
-               stop: handleVertexDrop
+               stop: handleVertexDragStop
             } );
 
             var linkControllers = [];
             function handleVertexDragStart( event, ui ) {
                linkControllers = graphController.vertexLinkControllers( id );
-               console.log( linkControllers );
+               // console.log( linkControllers );
             }
 
             function handleVertexDrag( event, ui ) {
@@ -204,7 +248,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                } );
             }
 
-            function handleVertexDrop() {
+            function handleVertexDragStop() {
                linkControllers = [];
             }
 
@@ -224,14 +268,17 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
       return {
          restrict: 'A',
-         controller: function PortController( $scope, $element ) {
+         controller: function PortController( $scope, $element, $attrs ) {
 
-            var port = $scope.port;
-            var portType = port.type || '';
+            var graph = $scope.nbeGraph;
+            var connect = $attrs[ 'nbePortGroup' ] === PORT_CLASS_OUT ? graph.connectToEdge : graph.connectFromEdge;
+
+            var vertexId = $scope.vertexId;
+            var portId = $scope.portId;
+            var portType = $scope.port.type || '';
             // console.log( $scope.port.label, $( 'i', $element[0] )[0], $scope.port.type );
 
-            var graphController = $scope.nbeGraph;
-            var jqGraph = graphController.jqGraph;
+            var jqGraph = graph.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
             var jqLinkGhost= $( '.link.GHOST', jqGraph );
 
@@ -247,7 +294,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                zIndex: 1000,
                start: handlePortDragStart,
                drag: handlePortDrag,
-               stop: handlePortDrop,
+               stop: handlePortDragStop,
                addClasses: false,
                appendTo: jqGraph
             } );
@@ -259,9 +306,9 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             function handlePortDragStart( event, ui ) {
                var jqHandle = $( event.target );
 
-               // delete link from this port
-               var link = graphController.linkByPort( $scope.vertexId, $scope.portId );
-               if ( link ) graphController.deleteLink( link );
+               graph.disconnect( $scope.vertexId, $scope.portId, $scope.port );
+               graph.dragNodeId = $scope.vertexId;
+               graph.dragPortId = $scope.portId;
 
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
@@ -279,9 +326,15 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                jqLinkGhost.attr( "d", svgConnectPath( fromLeft, fromTop, toLeft, toTop ) );
             }
 
-            function handlePortDrop() {
+            function handlePortDragStop() {
+               // console.log( 'port ', portId, 'drop to', graph.dropInfo );
                jqPortGhost.removeClass( portType );
                jqLinkGhost.attr( "class", basicLinkClass ).hide();
+               if ( graph.dropInfo.node ) {
+                  // check if types match...
+                  connect( vertexId, portId, $scope.port, graph.dropInfo.node, graph.dropInfo.port );
+                  graph.dropInfo.node = graph.dropInfo.port = null;
+               }
             }
 
          }
@@ -289,7 +342,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
    } );
 
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    module.directive( 'nbeLink', [ '$timeout', function createLinkDirective( $timeout ) {
 
@@ -301,9 +354,9 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var basicLinkClass = $element.attr( "class" );
             $element.attr( "class", basicLinkClass + " " + $scope.link.type );
 
-            var graphController = $scope.nbeGraph;
-            graphController.linkControllers[ $scope.link.id ] = this;
-            var jqGraph = graphController.jqGraph;
+            var graph = $scope.nbeGraph;
+            graph.linkControllers[ $scope.link.id ] = this;
+            var jqGraph = graph.jqGraph;
             var graphOffset = jqGraph.offset();
 
             var source = $scope.link.source;
@@ -351,6 +404,8 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             this.updatePath = updatePath;
 
             function init() {
+               // console.log( 'link controller: ', $scope.link );
+               // console.log( 'init SP: ', source.port, ' DP: ', dest.port );
 
                if ( source.port ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
@@ -372,18 +427,17 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                   jqDestHandle = null;
                }
 
-               // console.log( "SN: ", jqSourceNode, jqSourcePort );
-               // console.log( "DN: ", jqDestNode, jqDestPort );
+               // console.log( "SN: ", jqSourceNode.get(0).tagName, jqSourceHandle && jqSourceHandle.get(0) );
+               // console.log( "DN: ", jqDestNode.get(0).tagName, jqDestHandle && jqDestHandle.get(0) );
                updatePath();
             }
 
-            $timeout( init, 50 );
+            $timeout( init, 1 );
          }
       }
    } ] );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
    return module;
 

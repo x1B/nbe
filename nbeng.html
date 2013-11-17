@@ -23,6 +23,7 @@
                  <div data-ng-class="port.type"
                       data-ng-repeat="(portId, port) in vertex.ports.in"
                       data-nbe-port="{{ portId }}"
+                      data-nbe-port-group="in"
                       class="port"><i></i>{{ port.label }}
                  </div>
               </div>
@@ -30,6 +31,7 @@
                  <div data-ng-class="port.type"
                       data-ng-repeat="(portId, port) in vertex.ports.out"
                       data-nbe-port="{{ portId }}"
+                      data-nbe-port-group="out"
                       class="port">{{ port.label }}<i></i></div>
               </div>
            </div>
