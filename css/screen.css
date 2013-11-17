@@ -133,6 +133,11 @@ body {
   fill: transparent;
 }
 
+/* line 211, ../sass/screen.scss */
+.graph .GHOST {
+  display: none;
+}
+
 /* line 230, ../sass/screen.scss */
 .graph .node.vertex > .port-group > .ports > .port.ACTION > i {
   background: #c2e578;
