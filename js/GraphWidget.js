@@ -12,7 +12,6 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
    var EDGE_OFFSET = 15;
    var PORT_OFFSET = 8;
 
-   // noinspection JSCheckFunctionSignatures
    var module = ng.module( 'GraphWidget', [ ] );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,81 +30,104 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var nextLinkId = 0;
-   function createLink( sourceNode, sourcePort, destNode, destPort, type ) {
-      return {
-         id: nextLinkId++,
-         type: type,
-         source: { node: sourceNode, port: sourcePort },
-         dest: { node: destNode, port: destPort }
-      };
-   }
-
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
    function GraphWidget( $scope ) {
       var model = $scope.model = data.get( 'dummyModel' );
       var layout = $scope.layout = data.get( 'dummyLayout' );
-      var links = layout.links = { };
-
-      // must be changed to linksByVertex + linksByEdge...
-      var linksByEdge = $scope.linksByEdge = { };
-      var linksByVertex = $scope.linksByVertex = { };
-
-      function insertLink( sourceNode, sourcePort, destNode, destPort, type ) {
-         var link = createLink( sourceNode, sourcePort, destNode, destPort, type );
-         function add( map, key, value ) {
-            if ( map[ key ] === undefined ) map[ key ] = [];
-            map[ key ].push( value );
-         }
-         links[ link.id ] = link;
-         add( sourcePort ? linksByVertex : linksByEdge, sourceNode, link.id );
-         add( destPort ? linksByVertex : linksByEdge, destNode, link.id );
-      }
-
-      ng.forEach( model.vertices, function( vertex, vertexId ) {
-         ng.forEach( vertex.ports.in, function( port, portId ) {
-            if ( port.edge )
-               insertLink( port.edge, null, vertexId, portId, port.type );
-         } );
-         ng.forEach( vertex.ports.out, function( port, portId ) {
-            if ( port.edge )
-               insertLink( vertexId, portId, port.edge, null, port.type );
-         } );
-      } );
-
-      console.log( 'links by edge:', linksByEdge );
-      console.log( 'scope:', $scope );
+      var view = $scope.view = { links: { } };
    }
 
    GraphWidget.$inject = [ '$scope' ];
 
-   // noinspection JSUnusedGlobalSymbols
    module.controller( 'GraphWidget', GraphWidget );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * The Graph directive controller manages the view-model for the underlying graph.
+    * It is mainly concerned with creating and maintaining links and their controllers.
+    * Links are visible connections that represent graph multi-edge membership.
+    * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
+    */
    module.directive( 'nbeGraph', function createGraphDirective() {
 
       return {
          restrict: 'A',
          controller: function VertexController( $scope, $element ) {
+            var links = $scope.view.links = { };
+
+            var linksByEdge = { };
+            var linksByVertex = { };
+
+            // console.log( 'links by edge:', linksByEdge );
+
             this.jqGraph = $( $element[ 0 ] );
-            var linkControllers = this.linkControllers = {};
+
+            // nbeLink directives register themselves here
+            var linkControllers = this.linkControllers = { };
+
+            var nextLinkId = 0;
+            var createLink = this.createLink = function createLink( sourceNode, sourcePort, destNode, destPort, type ) {
+               var link = {
+                  id: nextLinkId++,
+                  type: type,
+                  source: { node: sourceNode, port: sourcePort },
+                  dest: { node: destNode, port: destPort }
+               };
+               function add( map, outerKey, innerKey, value ) {
+                  if ( map[ outerKey ] === undefined ) map[ outerKey ] = { };
+                  map[ outerKey ][ innerKey ] = value;
+               }
+               add( sourcePort ? linksByVertex : linksByEdge, sourceNode, link.id, link );
+               add( destPort   ? linksByVertex : linksByEdge, destNode,   link.id, link );
+               console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
+               links[ link.id ] = link;
+            };
+
+            this.deleteLink = function deleteLink( link ) {
+               function remove( map, outerKey, innerKey ) {
+                  delete map[ outerKey ][ innerKey ];
+               }
+               remove( link.source.port ? linksByVertex : linksByEdge, link.source.node, link.id );
+               remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.node,   link.id );
+               $scope.$apply(function() {
+                  delete $scope.view.links[ link.id ];
+               } );
+            };
 
             this.vertexLinkControllers = function vertexLinkControllers( vertexId ) {
-               if ( $scope.linksByVertex[ vertexId ] === undefined ) return [ ];
-               return _.map( $scope.linksByVertex[ vertexId ], function( link ) {
-                  return linkControllers[ link ];
+               if ( linksByVertex[ vertexId ] === undefined ) return [ ];
+               return _.map( linksByVertex[ vertexId ], function( link, linkId ) {
+                  return linkControllers[ linkId ];
                } );
-            }
+            };
 
             this.edgeLinkControllers = function edgeLinkControllers( edgeId ) {
-               if ( $scope.linksByEdge[ edgeId ] === undefined ) return [ ];
-               return _.map( $scope.linksByEdge[ edgeId ], function( link ) {
-                  return linkControllers[ link ];
+               if ( linksByEdge[ edgeId ] === undefined ) return [ ];
+               return _.map( linksByEdge[ edgeId ], function( link, linkId ) {
+                  return linkControllers[ linkId ];
                } );
-            }
+            };
+
+            this.linkByPort = function linkByPort( vertexId, portId ) {
+               var links = linksByVertex[ vertexId ];
+               for ( var linkId in links ) {
+                  var link = links[ linkId ];
+                  if ( link.source.port === portId || link.dest.port === portId ) {
+                     return links[ linkId ];
+                  }
+               }
+            };
+
+            ng.forEach( $scope.model.vertices, function( vertex, vertexId ) {
+               ng.forEach( vertex.ports.in, function( port, portId ) {
+                  if ( port.edge )
+                     createLink( port.edge, null, vertexId, portId, port.type );
+               } );
+               ng.forEach( vertex.ports.out, function( port, portId ) {
+                  if ( port.edge )
+                     createLink( vertexId, portId, port.edge, null, port.type );
+               } );
+            } );
 
             $scope.nbeGraph = this;
          }
@@ -121,7 +143,6 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
          controller: function EdgeController( $scope, $element ) {
 
             var graphController = $scope.nbeGraph;
-            var edge = $scope.edge;
             var id = $scope.edgeId;
 
             $( $element[ 0 ] ).draggable( {
@@ -135,7 +156,6 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var linkControllers = [];
             function handleEdgeDragStart( event, ui ) {
                linkControllers = graphController.edgeLinkControllers( id );
-               console.log( 'controllers:', linkControllers );
             }
 
             function handleEdgeDrag( event, ui ) {
@@ -175,6 +195,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var linkControllers = [];
             function handleVertexDragStart( event, ui ) {
                linkControllers = graphController.vertexLinkControllers( id );
+               console.log( linkControllers );
             }
 
             function handleVertexDrag( event, ui ) {
@@ -188,6 +209,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             }
 
             this.jqGraph = $( $element[ 0 ].parentNode );
+
          }
       };
    } );
@@ -204,7 +226,8 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
          restrict: 'A',
          controller: function PortController( $scope, $element ) {
 
-            var portType = '' + $scope.port.type;
+            var port = $scope.port;
+            var portType = port.type || '';
             // console.log( $scope.port.label, $( 'i', $element[0] )[0], $scope.port.type );
 
             var graphController = $scope.nbeGraph;
@@ -229,10 +252,16 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                appendTo: jqGraph
             } );
 
+            // , cursorAt: { left: 8, top: 8 }
+
             var basicLinkClass = jqLinkGhost.attr( "class" ) + " ";
 
             function handlePortDragStart( event, ui ) {
                var jqHandle = $( event.target );
+
+               // delete link from this port
+               var link = graphController.linkByPort( $scope.vertexId, $scope.portId );
+               if ( link ) graphController.deleteLink( link );
 
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();

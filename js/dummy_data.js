@@ -12,7 +12,7 @@ define([], function () {
                   },
                   "out": {
                      "o0": { label: "Resource (M)", type: "RESOURCE" },
-                     "o1": { label: "Confirm", type: "ACTION" }
+                     "o1": { label: "Confirm", type: "ACTION", edge: "e1" }
                   }
                }
             },
@@ -50,7 +50,7 @@ define([], function () {
                      "i0": { label: "First Resource (S)", type: "RESOURCE", edge: "e0" },
                      "i1": { label: "Second Resource (S)", type: "RESOURCE" },
                      "i2": { label: "Take a Second", type: "FLAG" },
-                     "i3": { label: "Save Action", type: "ACTION" }
+                     "i3": { label: "Save Action", type: "ACTION", edge: "e1" }
                   },
                   "out": {
                      "o0": { label: "Third Resource (M)", type: "RESOURCE" },
