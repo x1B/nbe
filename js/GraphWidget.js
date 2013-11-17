@@ -213,15 +213,13 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var jqLinkGhost= $( '.link.GHOST', jqGraph );
 
             // Drag starting position, relative to graph canvas.
-            var sourcePortLeft, sourcePortTop;
-            var lineOffset = 10; // how to calculate reliably?
-
-            // console.log( jqGraph );
+            var fromLeft, fromTop;
+            var graphOffset;
 
             $( 'i', $element[0] ).draggable( {
                opacity: 0.8,
                helper: function() {
-                  return $( '.GHOST.port', jqGraph ).clone();
+                  return $( '.GHOST.port', jqGraph ).clone().show();
                },
                zIndex: 1000,
                start: handlePortDragStart,
@@ -233,39 +231,23 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
             var basicLinkClass = jqLinkGhost.attr( "class" ) + " ";
 
-            /**
-             * if this is an IN port:
-             *    if there is no link here: stop.
-             *    else: $source = $link.sourcePort
-             * else:
-             *    if there is a $link with
-             * , draw line from current OUT port to mouse
-             * if this is an OUT port:
-             * ... draw line from port to mouse
-             * @param event
-             * @param ui
-             */
             function handlePortDragStart( event, ui ) {
-               var $portHandle = $( event.target );
-               var $portGroup = $portHandle.parent().parent();
-               if ( $portGroup.hasClass( PORT_CLASS_IN ) ) {
-                  // find source node
-               }
-               else {
-                  // set self as source port
-                  var portPos = ui.position;
-                  sourcePortLeft = portPos.left + lineOffset;
-                  sourcePortTop = portPos.top + lineOffset;
-               }
+               var jqHandle = $( event.target );
+
+               var p = jqHandle.offset();
+               graphOffset = jqGraph.offset();
+               fromLeft = p.left - graphOffset.left + PORT_OFFSET;
+               fromTop = p.top - graphOffset.top + PORT_OFFSET;
 
                ui.helper.addClass( portType ).show();
                jqLinkGhost.attr( "class", basicLinkClass + portType ).show();
-               // console.log( ui.helper )
             }
 
             function handlePortDrag( event, ui ) {
-               var pos = ui.position;
-               jqLinkGhost.attr( "d", svgConnectPath( sourcePortLeft, sourcePortTop, pos.left + PORT_OFFSET, pos.top + PORT_OFFSET ) );
+               var pos = ui.offset;
+               var toLeft = pos.left - graphOffset.left + PORT_OFFSET;
+               var toTop = pos.top - graphOffset.top + PORT_OFFSET;
+               jqLinkGhost.attr( "d", svgConnectPath( fromLeft, fromTop, toLeft, toTop ) );
             }
 
             function handlePortDrop() {
@@ -285,7 +267,6 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
       return {
          restrict: 'A',
          controller: function LinkController( $scope, $element ) {
-            console.log( 'link/path:', $scope.link, $element );
 
             // ngClass does not work with SVG
             var basicLinkClass = $element.attr( "class" );
