@@ -14,19 +14,81 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
    var module = ng.module( 'GraphWidget', [ ] );
 
+   // Length of a link stub (which helps visualizing where the link is attached).
+   var STUB_LENGTH = 20;
+   // A stub for a link attached to the left edge of a box.
+   var STUB_IN = -STUB_LENGTH;
+   // A stub for a link attached to the right edge of a box.
+   var STUB_OUT = STUB_LENGTH;
+   // No stub (link attached to mouse cursor).
+   var STUB_NONE = 0;
+
+
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var round = Math.round;
-   function svgLinePath( fromLeft, fromTop, toLeft, toTop ) {
-      return [ 'M', round( fromLeft ), ' ', round( fromTop ),
-               ' L', round( toLeft ), ' ', round( toTop ) ].join('');
+   var abs = Math.abs;
+   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
+      var fromX = round( fromLeft), fromY = round( fromTop ), toX = round( toLeft ), toY = round( toTop );
+      var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
+
+      var path = [ 'M', fromX, ',', fromY ];
+      path.push( 'H', fromX + fromStub );
+      path.push( 'L', toX + toStub, ',', toY );
+      path.push( 'H', toX );
+
+      return path.join('');
    }
 
-   function svgCubicBezierPath( fromLeft, fromTop, toLeft, toTop ) {
-      // todo
+   function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
+      var fromX = round( fromLeft), fromY = round( fromTop ),
+          toX   = round( toLeft ),  toY   = round( toTop );
+
+      var turnFrom = fromStub < 0 && toX > fromX || fromStub > 0 && toX < fromX;
+      var turnTo   = toStub   < 0 && toX < fromX || toStub   > 0 && toX > fromX;
+      var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
+
+      function turnAround( path, xStub, ySgn ) {
+         var yDist = 0;
+         var xSgn = 1, sweep = 1;
+         if ( xStub < 0 ) { xSgn = -1; sweep = 0; }
+         if ( ySgn < 0 ) { sweep = 1 - sweep }
+
+         path.push( 'a', STUB_LENGTH, ',', STUB_LENGTH, ' 0 0,', sweep, ' ', xSgn * STUB_LENGTH, ',', ySgn * STUB_LENGTH );
+         path.push( 'a', STUB_LENGTH, ',', STUB_LENGTH, ' 0 0,', sweep, ' ', -1 * xSgn * STUB_LENGTH, ',', ySgn * STUB_LENGTH );
+         return yDist;
+      }
+
+      var path = [ 'M', fromX, ',', fromY ];
+      if ( turnFrom ) {
+         path.push( ' h', fromStub );
+         turnAround( path, fromStub, 1 );
+         fromY += 2*STUB_LENGTH;
+      }
+      if ( turnTo ) {
+         toY += 2*STUB_LENGTH;
+      }
+
+      var middleX = round(fromLeft + (toLeft - fromLeft)/2);
+      if ( useStubsX ) {
+         if ( !turnFrom ) path.push( ' h', fromStub );
+         path.push( ' C', middleX, ',', fromY, ' ', middleX, ',', toY, ' ', toX + toStub, ',', toY );
+         if ( !turnTo ) path.push( ' H', toX );
+      }
+      else {
+         path.push( ' C', middleX, ',', fromY, ' ', middleX, ',', toY, ' ', toX, ',', toY );
+      }
+
+      if ( turnTo ) {
+         turnAround( path, toStub, -1 );
+         path.push( ' H', toX );
+      }
+
+      return path.join('');
    }
 
-   var svgConnectPath = svgLinePath;
+   // var svgLinkPath = svgCubicBezierLinkPath;
+   var svgLinkPath = svgLinearLinkPath;
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -271,7 +333,9 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
          controller: function PortController( $scope, $element, $attrs ) {
 
             var graph = $scope.nbeGraph;
-            var connect = $attrs[ 'nbePortGroup' ] === PORT_CLASS_OUT ? graph.connectToEdge : graph.connectFromEdge;
+            var portGroup = $attrs[ 'nbePortGroup' ];
+            var stubType = portGroup === PORT_CLASS_OUT ? STUB_OUT : STUB_IN;
+            var connect = portGroup === PORT_CLASS_OUT ? graph.connectToEdge : graph.connectFromEdge;
 
             var vertexId = $scope.vertexId;
             var portId = $scope.portId;
@@ -323,7 +387,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + PORT_OFFSET;
                var toTop = pos.top - graphOffset.top + PORT_OFFSET;
-               jqLinkGhost.attr( "d", svgConnectPath( fromLeft, fromTop, toLeft, toTop ) );
+               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, STUB_NONE ) );
             }
 
             function handlePortDragStop() {
@@ -399,7 +463,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             function updatePath() {
                center( jqSourceNode, jqSourceHandle, from );
                center( jqDestNode, jqDestHandle, to );
-               $element.attr( 'd', svgConnectPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ] ) );
+               $element.attr( 'd', svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], STUB_OUT, STUB_IN ) );
             }
             this.updatePath = updatePath;
 
