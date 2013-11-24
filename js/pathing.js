@@ -121,7 +121,7 @@ define([], function () {
          }
          else {
             // Shortest path to edge of this box
-            yDir = (box0.top - y < y - box0.bottom) ? -1 : 1;
+            yDir = abs(box0.top - y) < abs(y - box0.bottom) ? -1 : 1;
          }
 
          var sweep = yDir === 1 ? 0 : 1;
@@ -136,9 +136,12 @@ define([], function () {
          }
 
          // Cling to bottom/top edge as far as needed:
-         if ( yN * yDir < y * yDir || abs(y - yN) < 8*curvePadding ) {
+         if ( yN * yDir < y * yDir || abs(y - yN)*4 < abs(x - xN) ) {
+            // :TODO: dont do this if horizontal distance is very low...
             arc90( 1, yDir, sweep );
-            horizontal( max( x, min( box0.right, xN - 2*curvePadding ) ) );
+            if ( yN * yDir < y * yDir ) {
+               horizontal( max( x, min( box0.right, xN - 2*curvePadding ) ) );
+            }
          }
          else if ( !boxN && xN > box0.left ) {
             arc90( 1, yDir, sweep );
