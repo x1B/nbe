@@ -2,7 +2,7 @@ define([], function () {
 
 
    // Length of a link stub (which helps visualizing where the link is attached).
-   var STUB_LENGTH = 12;
+   var STUB_LENGTH = 20;
    // A stub for a link attached to the left edge of a box.
    var STUB_IN = -1;
    // A stub for a link attached to the right edge of a box.
@@ -30,13 +30,14 @@ define([], function () {
     */
    function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox ) {
       var x0, y0, xN, yN, stub0, stubN, box0, boxN;
-      var padding = STUB_LENGTH;
+      var curvePadding = 9;
+      var stubPadding = STUB_LENGTH;
 
       // console.log( 'fromBox', fromBox );
       // console.log( 'toBox', toBox );
 
       // Simplify by always drawing a path from left to right.
-      if ( fromLeft <= toLeft ) {
+      if ( fromLeft + fromStub*stubPadding <= toLeft + toStub*stubPadding  ) {
          x0 = round( fromLeft); xN = round( toLeft );
          y0 = round( fromTop ); yN = round( toTop );
          stub0 = fromStub;      stubN = toStub;
@@ -57,8 +58,15 @@ define([], function () {
       }
 
       function cubic( toX, toY ) {
-         var middleX = (toX - x) / 2;
-         path.push( 'C', x + middleX, ',', y, ' ', x + middleX, ',', toY, ' ', toX, ',', toY );
+         var middleX = x + (toX - x) / 2;
+         path.push( 'C', middleX, ',', y, ' ', middleX, ',', toY, ' ', toX, ',', toY );
+         x = toX;
+         y = toY;
+      }
+
+      function cubicY( toX, toY ) {
+         var middleY = y + (toY - y) / 2;
+         path.push( 'C', x, ',', middleY, ' ', toX, ',', middleY, ' ', toX, ',', toY );
          x = toX;
          y = toY;
       }
@@ -69,9 +77,9 @@ define([], function () {
       }
 
       function arc90( xSgn, ySgn, sweep ) {
-         x += xSgn * padding;
-         y += ySgn * padding;
-         path.push( 'A', padding, ',', padding, ' 0 0,', sweep, ' ', x, ',', y );
+         x += xSgn * curvePadding;
+         y += ySgn * curvePadding;
+         path.push( 'A', curvePadding, ',', curvePadding, ' 0 0,', sweep, ' ', x, ',', y );
       }
 
       function vertical( yAbs ) {
@@ -82,19 +90,21 @@ define([], function () {
       // Current path and position:
       var x = x0, y = y0;
       var path = [];
+      var useBezierY = false;
       // if (box0) drawBox( box0 );
       // if (boxN) drawBox( boxN );
       path.push( 'M', x, ',', y );
 
-      horizontal( x + stub0 * padding );
+      horizontal( x + stub0 * stubPadding );
       if ( stub0 < 0 ) {
          circumventBox0( box0, boxN, stubN );
       }
+
       if ( stubN > 0 && boxN ) {
          circumventBoxN( boxN );
       }
       else {
-         cubic( xN + stubN * padding, yN );
+         cubic( xN + stubN * stubPadding, yN );
       }
       horizontal( xN );
 
@@ -119,16 +129,22 @@ define([], function () {
          // Arc and go to bottom/top:
          arc90( -1, yDir, sweep );
          if ( yDir == 1 ) {
-            vertical( max( box0.bottom, y+padding ) );
+            vertical( max( box0.bottom, y+curvePadding ) );
          }
          else {
-            vertical( min( box0.top, y-padding) );
+            vertical( min( box0.top, y-curvePadding) );
          }
-         arc90( 1, yDir, sweep );
 
          // Cling to bottom/top edge as far as needed:
-         if ( yN * yDir < y * yDir ) {
-            horizontal( max( x, min( box0.right, xN - 2*padding ) ) );
+         if ( yN * yDir < y * yDir || abs(y - yN) < 8*curvePadding ) {
+            arc90( 1, yDir, sweep );
+            horizontal( max( x, min( box0.right, xN - 2*curvePadding ) ) );
+         }
+         else if ( !boxN && xN > box0.left ) {
+            arc90( 1, yDir, sweep );
+         }
+         else {
+            useBezierY = true;
          }
       }
 
@@ -137,23 +153,28 @@ define([], function () {
          var yDir, yEdge, xEdge, sweep;
          if (abs(boxN.top - y) < abs(y - boxN.bottom)) {
             yDir = 1;
-            yEdge = min( boxN.top - padding, yN - 2*padding );
+            yEdge = min( boxN.top - curvePadding, yN - 2*curvePadding );
             sweep = 1;
-            xEdge = yEdge > y ? boxN.right : boxN.left, x;
+            xEdge = yEdge > y ? boxN.right : boxN.left;
          }
          else {
             yDir = -1;
-            yEdge = max( boxN.bottom + padding, yN + 2*padding );
+            yEdge = max( boxN.bottom + curvePadding, yN + 2*curvePadding );
             sweep = 0;
-            xEdge = yEdge < y ? boxN.right : boxN.left, x;
+            xEdge = yEdge < y ? boxN.right : boxN.left;
          }
 
-         cubic( max( xEdge, x + padding ), yEdge );
-         // Stick to bottom/top edge as far as needed:
-         horizontal( boxN.right );
+         if ( useBezierY ) {
+            cubicY( boxN.right + curvePadding, yEdge );
+         }
+         else {
+            cubic( max( xEdge, x + curvePadding ), yEdge );
+            // Stick to bottom/top edge as far as needed:
+            horizontal( boxN.right );
+            arc90( 1, yDir, sweep );
+         }
          // turn towards port
-         arc90( 1, yDir, sweep );
-         vertical( yN - yDir * padding );
+         vertical( yN - yDir * curvePadding );
          arc90( -1, yDir, sweep );
       }
 
