@@ -3,9 +3,10 @@ define( [
    'jquery',
    'jquery.ui',
    'angular',
+   'pathing',
    'dummy_data'
 ],
-function ( _, $, jqueryUi, ng, data, undefined ) {
+function ( _, $, jqueryUi, ng, svgLinkPath, data, undefined ) {
    "use strict";
 
    // :TODO: calculate from stylesheet
@@ -14,88 +15,26 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
    var module = ng.module( 'GraphWidget', [ ] );
 
-   // Length of a link stub (which helps visualizing where the link is attached).
-   var STUB_LENGTH = 20;
-   // A stub for a link attached to the left edge of a box.
-   var STUB_IN = -STUB_LENGTH;
-   // A stub for a link attached to the right edge of a box.
-   var STUB_OUT = STUB_LENGTH;
-   // No stub (link attached to mouse cursor).
-   var STUB_NONE = 0;
-
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var round = Math.round;
-   var abs = Math.abs;
-   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
-      var fromX = round( fromLeft), fromY = round( fromTop ), toX = round( toLeft ), toY = round( toTop );
-      var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
-
-      var path = [ 'M', fromX, ',', fromY ];
-      path.push( 'H', fromX + fromStub );
-      path.push( 'L', toX + toStub, ',', toY );
-      path.push( 'H', toX );
-
-      return path.join('');
+   function calculateBoundingBox( jqNode, jqGraph, box ) {
+      var v = jqNode.offset();
+      var graphOffset = jqGraph.offset();
+      var top = v.top - graphOffset.top;
+      var left = v.left - graphOffset.left;
+      box.top = top;
+      box.left = left;
+      box.right = left + jqNode.width();
+      box.bottom = top + jqNode.height();
    }
-
-   function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
-      var fromX = round( fromLeft), fromY = round( fromTop ),
-          toX   = round( toLeft ),  toY   = round( toTop );
-
-      var turnFrom = fromStub < 0 && toX > fromX || fromStub > 0 && toX < fromX;
-      var turnTo   = toStub   < 0 && toX < fromX || toStub   > 0 && toX > fromX;
-      var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
-
-      function turnAround( path, xStub, ySgn ) {
-         var yDist = 0;
-         var xSgn = 1, sweep = 1;
-         if ( xStub < 0 ) { xSgn = -1; sweep = 0; }
-         if ( ySgn < 0 ) { sweep = 1 - sweep }
-
-         path.push( 'a', STUB_LENGTH, ',', STUB_LENGTH, ' 0 0,', sweep, ' ', xSgn * STUB_LENGTH, ',', ySgn * STUB_LENGTH );
-         path.push( 'a', STUB_LENGTH, ',', STUB_LENGTH, ' 0 0,', sweep, ' ', -1 * xSgn * STUB_LENGTH, ',', ySgn * STUB_LENGTH );
-         return yDist;
-      }
-
-      var path = [ 'M', fromX, ',', fromY ];
-      if ( turnFrom ) {
-         path.push( ' h', fromStub );
-         turnAround( path, fromStub, 1 );
-         fromY += 2*STUB_LENGTH;
-      }
-      if ( turnTo ) {
-         toY += 2*STUB_LENGTH;
-      }
-
-      var middleX = round(fromLeft + (toLeft - fromLeft)/2);
-      if ( useStubsX ) {
-         if ( !turnFrom ) path.push( ' h', fromStub );
-         path.push( ' C', middleX, ',', fromY, ' ', middleX, ',', toY, ' ', toX + toStub, ',', toY );
-         if ( !turnTo ) path.push( ' H', toX );
-      }
-      else {
-         path.push( ' C', middleX, ',', fromY, ' ', middleX, ',', toY, ' ', toX, ',', toY );
-      }
-
-      if ( turnTo ) {
-         turnAround( path, toStub, -1 );
-         path.push( ' H', toX );
-      }
-
-      return path.join('');
-   }
-
-   // var svgLinkPath = svgCubicBezierLinkPath;
-   var svgLinkPath = svgLinearLinkPath;
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function GraphWidget( $scope ) {
       var model = $scope.model = data.get( 'dummyModel' );
       var layout = $scope.layout = data.get( 'dummyLayout' );
-      var view = $scope.view = { links: { } };
+         var view = $scope.view = { links: { } };
    }
 
    GraphWidget.$inject = [ '$scope' ];
@@ -274,6 +213,8 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                graph.dropInfo.port = null;
             }
 
+            $scope.nbeEdge = this;
+            this.jqEdge = $( $element[ 0 ] );
             this.jqGraph = $( $element[ 0 ].parentNode );
          }
       };
@@ -314,7 +255,15 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                linkControllers = [];
             }
 
-            this.jqGraph = $( $element[ 0 ].parentNode );
+            var jqVertex = $( $element[ 0 ] );
+            var jqGraph = $( $element[ 0 ].parentNode );
+
+            function calculateBox( box ) {
+               calculateBoundingBox( jqVertex, jqGraph, box );
+            }
+            this.calculateBox = calculateBox;
+
+            $scope.nbeVertex = this;
 
          }
       };
@@ -334,7 +283,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
             var graph = $scope.nbeGraph;
             var portGroup = $attrs[ 'nbePortGroup' ];
-            var stubType = portGroup === PORT_CLASS_OUT ? STUB_OUT : STUB_IN;
+            var stubType = portGroup === PORT_CLASS_OUT ? 1 : -1;
             var connect = portGroup === PORT_CLASS_OUT ? graph.connectToEdge : graph.connectFromEdge;
 
             var vertexId = $scope.vertexId;
@@ -347,7 +296,9 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var jqLinkGhost= $( '.link.GHOST', jqGraph );
 
             // Drag starting position, relative to graph canvas.
-            var fromLeft, fromTop;
+            var fromLeft,
+                fromTop,
+                fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
             var graphOffset;
 
             $( 'i', $element[0] ).draggable( {
@@ -376,8 +327,10 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
 
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
+
                fromLeft = p.left - graphOffset.left + PORT_OFFSET;
                fromTop = p.top - graphOffset.top + PORT_OFFSET;
+               $scope.nbeVertex.calculateBox( fromBox );
 
                ui.helper.addClass( portType ).show();
                jqLinkGhost.attr( "class", basicLinkClass + portType ).show();
@@ -387,7 +340,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + PORT_OFFSET;
                var toTop = pos.top - graphOffset.top + PORT_OFFSET;
-               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, STUB_NONE ) );
+               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null ) );
             }
 
             function handlePortDragStop() {
@@ -430,7 +383,9 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
             var jqDestNode, jqDestHandle;
 
             var from = [ 0, 0 ];
+            var fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
             var to = [ 0, 0 ];
+            var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
             function jqVertexPlusHandle( portInfo ) {
                // console.log( 'Looking for node', portInfo.node );
@@ -445,7 +400,7 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                return $( '[data-nbe-edge="' + portInfo.node + '"]', jqGraph );
             }
 
-            function center( jqNode, jqHandle, coords ) {
+            function calculateLinkEnd( jqNode, jqHandle, coords ) {
                if ( jqHandle ) {
                   var p = jqHandle.offset();
                   coords[ 0 ] = p.left - graphOffset.left + PORT_OFFSET;
@@ -457,13 +412,15 @@ function ( _, $, jqueryUi, ng, data, undefined ) {
                   coords[ 1 ] = n.top - graphOffset.left + EDGE_OFFSET;
                }
                // console.log( 'Center(%o, %o): ', jqNode.data( 'nbeVertex' ) || jqNode.data( 'nbeEdge' ), jqHandle && jqHandle.data( 'nbePort' ), coords );
-               return center
+               return calculateLinkEnd;
             }
 
             function updatePath() {
-               center( jqSourceNode, jqSourceHandle, from );
-               center( jqDestNode, jqDestHandle, to );
-               $element.attr( 'd', svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], STUB_OUT, STUB_IN ) );
+               calculateLinkEnd( jqSourceNode, jqSourceHandle, from );
+               calculateLinkEnd( jqDestNode, jqDestHandle, to );
+               calculateBoundingBox( jqSourceNode, jqGraph, fromBox );
+               calculateBoundingBox( jqDestNode, jqGraph, toBox );
+               $element.attr( 'd', svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox ) );
             }
             this.updatePath = updatePath;
 
