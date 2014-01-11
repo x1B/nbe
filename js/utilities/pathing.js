@@ -1,18 +1,20 @@
 define([], function () {
 
-
-   // Length of a link stub (which helps visualizing where the link is attached).
+   // Length of a horizontal link stub that helps visualizing where a link is attached
    var STUB_LENGTH = 20;
-   // A stub for a link attached to the left edge of a box.
-   var STUB_IN = -1;
-   // A stub for a link attached to the right edge of a box.
-   var STUB_OUT = 1;
-   // No stub (link attached to mouse cursor).
+
+   // Stub length multiplier for a link attached to the left/right edge of a box.
+   var STUB_IN = -1,  STUB_OUT = 1;
+
+   // Stub length multiplier for no stub (link attached to mouse cursor).
    var STUB_NONE = 0;
 
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var round = Math.round, abs = Math.abs, min = Math.min, max = Math.max;
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
       var fromX = round( fromLeft), fromY = round( fromTop ), toX = round( toLeft ), toY = round( toTop );
       var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
@@ -25,10 +27,13 @@ define([], function () {
       return path.join('');
    }
 
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    /**
     * Try to circumvent boxes which are in the way
     */
    function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox ) {
+      // Path state:
       var x0, y0, xN, yN, stub0, stubN, box0, boxN;
       var curvePadding = 9;
       var stubPadding = STUB_LENGTH;
@@ -183,6 +188,8 @@ define([], function () {
 
       return path.join('');
    }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return svgCubicBezierLinkPath;
 
