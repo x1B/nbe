@@ -1,0 +1,13 @@
+{
+   "vertices": {
+      "v0": { "left": "120px", "top": "60px" },
+      "v1": { "left": "140px", "top": "400px" },
+      "v2": { "left": "800px", "top": "450px" },
+      "v3": { "left": "1000px", "top": "200px" }
+   },
+   "edges": {
+      "e0": { "left": "500px", "top": "350px" },
+      "e1": { "left": "550px", "top": "200px" },
+      "e2": { "left": "600px", "top": "100px" }
+   }
+}
