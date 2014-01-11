@@ -8,7 +8,7 @@ define( [
    'directives/vertex',
    'directives/link',
    'directives/port',
-   'dummy_data'
+   'json!./dummy_data.json'
 ],
 function (
    _,
@@ -29,8 +29,8 @@ function (
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function GraphWidget( $scope ) {
-      var model = $scope.model = data.get( 'dummyModel' );
-      var layout = $scope.layout = data.get( 'dummyLayout' );
+      var model = $scope.model = data.dummyModel;
+      var layout = $scope.layout = data.dummyLayout;
       var view = $scope.view = { };
    }
 

@@ -1,7 +1,7 @@
 define([], function () {
 
    function repeatAfter( f, $timeout, delay ) {
-      delay = delay || 75;
+      delay = delay || 50;
       var handle;
       return function( event ) {
          f.apply( this, arguments );

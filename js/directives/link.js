@@ -4,8 +4,7 @@ define( [
    'jquery.ui',
    'angular',
    '../utilities/layout',
-   '../utilities/pathing',
-   'dummy_data'
+   '../utilities/pathing'
 ],
 function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
    'use strict';
@@ -37,26 +36,13 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             var jqSourceNode, jqSourceHandle;
             var jqDestNode, jqDestHandle;
 
-            var from = [ 0, 0 ];
-            var fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
-            var to = [ 0, 0 ];
-            var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
+            var updatePath = pathUpdater();
 
             $timeout( init, 1 );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             this.updatePath = updatePath;
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            function updatePath() {
-               calculateLinkEnd( jqSourceNode, jqSourceHandle, from );
-               calculateLinkEnd( jqDestNode, jqDestHandle, to );
-               layout.boundingBox( jqSourceNode, jqGraph, fromBox );
-               layout.boundingBox( jqDestNode, jqGraph, toBox );
-               $element.attr( 'd', svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox ) );
-            }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -77,21 +63,39 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function calculateLinkEnd( jqNode, jqHandle, coords ) {
-               var portOffset = layout.PORT_DRAG_OFFSET, edgeOffset = layout.EDGE_DRAG_OFFSET;
+            function pathUpdater() {
+               var from = [ 0, 0 ];
+               var fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
+               var to = [ 0, 0 ];
+               var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
-               if ( jqHandle ) {
-                  var p = jqHandle.offset();
-                  coords[ 0 ] = p.left - graphOffset.left + portOffset;
-                  coords[ 1 ] = p.top - graphOffset.top + portOffset;
+               var portOffset = layout.PORT_DRAG_OFFSET,
+                   edgeOffset = layout.EDGE_DRAG_OFFSET,
+                   boundingBox = layout.boundingBox;
+
+               function calculateLinkEnd( jqNode, jqHandle, coords ) {
+                  if( jqHandle ) {
+                     var portPos = jqHandle.offset();
+                     coords[ 0 ] = portPos.left - graphOffset.left + portOffset;
+                     coords[ 1 ] = portPos.top - graphOffset.top + portOffset;
+                  }
+                  else {
+                     var edgePos = jqNode.offset();
+                     coords[ 0 ] = edgePos.left - graphOffset.left + edgeOffset;
+                     coords[ 1 ] = edgePos.top - graphOffset.left + edgeOffset;
+                  }
                }
-               else {
-                  var n = jqNode.offset();
-                  coords[ 0 ] = n.left - graphOffset.left + edgeOffset;
-                  coords[ 1 ] = n.top - graphOffset.left + edgeOffset;
+
+               function update() {
+                  calculateLinkEnd( jqSourceNode, jqSourceHandle, from );
+                  calculateLinkEnd( jqDestNode, jqDestHandle, to );
+                  boundingBox( jqSourceNode, jqGraph, fromBox );
+                  boundingBox( jqDestNode, jqGraph, toBox );
+                  var path = svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox );
+                  $element.attr( 'd', path );
                }
-               // console.log( 'Center(%o, %o): ', jqNode.data( 'nbeVertex' ) || jqNode.data( 'nbeEdge' ), jqHandle && jqHandle.data( 'nbePort' ), coords );
-               return calculateLinkEnd;
+
+               return update;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
