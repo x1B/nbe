@@ -6,8 +6,8 @@
       "v3": { "left": "1000px", "top": "200px" }
    },
    "edges": {
-      "e0": { "left": "500px", "top": "350px" },
-      "e1": { "left": "550px", "top": "200px" },
-      "e2": { "left": "600px", "top": "100px" }
+      "e0": { "left": "550px", "top": "350px" },
+      "e1": { "left": "600px", "top": "200px" },
+      "e2": { "left": "580px", "top": "280px" }
    }
 }

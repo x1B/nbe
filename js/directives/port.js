@@ -28,7 +28,12 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             var graph = $scope.nbeGraph;
             var portGroup = $attrs[ 'nbePortGroup' ];
             var stubType = portGroup === PORT_CLASS_OUT ? 1 : -1;
-            var connect = portGroup === PORT_CLASS_OUT ? graph.connectToEdge : graph.connectFromEdge;
+
+            var connectToEdge, connectToVertex;
+
+
+            var connectEdge = portGroup === PORT_CLASS_OUT ? graph.connectPortToEdge : graph.connectPortFromEdge;
+            var connectVertex = graph.connectPortToPort;
 
             var vertexId = $scope.vertexId;
             var portId = $scope.portId;
@@ -43,7 +48,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             var fromLeft, fromTop, fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
             var graphOffset;
 
-            $( 'i', $element[0] ).draggable( {
+            $( 'i', $element[ 0 ] ).draggable( {
                opacity: 0.8,
                helper: function() {
                   return $( '.GHOST.port', jqGraph ).clone().show();
@@ -54,6 +59,10 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                stop: handlePortDragStop,
                addClasses: false,
                appendTo: jqGraph
+            } ).droppable( {
+               accept: 'i',
+               hoverClass: 'drop-hover',
+               drop: handlePortDrop
             } );
 
             var basicLinkClass = jqLinkGhost.attr( "class" ) + " ";
@@ -93,11 +102,23 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                // console.log( 'port ', portId, 'drop to', graph.dropInfo );
                jqPortGhost.removeClass( portType );
                jqLinkGhost.attr( "class", basicLinkClass ).hide();
-               if ( graph.dropInfo.node ) {
-                  // check if types match...
-                  connect( vertexId, portId, $scope.port, graph.dropInfo.node, graph.dropInfo.port );
-                  graph.dropInfo.node = graph.dropInfo.port = null;
+               if ( graph.dropInfo.node  ) {
+                  if( graph.dropInfo.port ) {
+                     // check that input connects to output...
+                     connectVertex( vertexId, portId, $scope.port, graph.dropInfo.node, graph.dropInfo.port );
+                  }
+                  else {
+                     connectEdge( vertexId, portId, $scope.port, graph.dropInfo.node, graph.dropInfo.port );
+                     graph.dropInfo.node = graph.dropInfo.port = null;
+                  }
                }
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function handlePortDrop() {
+               graph.dropInfo.node = vertexId;
+               graph.dropInfo.port = portId;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

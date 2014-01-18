@@ -27,13 +27,13 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
                containment: 'parent',
                start: handleEdgeDragStart,
                drag: async.repeatAfter( handleEdgeDrag, $timeout ),
-               stop: handleEdgeDrop
+               stop: handlePortDrop
             } );
 
             $( $element[ 0 ] ).droppable( {
                accept: 'i',
                hoverClass: 'drop-hover',
-               drop: handleEdgeDrop
+               drop: handlePortDrop
             } );
 
             var linkControllers = [];
@@ -65,7 +65,7 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleEdgeDrop() {
+            function handlePortDrop() {
                graph.dropInfo.node = edgeId;
                graph.dropInfo.port = null;
             }
