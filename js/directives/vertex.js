@@ -1,3 +1,10 @@
+/**
+ * An vertex is a node with 0..n ports input ports and 0..n output ports.
+ * Each input port has 0..1 incoming links.
+ * Each output port has 0..1 outgoing links.
+ *
+ * It represents a vertex in a directed graph model, and may participate in an arbitrary number of edges.
+ */
 define( [
    'underscore',
    'jquery',

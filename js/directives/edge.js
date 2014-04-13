@@ -1,3 +1,8 @@
+/**
+ * An edge is a node which has no named ports, but can have 0..n input links and 0..n output links itself.
+ *
+ * It represents a multi-edge in a directed graph model, and may connect an arbitrary number of vertices.
+ */
 define( [
    'underscore',
    'jquery',
@@ -66,8 +71,8 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDrop() {
-               graph.dropInfo.node = edgeId;
-               graph.dropInfo.port = null;
+               graph.dropInfo.nodeId = edgeId;
+               graph.dropInfo.portId = null;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,12 +1,22 @@
+/**
+ * A link represents a directed connection from a vertex to an edge or from an edge to a vertex.
+ *
+ * representation: {
+ *    id: String,
+ *    type: String,
+ *    source: { nodeId: String, portId: String },
+ *    dest: { nodeId: String, portId: String }
+ * }
+ *
+ */
 define( [
-   'underscore',
    'jquery',
    'jquery.ui',
    'angular',
    '../utilities/layout',
    '../utilities/pathing'
 ],
-function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
+function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +27,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
    function createLinkDirective( $timeout ) {
 
+      // :TODO: use isolate scope
       return {
          restrict: 'A',
          controller: function LinkController( $scope, $element ) {
@@ -38,7 +49,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
             var updatePath = pathUpdater();
 
-            $timeout( init, 1 );
+            $timeout( init, 0 );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,18 +58,18 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function jqVertexPlusHandle( portInfo ) {
-               // console.log( 'Looking for node', portInfo.node );
-               var jqNode = $( '[data-nbe-vertex="' + portInfo.node + '"]', jqGraph );
-               var jqHandle = $( '[data-nbe-port="' + portInfo.port + '"] i', jqNode );
-               // console.log( 'Node: ', jqSourceNode.get(0) );
-               // console.log( 'Port: ', jqSourcePort.get(0) );
+               // console.log( 'Looking for node', portInfo.nodeId );
+               var jqNode = $( '[data-nbe-vertex="' + portInfo.nodeId + '"]', jqGraph );
+               var jqHandle = $( '[data-nbe-port="' + portInfo.portId + '"] i', jqNode );
+               // console.log( 'jqNode: ', jqNode.get(0) );
+               // console.log( 'jqPort: ', jqHandle.get(0) );
                return [ jqNode, jqHandle ];
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function jqEdge( portInfo ) {
-               return $( '[data-nbe-edge="' + portInfo.node + '"]', jqGraph );
+               return $( '[data-nbe-edge="' + portInfo.nodeId + '"]', jqGraph );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,31 +112,34 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function init() {
-               // console.log( 'link controller: ', $scope.link );
-               // console.log( 'init SP: ', source.port, ' DP: ', dest.port );
+               // console.log( 'creating link from model: ', $scope.link );
+               // console.log( '...connecting: ', source.nodeId+'#'+source.portId, ' --> ', dest.nodeId+'#'+dest.portId );
 
-               if ( source.port ) {
+               if ( source.portId ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
-                  jqSourceNode = jqSourceInfo[0];
-                  jqSourceHandle = jqSourceInfo[1];
+                  jqSourceNode = jqSourceInfo[ 0 ];
+                  jqSourceHandle = jqSourceInfo[ 1 ];
                }
                else {
                   jqSourceNode = jqEdge( source );
                   jqSourceHandle = null;
                }
 
-               if ( dest.port ) {
+               if ( dest.portId ) {
                   var jqDestInfo = jqVertexPlusHandle( dest );
-                  jqDestNode = jqDestInfo[0];
-                  jqDestHandle = jqDestInfo[1];
+                  jqDestNode = jqDestInfo[ 0 ];
+                  jqDestHandle = jqDestInfo[ 1 ];
                }
                else {
                   jqDestNode = jqEdge( dest );
                   jqDestHandle = null;
                }
 
-               // console.log( "SN: ", jqSourceNode.get(0).tagName, jqSourceHandle && jqSourceHandle.get(0) );
-               // console.log( "DN: ", jqDestNode.get(0).tagName, jqDestHandle && jqDestHandle.get(0) );
+               if( !jqSourceNode.get( 0 )  || !jqDestNode.get( 0 ) ) {
+                  console.log( 'bad' );
+               }
+               console.log( "SN: ", jqSourceNode.get( 0 ).tagName, jqSourceHandle && jqSourceHandle.get(0) );
+               console.log( "DN: ", jqDestNode.get( 0 ).tagName, jqDestHandle && jqDestHandle.get(0) );
                updatePath();
             }
 
