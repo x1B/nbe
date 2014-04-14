@@ -72,7 +72,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             function handlePortDragStart( event, ui ) {
                var jqHandle = $( event.target );
 
-               graph.disconnect( $scope.vertexId, $scope.port.id );
+               graph.disconnect( $scope.vertexId, $scope.port );
                graph.dragNodeId = $scope.vertexId;
                graph.dragPortId = $scope.port.id;
 
@@ -103,14 +103,14 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                jqPortGhost.removeClass( portType );
                jqLinkGhost.attr( "class", basicLinkClass ).hide();
                if ( graph.dropInfo.nodeId  ) {
-                  if( graph.dropInfo.portId ) {
+                  if( graph.dropInfo.port ) {
                      // check that input connects to output...
                      connectVertex( vertexId, $scope.port, graph.dropInfo.nodeId, graph.dropInfo.port );
                   }
                   else {
                      connectEdge( vertexId, $scope.port, graph.dropInfo.nodeId, undefined );
                   }
-                  graph.dropInfo.nodeId = graph.dropInfo.portId = null;
+                  graph.dropInfo.nodeId = graph.dropInfo.port = null;
                }
             }
 
@@ -118,11 +118,10 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
             function handlePortDrop() {
                graph.dropInfo.nodeId = vertexId;
-               graph.dropInfo.portId = $scope.port.id;
+               graph.dropInfo.port = $scope.port;
             }
 
          }
-
       };
 
    }

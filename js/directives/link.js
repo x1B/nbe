@@ -138,8 +138,8 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                if( !jqSourceNode.get( 0 )  || !jqDestNode.get( 0 ) ) {
                   console.log( 'bad' );
                }
-               console.log( "SN: ", jqSourceNode.get( 0 ).tagName, jqSourceHandle && jqSourceHandle.get(0) );
-               console.log( "DN: ", jqDestNode.get( 0 ).tagName, jqDestHandle && jqDestHandle.get(0) );
+               // console.log( "SN: ", jqSourceNode.get( 0 ).tagName, jqSourceHandle && jqSourceHandle.get(0) );
+               // console.log( "DN: ", jqDestNode.get( 0 ).tagName, jqDestHandle && jqDestHandle.get(0) );
                updatePath();
             }
 

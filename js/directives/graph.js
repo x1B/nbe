@@ -32,9 +32,9 @@ function ( _, $, ng, undefined ) {
       var linksByVertex;
       var linkControllers;
 
-      var nextLinkId = 0;
+      var nextLinkId;
       /** TODO: scan for or use the highest number actually used so far. */
-      var nextEdgeId = Object.keys( $scope.model.edges ).length + 1;
+      var nextEdgeId;
 
       var self = $scope.nbeGraph = this;
       initGraph( $scope );
@@ -57,17 +57,22 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function idGen( prefix, currentMap ) {
-         var maxIndex = -1;
+         console.log( 'starting idGen for ', prefix, 'content: ', currentMap );
          var prefixLength = prefix ? prefix.length : 0;
-         ng.forEach( currentMap, function( _, key ) {
-            var index = parseInt( key.substring( 0, prefixLength ) );
-            if ( index > maxIndex ) {
-               maxIndex = index;
-            }
-         } );
+         var maxIndex = Object.keys( currentMap )
+            .filter( function( k ) {
+               return k.indexOf( prefix ) === 0;
+            } )
+            .map( function( k ) {
+               var index = parseInt( k.substring( prefixLength ), 10 );
+               return isNaN( index ) ? -1 : index;
+            } )
+            .reduce( Math.max, -1 );
+
 
          return function nextId() {
-            return ++maxIndex;
+            ++maxIndex;
+            return prefix + maxIndex;
          }
       }
 
@@ -84,7 +89,7 @@ function ( _, $, ng, undefined ) {
          linksByVertex = { };
          self.linkControllers = linkControllers = { };
 
-         nextLinkId = idGen( 'ln', links );
+         nextLinkId = idGen( 'lnk', links );
          nextEdgeId = idGen( 'e', model.edges );
 
          ng.forEach( model.vertices, function( vertex, vertexId ) {
@@ -141,10 +146,14 @@ function ( _, $, ng, undefined ) {
          }
 
          var edgeId = port.edgeId;
+         console.log( 'disconnect edge', edgeId, ' from port ', vertexId + '#' + port.id );
          var link = linkByPort( vertexId, port );
+         console.log( '...link: ', link, ' among ', linksByVertex[ vertexId ] );
+
          $scope.$apply( function() {
             destroyLink( link );
             delete port.edgeId;
+            console.log( 'links remaining with edge ', edgeId, ': ', linksByEdge[ edgeId ] );
             if ( !Object.keys( linksByEdge[ edgeId ] ).length ) {
                delete model.edges[ edgeId ];
             }
@@ -175,7 +184,8 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function createEdge( sourceVertexId, sourcePort, destVertexId, destPort ) {
-         var id = nextEdgeId++;
+         var id = nextEdgeId();
+         var type = sourcePort.type;
          model.edges[ id ] = {
             type: type,
             label: type + ' ' + id
@@ -227,12 +237,15 @@ function ( _, $, ng, undefined ) {
 
       function linkByPort( vertexId, port ) {
          var links = linksByVertex[ vertexId ];
-         Object.keys( links ).forEach( function( linkId ) {
+         console.log( 'args:', arguments, 'links', links );
+         var keys = Object.keys( links );
+         for ( var i = keys.length; i --> 0; ) {
+            var linkId = keys[ i ];
             var link = links[ linkId ];
             if( link.source.portId === port.id || link.dest.portId === port.id ) {
                return links[ linkId ];
             }
-         } );
+         }
          return null;
       }
 
