@@ -9,6 +9,8 @@ define([], function () {
    // Stub length multiplier for no stub (link attached to mouse cursor).
    var STUB_NONE = 0;
 
+   var CURVE_PADDING = 10;
+
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var round = Math.round, abs = Math.abs, min = Math.min, max = Math.max;
@@ -35,7 +37,7 @@ define([], function () {
    function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox ) {
       // Path state:
       var x0, y0, xN, yN, stub0, stubN, box0, boxN;
-      var curvePadding = 9;
+      var curvePadding = CURVE_PADDING;
       var stubPadding = STUB_LENGTH;
 
       // console.log( 'fromBox', fromBox );

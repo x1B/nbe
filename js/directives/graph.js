@@ -63,21 +63,12 @@ function ( _, $, ng, undefined ) {
          // console.log( 'starting idGen for ', prefix, 'content: ', currentMap );
          var prefixLength = prefix ? prefix.length : 0;
          var maxIndex = Object.keys( currentMap )
-            .filter( function( k ) {
-               return k.indexOf( prefix ) === 0;
-            } )
-            .map( function( k ) {
-               var index = parseInt( k.substring( prefixLength ), 10 );
-               console.log( k, index, isNaN( index ) ? -1 : index );
-               return isNaN( index ) ? -1 : index;
-            } )
+            .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
+            .map( function( k ) { return parseInt( k.substring( prefixLength ), 10 ); } )
             .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
-
-         console.log( 'huh', prefix, maxIndex );
 
          return function nextId() {
             ++maxIndex;
-            console.log( 'idgen...', prefix + maxIndex );
             return prefix + maxIndex;
          }
       }
@@ -99,14 +90,14 @@ function ( _, $, ng, undefined ) {
          nextEdgeId = idGen( 'e', model.edges );
 
          ng.forEach( model.vertices, function( vertex, vertexId ) {
-            vertex.ports.in.forEach( function( port ) {
-               if ( port.edgeId ) {
-                  // console.log( 'creating in-link for edge ', port.edgeId );
+            vertex.ports.forEach( function( port ) {
+               if ( !port.edgeId ) {
+                  return;
+               }
+               if ( port.direction === 'in' ) {
                   createLink( port.edgeId, null, vertexId, port );
                }
-            } );
-            vertex.ports.out.forEach( function( port ) {
-               if ( port.edgeId ) {
+               else {
                   createLink( vertexId, port, port.edgeId, null );
                }
             } );
@@ -143,7 +134,8 @@ function ( _, $, ng, undefined ) {
 
       function connectPortToPort( sourceVertexId, sourcePort, destVertexId, destPort ) {
          // console.log( sourcePort, '-->', destPort );
-         if ( sourcePort.type !== destPort.type ) {
+         // :TODO: respect port direction
+         if ( sourcePort.type !== destPort.type || sourcePort.direction === destPort.direction ) {
             return;
          }
          disconnect( sourceVertexId, sourcePort );
@@ -301,6 +293,16 @@ function ( _, $, ng, undefined ) {
    return {
       define: function( module ) {
          module.directive( DIRECTIVE_NAME, createGraphDirective );
+         module.filter( 'nbeInputPorts', function() {
+            return function( ports ) {
+               return ports.filter( function( _ ) { return _.direction === 'in'; } );
+            }
+         } );
+         module.filter( 'nbeOutputPorts', function() {
+            return function( ports ) {
+               return ports.filter( function( _ ) { return _.direction !== 'in'; } );
+            }
+         } );
       }
    };
 

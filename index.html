@@ -21,7 +21,7 @@
            <div class="port-group">
               <div class="ports in">
                  <div data-ng-class="port.type"
-                      data-ng-repeat="port in vertex.ports.in"
+                      data-ng-repeat="port in vertex.ports | nbeInputPorts"
                       data-nbe-port="{{ port.id }}"
                       data-nbe-port-group="in"
                       class="port"><i></i>{{ port.label }}
@@ -29,7 +29,7 @@
               </div>
               <div class="ports out">
                  <div data-ng-class="port.type"
-                      data-ng-repeat="port in vertex.ports.out"
+                      data-ng-repeat="port in vertex.ports | nbeOutputPorts"
                       data-nbe-port="{{ port.id }}"
                       data-nbe-port-group="out"
                       class="port">{{ port.label }}<i></i></div>
