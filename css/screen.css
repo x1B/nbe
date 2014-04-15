@@ -1,9 +1,9 @@
-/* line 44, ../sass/screen.scss */
+/* line 46, ../sass/screen.scss */
 body {
   background: #444444;
 }
 
-/* line 50, ../sass/screen.scss */
+/* line 52, ../sass/screen.scss */
 .graph {
   background: #333333;
   border-radius: 10px;
@@ -15,14 +15,14 @@ body {
   font-family: "Lucida Grande";
   color: #e0e0e0;
 }
-/* line 52, ../sass/screen.scss */
+/* line 54, ../sass/screen.scss */
 .graph .links {
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
   background-size: 50px 50px;
 }
-/* line 70, ../sass/screen.scss */
+/* line 72, ../sass/screen.scss */
 .graph .port i {
   width: 12px;
   height: 12px;
@@ -33,30 +33,30 @@ body {
   display: inline-block;
   position: relative;
 }
-/* line 80, ../sass/screen.scss */
+/* line 82, ../sass/screen.scss */
 .graph .port i:hover {
   opacity: 0.5;
 }
-/* line 97, ../sass/screen.scss */
+/* line 99, ../sass/screen.scss */
 .graph * {
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   cursor: default;
 }
-/* line 104, ../sass/screen.scss */
+/* line 106, ../sass/screen.scss */
 .graph .node {
   position: absolute;
   border: solid #c8c8c8 1.5px;
 }
-/* line 108, ../sass/screen.scss */
+/* line 110, ../sass/screen.scss */
 .graph .node.vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 10px;
   background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 117, ../sass/screen.scss */
+/* line 119, ../sass/screen.scss */
 .graph .node.vertex .header {
   border-radius: 10px 10px 0px 0px;
   height: 18px;
@@ -67,7 +67,7 @@ body {
   font-size: 11px;
   text-shadow: 1px 1px 0.5px #444444;
 }
-/* line 128, ../sass/screen.scss */
+/* line 130, ../sass/screen.scss */
 .graph .node.vertex .port-group {
   background: rgba(0, 0, 0, 0.05);
   display: -webkit-flex;
@@ -75,14 +75,14 @@ body {
   -webkit-align-items: flex-start;
   border-top: solid #c8c8c8 1px;
 }
-/* line 137, ../sass/screen.scss */
+/* line 139, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports {
   -webkit-flex: 0 1 auto;
   display: -webkit-flex;
   -webkit-flex-flow: column;
   -webkit-justify-content: stretch;
 }
-/* line 146, ../sass/screen.scss */
+/* line 148, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports .port {
   -webkit-flex: 0 1 auto;
   line-height: 16px;
@@ -90,30 +90,30 @@ body {
   font-size: 10px;
   text-shadow: 0 0 2px #f9f9f9;
 }
-/* line 160, ../sass/screen.scss */
+/* line 162, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports .port {
   white-space: nowrap;
 }
-/* line 164, ../sass/screen.scss */
+/* line 166, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.in {
   border-right: 1px solid #a0a0a0;
   -webkit-align-items: flex-start;
 }
-/* line 167, ../sass/screen.scss */
+/* line 169, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.in .port {
   text-align: left;
   padding-right: 10px;
 }
-/* line 170, ../sass/screen.scss */
+/* line 172, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.out {
   -webkit-align-items: flex-end;
 }
-/* line 172, ../sass/screen.scss */
+/* line 174, ../sass/screen.scss */
 .graph .node.vertex .port-group .ports.out .port {
   text-align: right;
   padding-left: 10px;
 }
-/* line 182, ../sass/screen.scss */
+/* line 184, ../sass/screen.scss */
 .graph .node.edge {
   width: 30px;
   height: 30px;
@@ -121,11 +121,11 @@ body {
   border-radius: 30px;
   box-shadow: 4px 4px 4px #202020;
 }
-/* line 192, ../sass/screen.scss */
+/* line 194, ../sass/screen.scss */
 .graph .GHOST {
   position: absolute;
 }
-/* line 197, ../sass/screen.scss */
+/* line 199, ../sass/screen.scss */
 .graph .links .link {
   position: absolute;
   stroke-width: 2;
@@ -133,37 +133,67 @@ body {
   fill: transparent;
 }
 
-/* line 230, ../sass/screen.scss */
-.graph .node.vertex > .port-group > .ports > .port.ACTION > i {
+/* line 232, ../sass/screen.scss */
+.graph .port.ACTION > i {
   background: #c2e578;
 }
-/* line 234, ../sass/screen.scss */
-.graph .node.vertex > .port-group > .ports > .port.RESOURCE > i {
+/* line 236, ../sass/screen.scss */
+.graph .port.RESOURCE > i {
   background: #626ca8;
 }
-/* line 242, ../sass/screen.scss */
+/* line 244, ../sass/screen.scss */
 .graph .node.edge.ACTION {
   background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
-/* line 249, ../sass/screen.scss */
+/* line 251, ../sass/screen.scss */
 .graph .node.edge.RESOURCE {
   background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
-/* line 260, ../sass/screen.scss */
+/* line 262, ../sass/screen.scss */
 .graph .link.ACTION {
   stroke: #c2e578;
 }
-/* line 264, ../sass/screen.scss */
+/* line 266, ../sass/screen.scss */
 .graph .link.RESOURCE {
   stroke: #626ca8;
 }
-/* line 273, ../sass/screen.scss */
+/* line 275, ../sass/screen.scss */
 .graph .port.ACTION i {
   background: #c2e578;
 }
-/* line 277, ../sass/screen.scss */
+/* line 279, ../sass/screen.scss */
 .graph .port.RESOURCE i {
   background: #626ca8;
+}
+
+/* line 286, ../sass/screen.scss */
+.graph.highlight-FLAG .port:not(.FLAG) > i,
+.graph.highlight-FLAG .node.edge:not(.FLAG) {
+  background: #646464;
+}
+/* line 289, ../sass/screen.scss */
+.graph.highlight-FLAG .link:not(.FLAG) {
+  stroke: #646464;
+}
+
+/* line 296, ../sass/screen.scss */
+.graph.highlight-ACTION .port:not(.ACTION) > i,
+.graph.highlight-ACTION .node.edge:not(.ACTION) {
+  background: #646464;
+}
+/* line 299, ../sass/screen.scss */
+.graph.highlight-ACTION .link:not(.ACTION) {
+  stroke: #646464;
+}
+
+/* line 306, ../sass/screen.scss */
+.graph.highlight-RESOURCE .port:not(.RESOURCE) > i,
+.graph.highlight-RESOURCE .node.edge:not(.RESOURCE) {
+  background: #646464;
+}
+/* line 309, ../sass/screen.scss */
+.graph.highlight-RESOURCE .link:not(.RESOURCE) {
+  stroke: #646464;
 }

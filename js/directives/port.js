@@ -32,8 +32,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             var connectToEdge, connectToVertex;
 
 
-            var connectEdge =
-                  portGroup === PORT_CLASS_OUT ? graph.connectPortToEdge : graph.connectPortFromEdge;
+            var connectEdge = portGroup === PORT_CLASS_OUT ? graph.connectPortToEdge : graph.connectPortFromEdge;
             var connectVertex = graph.connectPortToPort;
 
             var vertexId = $scope.vertexId;
@@ -76,6 +75,8 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                graph.dragNodeId = $scope.vertexId;
                graph.dragPortId = $scope.port.id;
 
+               jqGraph.addClass( 'highlight-' + portType );
+
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
 
@@ -102,16 +103,25 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                // console.log( 'port ', portId, 'drop to', graph.dropInfo );
                jqPortGhost.removeClass( portType );
                jqLinkGhost.attr( "class", basicLinkClass ).hide();
-               if ( graph.dropInfo.nodeId  ) {
-                  if( graph.dropInfo.port ) {
-                     // check that input connects to output...
+               jqGraph.removeClass( 'highlight-' + portType );
+
+
+               if ( !graph.dropInfo.nodeId ) {
+                  return;
+               }
+
+               if( graph.dropInfo.port ) {
+                  if( portGroup === PORT_CLASS_OUT ) {
                      connectVertex( vertexId, $scope.port, graph.dropInfo.nodeId, graph.dropInfo.port );
                   }
                   else {
-                     connectEdge( vertexId, $scope.port, graph.dropInfo.nodeId, undefined );
+                     connectVertex( graph.dropInfo.nodeId, graph.dropInfo.port, vertexId, $scope.port );
                   }
-                  graph.dropInfo.nodeId = graph.dropInfo.port = null;
                }
+               else {
+                  connectEdge( vertexId, $scope.port, graph.dropInfo.nodeId, undefined );
+               }
+               graph.dropInfo.nodeId = graph.dropInfo.port = null;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

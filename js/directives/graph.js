@@ -45,19 +45,22 @@ function ( _, $, ng, undefined ) {
       /** When link ghosts are dropped, the drop target can be accessed here. */
       this.dropInfo = { nodeId: null, portId: null };
 
+      // Controller API:
       this.linkByPort = linkByPort;
       this.vertexLinkControllers = vertexLinkControllers;
       this.edgeLinkControllers = edgeLinkControllers;
+
       this.connectPortFromEdge = connectPortFromEdge;
       this.connectPortToEdge = connectPortToEdge;
       this.connectPortToPort = connectPortToPort;
       this.disconnect = disconnect;
 
+      this.selectEdge = selectEdge;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function idGen( prefix, currentMap ) {
-         console.log( 'starting idGen for ', prefix, 'content: ', currentMap );
+         // console.log( 'starting idGen for ', prefix, 'content: ', currentMap );
          var prefixLength = prefix ? prefix.length : 0;
          var maxIndex = Object.keys( currentMap )
             .filter( function( k ) {
@@ -65,13 +68,16 @@ function ( _, $, ng, undefined ) {
             } )
             .map( function( k ) {
                var index = parseInt( k.substring( prefixLength ), 10 );
+               console.log( k, index, isNaN( index ) ? -1 : index );
                return isNaN( index ) ? -1 : index;
             } )
-            .reduce( Math.max, -1 );
+            .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
 
+         console.log( 'huh', prefix, maxIndex );
 
          return function nextId() {
             ++maxIndex;
+            console.log( 'idgen...', prefix + maxIndex );
             return prefix + maxIndex;
          }
       }
@@ -95,7 +101,7 @@ function ( _, $, ng, undefined ) {
          ng.forEach( model.vertices, function( vertex, vertexId ) {
             vertex.ports.in.forEach( function( port ) {
                if ( port.edgeId ) {
-                  console.log( 'creating in-link for edge ', port.edgeId );
+                  // console.log( 'creating in-link for edge ', port.edgeId );
                   createLink( port.edgeId, null, vertexId, port );
                }
             } );
@@ -110,6 +116,10 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function connectPortFromEdge( vertexId, port, edgeId ) {
+         // console.log( port, '-->', model.edges[ edgeId ] );
+         if ( port.type !== model.edges[ edgeId ].type ) {
+            return;
+         }
          $scope.$apply( function() {
             port.edgeId = edgeId;
             createLink( edgeId, null, vertexId, port );
@@ -119,6 +129,10 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function connectPortToEdge( vertexId, port, edgeId ) {
+         // console.log( port, '-->', model.edges[ edgeId ] );
+         if ( port.type !== model.edges[ edgeId ].type ) {
+            return;
+         }
          $scope.$apply( function() {
             port.edgeId = edgeId;
             createLink( vertexId, port, edgeId, null );
@@ -128,6 +142,10 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function connectPortToPort( sourceVertexId, sourcePort, destVertexId, destPort ) {
+         // console.log( sourcePort, '-->', destPort );
+         if ( sourcePort.type !== destPort.type ) {
+            return;
+         }
          disconnect( sourceVertexId, sourcePort );
          disconnect( destVertexId, destPort );
          $scope.$apply( function() {
@@ -146,9 +164,9 @@ function ( _, $, ng, undefined ) {
          }
 
          var edgeId = port.edgeId;
-         console.log( 'disconnect edge', edgeId, ' from port ', vertexId + '#' + port.id );
+         // console.log( 'disconnect edge', edgeId, ' from port ', vertexId + '#' + port.id );
          var link = linkByPort( vertexId, port );
-         console.log( '...link: ', link, ' among ', linksByVertex[ vertexId ] );
+         // console.log( '...link: ', link, ' among ', linksByVertex[ vertexId ] );
 
          $scope.$apply( function() {
             destroyLink( link );
@@ -177,7 +195,7 @@ function ( _, $, ng, undefined ) {
          }
          add( sourcePort ? linksByVertex : linksByEdge, sourceNodeId, link.id, link );
          add( destPort   ? linksByVertex : linksByEdge, destNodeId,   link.id, link );
-         console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
+         // console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
          links[ link.id ] = link;
       }
 
@@ -247,6 +265,18 @@ function ( _, $, ng, undefined ) {
             }
          }
          return null;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /** {String} One of "EDGE", "VERTEX", "LINK" */
+      var selectionKind;
+
+      /** {String} The ID of the selected element */
+      var selectionID;
+
+      function selectEdge( edgeId ) {
+
       }
 
    }

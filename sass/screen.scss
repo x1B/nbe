@@ -30,6 +30,8 @@ $vertexBgColor: $paletteD;
 $fgColorDark: $gray0;
 $vertexBorderColor: $gray4;
 
+$unHighlightColor: $gray3;
+
 $nodeBorderColor: $gray5;
 $nodeShadowColor: $gray0;
 
@@ -223,15 +225,15 @@ body {
 
 .graph {
 
-   .node.vertex > .port-group > .ports > .port.FLAG > i {
+   .port.FLAG > i {
       // use default
    }
 
-   .node.vertex > .port-group > .ports > .port.ACTION > i {
+   .port.ACTION > i {
       background: $edgeBgColor2;
    }
 
-   .node.vertex > .port-group > .ports > .port.RESOURCE > i {
+   .port.RESOURCE > i {
       background: $edgeBgColor3;
    }
 
@@ -276,5 +278,35 @@ body {
 
    .port.RESOURCE i {
       background: $edgeBgColor3;
+   }
+}
+
+.graph.highlight-FLAG {
+   .port:not(.FLAG) > i,
+   .node.edge:not(.FLAG) {
+      background: $unHighlightColor;
+   }
+   .link:not(.FLAG) {
+      stroke: $unHighlightColor;
+   }
+}
+
+.graph.highlight-ACTION {
+   .port:not(.ACTION) > i,
+   .node.edge:not(.ACTION) {
+      background: $unHighlightColor;
+   }
+   .link:not(.ACTION) {
+      stroke: $unHighlightColor;
+   }
+}
+
+.graph.highlight-RESOURCE {
+   .port:not(.RESOURCE) > i,
+   .node.edge:not(.RESOURCE) {
+      background: $unHighlightColor;
+   }
+   .link:not(.RESOURCE) {
+      stroke: $unHighlightColor;
    }
 }
