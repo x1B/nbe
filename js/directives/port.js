@@ -72,10 +72,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                var jqHandle = $( event.target );
 
                graph.disconnect( $scope.vertexId, $scope.port );
-               graph.dragNodeId = $scope.vertexId;
-               graph.dragPortId = $scope.port.id;
-
-               jqGraph.addClass( 'highlight-' + portType );
+               graph.setDragState( $scope.vertexId, $scope.port );
 
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
@@ -94,7 +91,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
                var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
-               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null ) );
+               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null, true ) );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,8 +100,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                // console.log( 'port ', portId, 'drop to', graph.dropInfo );
                jqPortGhost.removeClass( portType );
                jqLinkGhost.attr( "class", basicLinkClass ).hide();
-               jqGraph.removeClass( 'highlight-' + portType );
-
+               graph.clearDragState();
 
                if ( !graph.dropInfo.nodeId ) {
                   return;

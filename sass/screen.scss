@@ -1,5 +1,3 @@
-@import "compass/css3";
-
 // Physical colors:
 
 $gray0: #202020;
@@ -16,15 +14,16 @@ $paletteB: #c2e578;
 $paletteC: #626ca8;
 $paletteD: #f5c680;
 
-// Semantic colors:
+
+// Logical colors:
 
 $bgColor: $gray2;
 $graphBgColor: $gray1;
 $gridColor: $bgColor;
 
-$edgeBgColor1: $paletteA;
-$edgeBgColor2: $paletteB;
-$edgeBgColor3: $paletteC;
+$typeColor1: $paletteA;
+$typeColor2: $paletteB;
+$typeColor3: $paletteC;
 $vertexBgColor: $paletteD;
 
 $fgColorDark: $gray0;
@@ -38,16 +37,21 @@ $nodeShadowColor: $gray0;
 $textColor: $gray6;
 $portTextColor: $gray0;
 
+
 // Sizes:
 $nodeTitleHeight: 18px;
 $portAnchorSize: 12px;
 $portHeight: 16px;
 
+$edgeNodeSize: 30px;
+
 body {
    background: $bgColor;
 }
 
-
+[data-ng-cloak] {
+   display: none !important;
+}
 
 .graph {
 
@@ -72,7 +76,7 @@ body {
       i {
          width: $portAnchorSize;
          height: $portAnchorSize;
-         background: $edgeBgColor1;
+         background: $typeColor1;
          border: solid $gray2 1px;
          border-radius: $portAnchorSize/2;
          margin: 3px 5px -1px 5px;
@@ -130,6 +134,7 @@ body {
          .port-group {
 
             background: rgba(0, 0, 0, 0.05);
+            border-top: solid $nodeBorderColor 1px;
 
             // Flex container:
             display: -webkit-flex;
@@ -147,16 +152,13 @@ body {
 
                .port {
                   -webkit-flex: 0 1 auto;
-
                   // vertical-align: top;
                   line-height: $portHeight;
                   color: $portTextColor;
                   font-size: 10px;
                   text-shadow: 0 0 2px $gray7;
 
-                  i {
-
-                  }
+                  i { }
                }
 
                .port {
@@ -174,19 +176,25 @@ body {
                   .port { text-align: right; padding-left: 10px; }
                }
             }
-
-            border-top: solid $nodeBorderColor 1px;
          }
-
       }
 
       // Default edge-node style;
       &.edge {
-         width: 30px;
-         height: 30px;
-         background: linear-gradient(135deg, $edgeBgColor1 0%, darken($edgeBgColor1, 20%) 100%);
-         border-radius: 30px;
+         width: $edgeNodeSize;
+         height: $edgeNodeSize;
+         background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
+         border-radius: $edgeNodeSize;
          box-shadow: 4px 4px 4px $gray0;
+         padding-top: $edgeNodeSize;
+
+         label {
+            position: relative;
+            width: 200px;
+            left: -100px + $edgeNodeSize/2;
+            text-align: center;
+            text-shadow: 4px 4px 4px $gray0;
+         }
       }
 
    }
@@ -198,9 +206,14 @@ body {
    .links {
       .link {
          position: absolute;
-         stroke-width: 2;
-         stroke: $edgeBgColor1;
          fill: transparent;
+      }
+      .link, marker {
+         stroke-width: 2;
+         stroke: $typeColor1;
+      }
+      marker {
+         fill: $typeColor1;
       }
    }
 }
@@ -230,11 +243,11 @@ body {
    }
 
    .port.ACTION > i {
-      background: $edgeBgColor2;
+      background: $typeColor2;
    }
 
    .port.RESOURCE > i {
-      background: $edgeBgColor3;
+      background: $typeColor3;
    }
 
    .node.edge.FLAG {
@@ -243,28 +256,36 @@ body {
 
    .node.edge.ACTION {
       background: -moz-linear-gradient(left top,
-         $edgeBgColor2 0%, darken($edgeBgColor2, 20%) 100%);
+         $typeColor2 0%, darken($typeColor2, 20%) 100%);
       background: -webkit-gradient(linear, left top, right bottom,
-         color-stop(0%, $edgeBgColor2), color-stop(100%, darken($edgeBgColor2, 30%)));
+         color-stop(0%, $typeColor2), color-stop(100%, darken($typeColor2, 30%)));
    }
 
    .node.edge.RESOURCE {
       background: -moz-linear-gradient(left top,
-         $edgeBgColor3 0%, darken($edgeBgColor3, 20%) 100%);
+         $typeColor3 0%, darken($typeColor3, 20%) 100%);
       background: -webkit-gradient(linear, left top, right bottom,
-         color-stop(0%, $edgeBgColor3), color-stop(100%, darken($edgeBgColor3, 30%)));
+         color-stop(0%, $typeColor3), color-stop(100%, darken($typeColor3, 30%)));
    }
 
    .link.FLAG {
       // use default
    }
 
-   .link.ACTION {
-      stroke: $edgeBgColor2;
+   .link.ACTION,
+   marker.ACTION {
+      stroke: $typeColor2;
+   }
+   marker.ACTION {
+      fill: $typeColor2;
    }
 
-   .link.RESOURCE {
-      stroke: $edgeBgColor3;
+   .link.RESOURCE,
+   marker.RESOURCE {
+      stroke: $typeColor3;
+   }
+   marker.RESOURCE {
+      fill: $typeColor3;
    }
 
 
@@ -273,11 +294,23 @@ body {
    }
 
    .port.ACTION i {
-      background: $edgeBgColor2;
+      background: $typeColor2;
    }
 
    .port.RESOURCE i {
-      background: $edgeBgColor3;
+      background: $typeColor3;
+   }
+}
+
+.graph.highlight-in {
+   .ports.out i {
+      background: $unHighlightColor;
+   }
+}
+
+.graph.highlight-out {
+   .ports.in i {
+      background: $unHighlightColor;
    }
 }
 

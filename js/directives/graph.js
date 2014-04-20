@@ -21,6 +21,8 @@ function ( _, $, ng, undefined ) {
     */
    function GraphController( $scope, $element ) {
 
+      $scope.types = [ 'FLAG', 'ACTION' , 'RESOURCE' ];
+
       /** Shorthands to $scope.* */
       var model;
       var layout;
@@ -42,8 +44,11 @@ function ( _, $, ng, undefined ) {
       /** Provide access to the jQuery handle to the graph canvas element */
       this.jqGraph = $( $element[ 0 ] );
 
-      /** When link ghosts are dropped, the drop target can be accessed here. */
+      /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
       this.dropInfo = { nodeId: null, portId: null };
+
+      /** While a port is being dragged, it can be accessed here. */
+      this.dragState = { nodeId: null, port: null };
 
       // Controller API:
       this.linkByPort = linkByPort;
@@ -56,6 +61,17 @@ function ( _, $, ng, undefined ) {
       this.disconnect = disconnect;
 
       this.selectEdge = selectEdge;
+      this.setDragState = function( nodeId, port ) {
+         this.dragState.nodeId = nodeId;
+         this.dragState.port = port;
+         this.jqGraph.addClass( 'highlight-' + port.type );
+         this.jqGraph.addClass( 'highlight-' + ( port.direction === 'in' ? 'out' : 'in' ) );
+      };
+
+      this.clearDragState = function() {
+         this.jqGraph.removeClass( 'highlight-' + this.dragState.port.type );
+         this.jqGraph.removeClass( 'highlight-' + ( this.dragState.port.direction === 'in' ? 'out' : 'in' ) );
+      };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +123,6 @@ function ( _, $, ng, undefined ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function connectPortFromEdge( vertexId, port, edgeId ) {
-         // console.log( port, '-->', model.edges[ edgeId ] );
          if ( port.type !== model.edges[ edgeId ].type ) {
             return;
          }
@@ -163,7 +178,7 @@ function ( _, $, ng, undefined ) {
          $scope.$apply( function() {
             destroyLink( link );
             delete port.edgeId;
-            console.log( 'links remaining with edge ', edgeId, ': ', linksByEdge[ edgeId ] );
+            // console.log( 'links remaining with edge ', edgeId, ': ', linksByEdge[ edgeId ] );
             if ( !Object.keys( linksByEdge[ edgeId ] ).length ) {
                delete model.edges[ edgeId ];
             }
@@ -247,7 +262,6 @@ function ( _, $, ng, undefined ) {
 
       function linkByPort( vertexId, port ) {
          var links = linksByVertex[ vertexId ];
-         console.log( 'args:', arguments, 'links', links );
          var keys = Object.keys( links );
          for ( var i = keys.length; i --> 0; ) {
             var linkId = keys[ i ];

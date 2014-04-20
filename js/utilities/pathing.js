@@ -1,4 +1,4 @@
-define([], function () {
+define( [], function() {
 
    // Length of a horizontal link stub that helps visualizing where a link is attached
    var STUB_LENGTH = 20;
@@ -9,7 +9,9 @@ define([], function () {
    // Stub length multiplier for no stub (link attached to mouse cursor).
    var STUB_NONE = 0;
 
-   var CURVE_PADDING = 10;
+   var ARROW_HEAD_LENGTH = 3;
+
+   var CURVE_PADDING = 8;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +19,7 @@ define([], function () {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub ) {
+   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox, noArrow ) {
       var fromX = round( fromLeft), fromY = round( fromTop ), toX = round( toLeft ), toY = round( toTop );
       var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
 
@@ -34,35 +36,83 @@ define([], function () {
    /**
     * Try to circumvent boxes which are in the way
     */
-   function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox ) {
+   function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn, fromBox, toBox, noArrow ) {
+      // Parameters:
+      var curvePadding = CURVE_PADDING;
+      var stubLength = STUB_LENGTH;
+      var arrowHeadLength = ARROW_HEAD_LENGTH;
+      var reverse;
       // Path state:
       var x0, y0, xN, yN, stub0, stubN, box0, boxN;
-      var curvePadding = CURVE_PADDING;
-      var stubPadding = STUB_LENGTH;
+      initializeParameters();
 
-      // console.log( 'fromBox', fromBox );
-      // console.log( 'toBox', toBox );
+      // Current path and position:
+      var x = x0, y = y0;
+      var path = [];
+      var useBezierY = false;
+      path.push( 'M', x, ',', y );
 
-      // Simplify by always drawing a path from left to right.
-      if ( fromLeft + fromStub*stubPadding <= toLeft + toStub*stubPadding  ) {
-         x0 = round( fromLeft); xN = round( toLeft );
-         y0 = round( fromTop ); yN = round( toTop );
-         stub0 = fromStub;      stubN = toStub;
-         box0 = fromBox;        boxN = toBox;
+      if( reverse ) {
+         arrowHead();
+      }
+
+      horizontal( x + stub0 * stubLength );
+      if ( stub0 < 0 ) {
+         circumventBox0( box0, boxN, stubN );
+      }
+      if ( stubN > 0 && boxN ) {
+         circumventBoxN( boxN );
       }
       else {
-         x0 = round( toLeft);   xN = round( fromLeft );
-         y0 = round( toTop );   yN = round( fromTop );
-         stub0 = toStub;        stubN = fromStub;
-         box0 = toBox;          boxN = fromBox;
+         cubic( xN + stubN * stubLength, yN );
       }
-      // console.log( 'link.0: ', xN, yN, stubN, boxN );
-      // console.log( 'link.N: ', xN, yN, stubN, boxN );
+      horizontal( xN );
 
-      function drawBox( box ) {
-         path.push( 'M', box.left, ',', box.top );
-         path.push( 'H', box.right, 'V', box.bottom, 'H', box.left, 'V', box.top );
+      if( !reverse ) {
+         arrowHead();
       }
+
+      var d = path.join('');
+      return d;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function initializeParameters() {
+         if( toBox ) {
+            var boxDeltaY = abs( toTop > fromTop ? fromBox.bottom - toBox.top : toBox.bottom - fromBox.top );
+            stubLength = STUB_LENGTH;
+            if ( boxDeltaY < 3*STUB_LENGTH ) {
+               var yRatio = boxDeltaY / (3 * STUB_LENGTH);
+               curvePadding = max( 3, max( 1, round( yRatio*CURVE_PADDING ) ) );
+               stubLength += CURVE_PADDING - curvePadding;
+            }
+         }
+
+         var deltaX = abs( fromLeft - toLeft );
+         if ( deltaX < 3*STUB_LENGTH ) {
+            var xRatio = deltaX/(3*STUB_LENGTH);
+            stubLength = max( 3, round( xRatio*STUB_LENGTH ) );
+            curvePadding = max( 1, round( xRatio*CURVE_PADDING ) );
+         }
+
+         // Simplify by always drawing a path from left to right.
+         reverse = fromLeft + fromStubSgn*stubLength > toLeft + toStubSgn*stubLength;
+         if ( reverse  ) {
+            x0 = round( toLeft);   xN = round( fromLeft );
+            y0 = round( toTop );   yN = round( fromTop );
+            stub0 = toStubSgn;     stubN = fromStubSgn;
+            box0 = toBox;          boxN = fromBox;
+         }
+         else {
+            x0 = round( fromLeft); xN = round( toLeft );
+            y0 = round( fromTop ); yN = round( toTop );
+            stub0 = fromStubSgn;   stubN = toStubSgn;
+            box0 = fromBox;        boxN = toBox;
+         }
+
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function cubic( toX, toY ) {
          var middleX = x + (toX - x) / 2;
@@ -94,26 +144,20 @@ define([], function () {
          path.push( 'V', yAbs );
       }
 
-      // Current path and position:
-      var x = x0, y = y0;
-      var path = [];
-      var useBezierY = false;
-      // if (box0) drawBox( box0 );
-      // if (boxN) drawBox( boxN );
-      path.push( 'M', x, ',', y );
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      horizontal( x + stub0 * stubPadding );
-      if ( stub0 < 0 ) {
-         circumventBox0( box0, boxN, stubN );
+      function arrowHead() {
+         if ( noArrow ) {
+            return;
+         }
+         var ax = x - 20 - arrowHeadLength, ay = y;
+         path.push( 'M', ax, ',', ay-arrowHeadLength,
+                    'L', ax + 20/2, ',', ay,
+                    'L', ax, ',', ay+arrowHeadLength,
+                    'L', ax+arrowHeadLength, ',', ay,
+                    'L', ax, ',', ay-arrowHeadLength,
+                    'M', x, ',', y );
       }
-
-      if ( stubN > 0 && boxN ) {
-         circumventBoxN( boxN );
-      }
-      else {
-         cubic( xN + stubN * stubPadding, yN );
-      }
-      horizontal( xN );
 
       function circumventBox0() {
          // down: 1, up: -1
@@ -144,7 +188,6 @@ define([], function () {
 
          // Cling to bottom/top edge as far as needed:
          if ( yN * yDir < y * yDir || abs(y - yN)*4 < abs(x - xN) ) {
-            // :TODO: dont do this if horizontal distance is very low...
             arc90( 1, yDir, sweep );
             if ( yN * yDir < y * yDir ) {
                horizontal( max( x, min( box0.right, xN - 2*curvePadding ) ) );
@@ -158,18 +201,20 @@ define([], function () {
          }
       }
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function circumventBoxN() {
          // Draw line to nearest corner of boxN:
          var yDir, yEdge, xEdge, sweep;
-         if (abs(boxN.top - y) < abs(y - boxN.bottom)) {
+         if ( abs(boxN.top - y) + (y < yN ? -1 : 0) < abs(y - boxN.bottom) ) {
             yDir = 1;
-            yEdge = min( boxN.top - curvePadding, yN - 2*curvePadding );
+            yEdge = min( boxN.top - curvePadding, yN -2*curvePadding );
             sweep = 1;
             xEdge = yEdge > y ? boxN.right : boxN.left;
          }
          else {
             yDir = -1;
-            yEdge = max( boxN.bottom + curvePadding, yN + 2*curvePadding );
+            yEdge = max( boxN.bottom + curvePadding, yN +2*curvePadding );
             sweep = 0;
             xEdge = yEdge < y ? boxN.right : boxN.left;
          }
@@ -188,7 +233,6 @@ define([], function () {
          arc90( -1, yDir, sweep );
       }
 
-      return path.join('');
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

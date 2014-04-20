@@ -33,7 +33,7 @@
          "ports": [
                { "id": "i0", "label": "First Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
                { "id": "i1", "label": "Second Resource (S)", "type": "RESOURCE", "direction": "in"  },
-               { "id": "i2", "label": "Take a Second", "type": "FLAG", "direction": "in"  },
+               { "id": "i2", "label": "Take a Second", "type": "FLAG", "edgeId": "e2", "direction": "in" },
                { "id": "i3", "label": "Save Action", "type": "ACTION", "edgeId": "e1", "direction": "in"  },
                { "id": "o0", "label": "Third Resource (M)", "type": "RESOURCE" },
                { "id": "o1", "label": "Fourth Resource (M)", "type": "RESOURCE" },

@@ -102,7 +102,7 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                   calculateLinkEnd( jqDestNode, jqDestHandle, to );
                   boundingBox( jqSourceNode, jqGraph, fromBox );
                   boundingBox( jqDestNode, jqGraph, toBox );
-                  var path = svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox );
+                  var path = svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox, false);
                   $element.attr( 'd', path );
                }
 
