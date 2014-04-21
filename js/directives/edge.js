@@ -24,25 +24,25 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
          restrict: 'A',
          controller: function EdgeController( $scope, $element ) {
 
+            var jqEdge = $( $element[ 0 ] );
             var graph = $scope.nbeGraph;
             var edgeId = $scope.edgeId;
 
-            $( $element[ 0 ] ).draggable( {
+            jqEdge.draggable( {
                stack: '.graph *',
                containment: 'parent',
                start: handleEdgeDragStart,
                drag: async.repeatAfter( handleEdgeDrag, $timeout ),
-               stop: handlePortDrop
+               stop: handleDrop
             } );
 
-            $( $element[ 0 ] ).droppable( {
+            jqEdge.droppable( {
                accept: 'i',
                hoverClass: 'drop-hover',
-               drop: handlePortDrop
+               drop: handleDrop
             } );
 
-            var linkControllers = [];
-
+            var linksToRepaint = [];
             this.jqEdge = $( $element[ 0 ] );
             this.jqGraph = $( $element[ 0 ].parentNode );
 
@@ -51,31 +51,39 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart( event, ui ) {
-               linkControllers = graph.edgeLinkControllers( edgeId );
+               linksToRepaint = graph.edgeLinkControllers( edgeId );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDrag( event, ui ) {
-               ng.forEach( linkControllers, function( linkController ) {
-                  linkController.updatePath();
+               ng.forEach( linksToRepaint, function( linkController ) {
+                  linkController.repaint();
                } );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleEdgeStop() {
-               linkControllers = [];
+            function handleDrop( event, ui ) {
+               if ( $( ui.helper ).hasClass( 'edge' ) ) {
+                  // stopped dragging this edge
+                  var edgeLayout = $scope.layout.edges[ edgeId ];
+                  edgeLayout.left = ui.position.left / $scope.canvas.width;
+                  edgeLayout.top = ui.position.top / $scope.canvas.height;
+                  linksToRepaint = [];
+               }
+               else {
+                  // dropped a port onto this edge
+                  graph.dropInfo.nodeId = edgeId;
+                  graph.dropInfo.portId = null;
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handlePortDrop() {
-               graph.dropInfo.nodeId = edgeId;
-               graph.dropInfo.portId = null;
-            }
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
+            $scope.handleEdgeClick = function() {
+               graph.selectEdge( edgeId );
+            };
 
          }
       };

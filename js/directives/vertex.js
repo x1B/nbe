@@ -35,7 +35,7 @@ function( _, $, jqueryUi, ng, layout, async, undefined ) {
                stop: handleVertexDragStop
             } );
 
-            var linkControllers = [];
+            var linksToRepaint = [];
 
             var jqVertex = $( $element[ 0 ] );
             var jqGraph = $( $element[ 0 ].parentNode );
@@ -49,21 +49,25 @@ function( _, $, jqueryUi, ng, layout, async, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDragStart( event, ui ) {
-               linkControllers = graphController.vertexLinkControllers( id );
+               linksToRepaint = graphController.vertexLinkControllers( id );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDrag( event, ui ) {
-               ng.forEach( linkControllers, function( linkController ) {
-                  linkController.updatePath();
+               ng.forEach( linksToRepaint, function( linkController ) {
+                  linkController.repaint();
                } );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleVertexDragStop() {
-               linkControllers = [];
+            function handleVertexDragStop( event, ui ) {
+               linksToRepaint = [];
+
+               var layout = $scope.layout.vertices[ id ];
+               layout.left = ui.position.left / $scope.canvas.width;
+               layout.top = ui.position.top / $scope.canvas.height;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,8 +75,6 @@ function( _, $, jqueryUi, ng, layout, async, undefined ) {
             function calculateBox( box ) {
                layout.boundingBox( jqVertex, jqGraph, box );
             }
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
 
          }
       };

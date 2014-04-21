@@ -52,7 +52,7 @@ define( [], function() {
       var useBezierY = false;
       path.push( 'M', x, ',', y );
 
-      if( reverse ) {
+      if ( reverse ) {
          arrowHead();
       }
 
@@ -68,7 +68,7 @@ define( [], function() {
       }
       horizontal( xN );
 
-      if( !reverse ) {
+      if ( !reverse ) {
          arrowHead();
       }
 
@@ -78,18 +78,19 @@ define( [], function() {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function initializeParameters() {
+         var yRatio = 1;
          if( toBox ) {
             var boxDeltaY = abs( toTop > fromTop ? fromBox.bottom - toBox.top : toBox.bottom - fromBox.top );
             stubLength = STUB_LENGTH;
             if ( boxDeltaY < 3*STUB_LENGTH ) {
-               var yRatio = boxDeltaY / (3 * STUB_LENGTH);
+               yRatio = boxDeltaY / (3 * STUB_LENGTH);
                curvePadding = max( 3, max( 1, round( yRatio*CURVE_PADDING ) ) );
                stubLength += CURVE_PADDING - curvePadding;
             }
          }
 
          var deltaX = abs( fromLeft - toLeft );
-         if ( deltaX < 3*STUB_LENGTH ) {
+         if ( deltaX < 3*STUB_LENGTH && yRatio < 1 ) {
             var xRatio = deltaX/(3*STUB_LENGTH);
             stubLength = max( 3, round( xRatio*STUB_LENGTH ) );
             curvePadding = max( 1, round( xRatio*CURVE_PADDING ) );

@@ -11,10 +11,12 @@
 
   <!-- Template for the node based editor -->
   <div data-ng-controller="GraphWidget">
-     <section class="graph" data-nbe-graph data-ng-cloak>
+     <section class="graph"
+              data-nbe-graph
+              data-ng-cloak>
 
         <div data-ng-repeat="(vertexId, vertex) in model.vertices"
-             data-ng-style="layout.vertices[ vertexId ]"
+             data-ng-style="{ left: layout.vertices[ vertexId ].left * canvas.width, top: layout.vertices[ vertexId ].top * canvas.height }"
              data-nbe-vertex="{{ vertexId }}"
              class="node vertex">
            <div class="header">{{ vertex.label }}</div>
@@ -46,11 +48,11 @@
         <div class="port GHOST" style="display: none;"><i></i></div>
 
         <div data-ng-repeat="(edgeId, edge) in model.edges"
-             class="node edge"
-             data-ng-class="edge.type"
+             class="node edge {{ edge.type }}"
+             data-ng-class="{ 'selected': (selection.kind == 'EDGE' && selection.id == edgeId) }"
+             data-ng-click="handleEdgeClick()"
              data-nbe-edge="{{ edgeId }}"
-             data-ng-style="layout.edges[ edgeId ]"></div>
-        <!-- <label>{{ edge.label }}</label> -->
+             data-ng-style="{ left: layout.edges[ edgeId ].left * canvas.width, top: layout.edges[ edgeId ].top * canvas.height }"><label>{{ edge.label }}</label></div>
 
         <!--
         <div class="node edge GHOST"></div>
@@ -60,7 +62,7 @@
            <path data-ng-repeat="(id, link) in view.links"
                  data-nbe-link
                  stroke-linejoin="round"
-                 class="link"
+                 class="{{ ( selection.id == link.source.nodeId || selection.id == link.dest.nodeId ) && 'selected' || '' }} link {{ link.type }}"
                  d="M0 0 L0 0"/>
            <path class="link GHOST" />
         </svg>

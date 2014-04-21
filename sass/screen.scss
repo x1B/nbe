@@ -186,7 +186,6 @@ body {
          background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
          border-radius: $edgeNodeSize;
          box-shadow: 4px 4px 4px $gray0;
-         padding-top: $edgeNodeSize;
 
          label {
             position: relative;
@@ -194,6 +193,11 @@ body {
             left: -100px + $edgeNodeSize/2;
             text-align: center;
             text-shadow: 4px 4px 4px $gray0;
+            top: $edgeNodeSize + 2px;
+         }
+
+         &.selected {
+            box-shadow: 0px 0px 8px #fff, 4px 4px 4px $gray0;
          }
       }
 
@@ -208,12 +212,12 @@ body {
          position: absolute;
          fill: transparent;
       }
-      .link, marker {
+      .link {
          stroke-width: 2;
          stroke: $typeColor1;
       }
-      marker {
-         fill: $typeColor1;
+      .link.selected {
+         stroke: lighten( $typeColor1, 15 );
       }
    }
 }
@@ -234,7 +238,9 @@ body {
 }
 
 
-// API User Theme:
+
+
+// User Theme:
 
 .graph {
 
@@ -272,22 +278,20 @@ body {
       // use default
    }
 
-   .link.ACTION,
-   marker.ACTION {
+   .link.ACTION {
       stroke: $typeColor2;
-   }
-   marker.ACTION {
-      fill: $typeColor2;
+      &.selected {
+         stroke: lighten( $typeColor2, 15 );
+      }
    }
 
-   .link.RESOURCE,
-   marker.RESOURCE {
+
+   .link.RESOURCE {
       stroke: $typeColor3;
+      &.selected {
+         stroke: lighten( $typeColor3, 15 );
+      }
    }
-   marker.RESOURCE {
-      fill: $typeColor3;
-   }
-
 
    .port.FLAG {
       // use default

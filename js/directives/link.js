@@ -32,10 +32,6 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
          restrict: 'A',
          controller: function LinkController( $scope, $element ) {
 
-            // ngClass does not work with SVG
-            var basicLinkClass = $element.attr( 'class' );
-            $element.attr( 'class', basicLinkClass + " " + $scope.link.type );
-
             var graph = $scope.nbeGraph;
             graph.linkControllers[ $scope.link.id ] = this;
             var jqGraph = graph.jqGraph;
@@ -47,13 +43,9 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             var jqSourceNode, jqSourceHandle;
             var jqDestNode, jqDestHandle;
 
-            var updatePath = pathUpdater();
+            var repaint = this.repaint = pathUpdater();
 
             $timeout( init, 0 );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            this.updatePath = updatePath;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -134,13 +126,9 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                   jqDestNode = jqEdge( dest );
                   jqDestHandle = null;
                }
-
-               if( !jqSourceNode.get( 0 )  || !jqDestNode.get( 0 ) ) {
-                  console.log( 'bad' );
-               }
                // console.log( "SN: ", jqSourceNode.get( 0 ).tagName, jqSourceHandle && jqSourceHandle.get(0) );
                // console.log( "DN: ", jqDestNode.get( 0 ).tagName, jqDestHandle && jqDestHandle.get(0) );
-               updatePath();
+               repaint();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

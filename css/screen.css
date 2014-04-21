@@ -125,116 +125,118 @@ body {
   background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
   border-radius: 30px;
   box-shadow: 4px 4px 4px #202020;
-  padding-top: 30px;
 }
-/* line 191, ../sass/screen.scss */
+/* line 190, ../sass/screen.scss */
 .graph .node.edge label {
   position: relative;
   width: 200px;
   left: -85px;
   text-align: center;
   text-shadow: 4px 4px 4px #202020;
+  top: 32px;
 }
-/* line 202, ../sass/screen.scss */
+/* line 199, ../sass/screen.scss */
+.graph .node.edge.selected {
+  box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
+}
+/* line 206, ../sass/screen.scss */
 .graph .GHOST {
   position: absolute;
 }
-/* line 207, ../sass/screen.scss */
+/* line 211, ../sass/screen.scss */
 .graph .links .link {
   position: absolute;
   fill: transparent;
 }
-/* line 211, ../sass/screen.scss */
-.graph .links .link, .graph .links marker {
+/* line 215, ../sass/screen.scss */
+.graph .links .link {
   stroke-width: 2;
   stroke: #c3669c;
 }
-/* line 215, ../sass/screen.scss */
-.graph .links marker {
-  fill: #c3669c;
+/* line 219, ../sass/screen.scss */
+.graph .links .link.selected {
+  stroke: #d99dc0;
 }
 
-/* line 245, ../sass/screen.scss */
+/* line 251, ../sass/screen.scss */
 .graph .port.ACTION > i {
   background: #c2e578;
 }
-/* line 249, ../sass/screen.scss */
+/* line 255, ../sass/screen.scss */
 .graph .port.RESOURCE > i {
   background: #626ca8;
 }
-/* line 257, ../sass/screen.scss */
+/* line 263, ../sass/screen.scss */
 .graph .node.edge.ACTION {
   background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
-/* line 264, ../sass/screen.scss */
+/* line 270, ../sass/screen.scss */
 .graph .node.edge.RESOURCE {
   background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
-/* line 276, ../sass/screen.scss */
-.graph .link.ACTION,
-.graph marker.ACTION {
+/* line 281, ../sass/screen.scss */
+.graph .link.ACTION {
   stroke: #c2e578;
 }
-/* line 279, ../sass/screen.scss */
-.graph marker.ACTION {
-  fill: #c2e578;
+/* line 283, ../sass/screen.scss */
+.graph .link.ACTION.selected {
+  stroke: #dff1b8;
 }
-/* line 284, ../sass/screen.scss */
-.graph .link.RESOURCE,
-.graph marker.RESOURCE {
+/* line 289, ../sass/screen.scss */
+.graph .link.RESOURCE {
   stroke: #626ca8;
 }
-/* line 287, ../sass/screen.scss */
-.graph marker.RESOURCE {
-  fill: #626ca8;
+/* line 291, ../sass/screen.scss */
+.graph .link.RESOURCE.selected {
+  stroke: #939ac3;
 }
-/* line 296, ../sass/screen.scss */
+/* line 300, ../sass/screen.scss */
 .graph .port.ACTION i {
   background: #c2e578;
 }
-/* line 300, ../sass/screen.scss */
+/* line 304, ../sass/screen.scss */
 .graph .port.RESOURCE i {
   background: #626ca8;
 }
 
-/* line 306, ../sass/screen.scss */
+/* line 310, ../sass/screen.scss */
 .graph.highlight-in .ports.out i {
   background: #646464;
 }
 
-/* line 312, ../sass/screen.scss */
+/* line 316, ../sass/screen.scss */
 .graph.highlight-out .ports.in i {
   background: #646464;
 }
 
-/* line 319, ../sass/screen.scss */
+/* line 323, ../sass/screen.scss */
 .graph.highlight-FLAG .port:not(.FLAG) > i,
 .graph.highlight-FLAG .node.edge:not(.FLAG) {
   background: #646464;
 }
-/* line 322, ../sass/screen.scss */
+/* line 326, ../sass/screen.scss */
 .graph.highlight-FLAG .link:not(.FLAG) {
   stroke: #646464;
 }
 
-/* line 329, ../sass/screen.scss */
+/* line 333, ../sass/screen.scss */
 .graph.highlight-ACTION .port:not(.ACTION) > i,
 .graph.highlight-ACTION .node.edge:not(.ACTION) {
   background: #646464;
 }
-/* line 332, ../sass/screen.scss */
+/* line 336, ../sass/screen.scss */
 .graph.highlight-ACTION .link:not(.ACTION) {
   stroke: #646464;
 }
 
-/* line 339, ../sass/screen.scss */
+/* line 343, ../sass/screen.scss */
 .graph.highlight-RESOURCE .port:not(.RESOURCE) > i,
 .graph.highlight-RESOURCE .node.edge:not(.RESOURCE) {
   background: #646464;
 }
-/* line 342, ../sass/screen.scss */
+/* line 346, ../sass/screen.scss */
 .graph.highlight-RESOURCE .link:not(.RESOURCE) {
   stroke: #646464;
 }
