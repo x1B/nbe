@@ -31,13 +31,11 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
             var connectToEdge, connectToVertex;
 
-
             var connectEdge = portGroup === PORT_CLASS_OUT ? graph.connectPortToEdge : graph.connectPortFromEdge;
             var connectVertex = graph.connectPortToPort;
 
             var vertexId = $scope.vertexId;
             var portType = $scope.port.type || '';
-            // console.log( $scope.port.label, $( 'i', $element[0] )[0], $scope.port.type );
 
             var jqGraph = graph.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
@@ -64,7 +62,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                drop: handlePortDrop
             } );
 
-            var basicLinkClass = jqLinkGhost.attr( "class" ) + " ";
+            var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +80,7 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                $scope.nbeVertex.calculateBox( fromBox );
 
                ui.helper.addClass( portType ).show();
-               jqLinkGhost.attr( "class", basicLinkClass + portType ).show();
+               jqLinkGhost.attr( 'class', basicLinkClass + portType ).show();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,15 +89,14 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
                var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
-               jqLinkGhost.attr( "d", svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null, true ) );
+               jqLinkGhost.attr( 'd', svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null, true ) );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDragStop() {
-               // console.log( 'port ', portId, 'drop to', graph.dropInfo );
                jqPortGhost.removeClass( portType );
-               jqLinkGhost.attr( "class", basicLinkClass ).hide();
+               jqLinkGhost.attr( 'class', basicLinkClass ).hide();
                graph.clearDragState();
 
                if ( !graph.dropInfo.nodeId ) {

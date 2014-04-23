@@ -77,7 +77,6 @@ function ( _, $, ng, async, undefined ) {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function idGen( prefix, currentMap ) {
-            // console.log( 'starting idGen for ', prefix, 'content: ', currentMap );
             var prefixLength = prefix ? prefix.length : 0;
             var maxIndex = Object.keys( currentMap )
                .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
@@ -159,7 +158,6 @@ function ( _, $, ng, async, undefined ) {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function connectPortToEdge( vertexId, port, edgeId ) {
-            // console.log( port, '-->', model.edges[ edgeId ] );
             if ( port.type !== model.edges[ edgeId ].type ) {
                return;
             }
@@ -172,7 +170,6 @@ function ( _, $, ng, async, undefined ) {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function connectPortToPort( sourceVertexId, sourcePort, destVertexId, destPort ) {
-            // console.log( sourcePort, '-->', destPort );
             if ( sourcePort.type !== destPort.type || sourcePort.direction === destPort.direction ) {
                return;
             }
@@ -194,14 +191,11 @@ function ( _, $, ng, async, undefined ) {
             }
 
             var edgeId = port.edgeId;
-            // console.log( 'disconnect edge', edgeId, ' from port ', vertexId + '#' + port.id );
             var link = linkByPort( vertexId, port );
-            // console.log( '...link: ', link, ' among ', linksByVertex[ vertexId ] );
 
             $scope.$apply( function() {
                destroyLink( link );
                delete port.edgeId;
-               // console.log( 'links remaining with edge ', edgeId, ': ', linksByEdge[ edgeId ] );
                if ( !Object.keys( linksByEdge[ edgeId ] ).length ) {
                   delete model.edges[ edgeId ];
                }
@@ -225,7 +219,6 @@ function ( _, $, ng, async, undefined ) {
             }
             add( sourcePort ? linksByVertex : linksByEdge, sourceNodeId, link.id, link );
             add( destPort   ? linksByVertex : linksByEdge, destNodeId,   link.id, link );
-            // console.log( 'link', link.id, 'created. linksByVertex:', linksByVertex );
             links[ link.id ] = link;
          }
 
@@ -242,7 +235,6 @@ function ( _, $, ng, async, undefined ) {
             var destLayout =  layout.vertices[ destVertexId ];
             var centerX = ( parseFloat( sourceLayout.left ) + parseFloat( destLayout.left ) ) / 2;
             var centerY = ( parseFloat( sourceLayout.top ) + parseFloat( destLayout.top ) ) / 2;
-            console.log( sourceLayout, { left: centerX, top: centerY } );
             layout.edges[ id ] = { left: centerX, top: centerY };
             createLink( sourceVertexId, sourcePort, id, null, type );
             createLink( id, null, destVertexId, destPort, type );
