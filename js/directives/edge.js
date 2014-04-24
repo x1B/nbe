@@ -74,8 +74,7 @@ function ( _, $, jqueryUi, ng, async, undefined ) {
                }
                else {
                   // dropped a port onto this edge
-                  graph.dropInfo.nodeId = edgeId;
-                  graph.dropInfo.portId = null;
+                  graph.dragDrop.setDropRef( { nodeId: edgeId } );
                }
             }
 

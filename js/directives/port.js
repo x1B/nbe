@@ -26,16 +26,10 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
          controller: function PortController( $scope, $element, $attrs ) {
 
             var graph = $scope.nbeGraph;
-            var portGroup = $attrs[ 'nbePortGroup' ];
-            var stubType = portGroup === PORT_CLASS_OUT ? 1 : -1;
-
-            var connectToEdge, connectToVertex;
-
-            var connectEdge = portGroup === PORT_CLASS_OUT ? graph.connectPortToEdge : graph.connectPortFromEdge;
-            var connectVertex = graph.connectPortToPort;
+            // For drawing links:
+            var stubDirection = $attrs[ 'nbePortGroup' ] === PORT_CLASS_OUT ? 1 : -1;
 
             var vertexId = $scope.vertexId;
-            var portType = $scope.port.type || '';
 
             var jqGraph = graph.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
@@ -69,8 +63,13 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             function handlePortDragStart( event, ui ) {
                var jqHandle = $( event.target );
 
-               graph.disconnect( $scope.vertexId, $scope.port );
-               graph.setDragState( $scope.vertexId, $scope.port );
+               var dd = graph.dragDrop;
+               var transaction = dd.start( { nodeId: $scope.vertexId, port: $scope.port} );
+
+               if ( $scope.port.edgeId ) {
+                  var disonnectOp = graph.makeDisconnectOp( { nodeId: $scope.vertexId, port: $scope.port } );
+                  transaction.perform( disonnectOp );
+               }
 
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
@@ -79,8 +78,8 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                fromTop = p.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
                $scope.nbeVertex.calculateBox( fromBox );
 
-               ui.helper.addClass( portType ).show();
-               jqLinkGhost.attr( 'class', basicLinkClass + portType ).show();
+               ui.helper.addClass( $scope.port.type ).show();
+               jqLinkGhost.attr( 'class', basicLinkClass + $scope.port.type ).show();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,39 +88,30 @@ function ( _, $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
                var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
-               jqLinkGhost.attr( 'd', svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubType, 0, fromBox, null, true ) );
+               jqLinkGhost.attr( 'd', svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true ) );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDragStop() {
-               jqPortGhost.removeClass( portType );
+               jqPortGhost.removeClass( $scope.port.type );
                jqLinkGhost.attr( 'class', basicLinkClass ).hide();
-               graph.clearDragState();
 
-               if ( !graph.dropInfo.nodeId ) {
+               var dd = graph.dragDrop;
+               if ( !dd.dropRef() ) {
+                  dd.finish();
                   return;
                }
 
-               if( graph.dropInfo.port ) {
-                  if( portGroup === PORT_CLASS_OUT ) {
-                     connectVertex( vertexId, $scope.port, graph.dropInfo.nodeId, graph.dropInfo.port );
-                  }
-                  else {
-                     connectVertex( graph.dropInfo.nodeId, graph.dropInfo.port, vertexId, $scope.port );
-                  }
-               }
-               else {
-                  connectEdge( vertexId, $scope.port, graph.dropInfo.nodeId, undefined );
-               }
-               graph.dropInfo.nodeId = graph.dropInfo.port = null;
+               var op = graph.makeConnectOp( { nodeId: vertexId, port: $scope.port }, dd.dropRef() );
+               dd.transaction().perform( op );
+               dd.finish();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDrop() {
-               graph.dropInfo.nodeId = vertexId;
-               graph.dropInfo.port = $scope.port;
+               graph.dragDrop.setDropRef( { nodeId: vertexId, port: $scope.port } );
             }
 
          }

@@ -49,16 +49,16 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function jqVertexPlusHandle( portInfo ) {
-               var jqNode = $( '[data-nbe-vertex="' + portInfo.nodeId + '"]', jqGraph );
-               var jqHandle = $( '[data-nbe-port="' + portInfo.portId + '"] i', jqNode );
+            function jqVertexPlusHandle( ref ) {
+               var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', jqGraph );
+               var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
                return [ jqNode, jqHandle ];
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function jqEdge( portInfo ) {
-               return $( '[data-nbe-edge="' + portInfo.nodeId + '"]', jqGraph );
+            function jqEdge( ref ) {
+               return $( '[data-nbe-edge="' + ref.nodeId + '"]', jqGraph );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function init() {
-               if ( source.portId ) {
+               if ( source.port ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
                   jqSourceNode = jqSourceInfo[ 0 ];
                   jqSourceHandle = jqSourceInfo[ 1 ];
@@ -111,7 +111,7 @@ function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
                   jqSourceHandle = null;
                }
 
-               if ( dest.portId ) {
+               if ( dest.port ) {
                   var jqDestInfo = jqVertexPlusHandle( dest );
                   jqDestNode = jqDestInfo[ 0 ];
                   jqDestHandle = jqDestInfo[ 1 ];

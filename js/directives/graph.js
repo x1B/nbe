@@ -27,15 +27,15 @@ function ( _, $, ng, async, undefined ) {
          var model;
          var layout;
          var view;
+         var selection;
 
-         /** Transient information about links. */
+         /** Transient members, re-initialized when the model is replaced. */
          var links;
          var linksByEdge;
          var linksByVertex;
          var linkControllers;
-
-         var nextLinkId;
-         var nextEdgeId;
+         var generateLinkId;
+         var generateEdgeId;
 
          var self = $scope.nbeGraph = this;
 
@@ -44,52 +44,44 @@ function ( _, $, ng, async, undefined ) {
 
          initGraph( $scope );
 
-         /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
-         this.dropInfo = { nodeId: null, portId: null };
-
-         /** While a port is being dragged, it can be accessed here. */
-         this.dragState = { nodeId: null, port: null };
-
          // Controller API:
          this.linkByPort = linkByPort;
          this.vertexLinkControllers = vertexLinkControllers;
          this.edgeLinkControllers = edgeLinkControllers;
 
-         this.connectPortFromEdge = connectPortFromEdge;
-         this.connectPortToEdge = connectPortToEdge;
-         this.connectPortToPort = connectPortToPort;
-         this.disconnect = disconnect;
+         this.makeConnectOp = makeConnectOp;
+         this.makeDisconnectOp = makeDisconnectOp;
 
          this.selectEdge = selectEdge;
 
-         this.setDragState = function( nodeId, port ) {
-            this.dragState.nodeId = nodeId;
-            this.dragState.port = port;
-            this.jqGraph.addClass( 'highlight-' + port.type );
-            this.jqGraph.addClass( 'highlight-' + ( port.direction === 'in' ? 'out' : 'in' ) );
+         var operations = this.operations = {
+            perform: function( op ) {
+               if ( op === noOp ) {
+                  return;
+               }
+               console.log( 'perform: ', op );
+               $scope.$apply( op );
+            },
+            startTransaction: function() {
+               var transactionOps = [];
+               return {
+                  perform: function( op ) {
+                     // :TODO: manage transaction state
+                     operations.perform( op );
+                  },
+                  commit: function() {
+                     // :TODO: manage transaction state
+                  },
+                  rollBack: function() {
+                     // :TODO: manage transaction state
+                  }
+               }
+            },
+            undo: function() {},
+            redo: function() {}
          };
 
-         this.clearDragState = function() {
-            this.jqGraph.removeClass( 'highlight-' + this.dragState.port.type );
-            this.jqGraph.removeClass( 'highlight-' + ( this.dragState.port.direction === 'in' ? 'out' : 'in' ) );
-         };
-
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function idGen( prefix, currentMap ) {
-            var prefixLength = prefix ? prefix.length : 0;
-            var maxIndex = Object.keys( currentMap )
-               .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
-               .map( function( k ) { return parseInt( k.substring( prefixLength ), 10 ); } )
-               .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
-
-            return function nextId() {
-               ++maxIndex;
-               return prefix + maxIndex;
-            }
-         }
-
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function repaint() {
             $scope.canvas = {
@@ -104,155 +96,225 @@ function ( _, $, ng, async, undefined ) {
 
          $( window ).on( 'resize', async.repeatAfter( _.debounce( repaint, 20 ), $timeout, 20 ) );
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function initGraph( $scope ) {
-
             model = $scope.model;
             layout = $scope.layout;
             view = $scope.view;
+            selection = $scope.selection = { kind: null, id: null };
 
-            view.links = links = { };
-            $scope.selection = {
-               /** {String} One of "EDGE", "VERTEX", "LINK" */
-               kind: null,
-               /** {String} The ID of the selected element */
-               id: null
-            };
             linksByEdge = { };
             linksByVertex = { };
             self.linkControllers = linkControllers = { };
 
-            nextLinkId = idGen( 'lnk', links );
-            nextEdgeId = idGen( 'e', model.edges );
+            view.links = links = { };
+            generateEdgeId = idGenerator( '#', model.edges );
+            generateLinkId = idGenerator( 'lnk', links );
 
             ng.forEach( model.vertices, function( vertex, vertexId ) {
-               vertex.ports.forEach( function( port ) {
-                  if ( !port.edgeId ) {
-                     return;
-                  }
+               vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
+                  var edgeRef = { nodeId: port.edgeId, port: null };
+                  var vertexRef = { nodeId: vertexId, port: port };
                   if ( port.direction === 'in' ) {
-                     createLink( port.edgeId, null, vertexId, port );
+                     createLink( edgeRef, vertexRef );
                   }
                   else {
-                     createLink( vertexId, port, port.edgeId, null );
+                     createLink( vertexRef, edgeRef );
                   }
                } );
             } );
 
+            $( document ).on( 'keyup', handleKeys );
             repaint();
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function connectPortFromEdge( vertexId, port, edgeId ) {
-            if ( port.type !== model.edges[ edgeId ].type ) {
-               return;
+         function noOp() { }
+         noOp.undo = noOp;
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function makeConnectOp( fromRef, toRef ) {
+            Object.freeze( fromRef );
+            Object.freeze( toRef );
+
+            if( !toRef.port ) {
+               return makeConnectPortToEdgeOp( fromRef, toRef.nodeId );
             }
-            $scope.$apply( function() {
-               port.edgeId = edgeId;
-               createLink( edgeId, null, vertexId, port );
-            } );
+            else if( !fromRef.port ) {
+               return makeConnectPortToEdgeOp( toRef, fromRef.nodeId );
+            }
+            else {
+               return makeConnectPortToPortOp( fromRef, toRef );
+            }
+
+            function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
+               if ( vertexRef.port.type !== model.edges[ toEdgeId ].type ) {
+                  return noOp;
+               }
+               var edgeRef = { nodeId: toEdgeId };
+               function connectPortToEdgeOp() {
+                  vertexRef.port.edgeId = toEdgeId;
+                  createLink( vertexRef, edgeRef );
+               }
+               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef, edgeRef );
+               return connectPortToEdgeOp;
+            }
+
+            function makeConnectPortToPortOp( fromRef, toRef ) {
+               if ( fromRef.port.type !== toRef.port.type ||
+                    fromRef.port.direction === toRef.port.direction ) {
+                  return noOp;
+               }
+
+               var disconnectFromOp = makeDisconnectOp( fromRef );
+               var disconnectToOp = makeDisconnectOp( toRef );
+               function connectPortToPortOp() {
+                  disconnectFromOp();
+                  disconnectToOp();
+                  var edgeId = createEdge( fromRef, toRef );
+                  fromRef.port.edgeId = edgeId;
+                  toRef.port.edgeId = edgeId;
+                  connectPortToPortOp.undo = function() {
+                     makeDisconnectOp( fromRef, toRef )();
+                     disconnectToOp.undo();
+                     disconnectFromOp.undo();
+                  }
+               }
+               return connectPortToPortOp;
+            }
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function connectPortToEdge( vertexId, port, edgeId ) {
-            if ( port.type !== model.edges[ edgeId ].type ) {
-               return;
-            }
-            $scope.$apply( function() {
-               port.edgeId = edgeId;
-               createLink( vertexId, port, edgeId, null );
-            } );
-         }
-
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function connectPortToPort( sourceVertexId, sourcePort, destVertexId, destPort ) {
-            if ( sourcePort.type !== destPort.type || sourcePort.direction === destPort.direction ) {
-               return;
-            }
-            disconnect( sourceVertexId, sourcePort );
-            disconnect( destVertexId, destPort );
-            $scope.$apply( function() {
-               var edgeId = createEdge( sourceVertexId, sourcePort, destVertexId, destPort );
-               sourcePort.edgeId = edgeId;
-               destPort.edgeId = edgeId;
-            } );
-         }
-
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         /** Delete the link at this port, if there is one. */
-         function disconnect( vertexId, port ) {
-            if ( !port.edgeId ) {
-               return;
+         function makeDisconnectOp( ref ) {
+            Object.freeze( ref );
+            if ( !ref.port.edgeId ) {
+               return noOp;
             }
 
-            var edgeId = port.edgeId;
-            var link = linkByPort( vertexId, port );
+            var edgeId = ref.port.edgeId;
+            var link = linkByPort( ref.nodeId, ref.port );
 
-            $scope.$apply( function() {
+            function disconnectOp() {
                destroyLink( link );
-               delete port.edgeId;
+               delete ref.port.edgeId;
+               var removedEdge;
                if ( !Object.keys( linksByEdge[ edgeId ] ).length ) {
+                  removedEdge = model.edges[ edgeId ];
                   delete model.edges[ edgeId ];
                }
+
+               disconnectOp.undo = function() {
+                  if ( removedEdge ) {
+                     model.edges[ edgeId ] = removedEdge;
+                  }
+                  port.edgeId = edgeId;
+                  createLink( ref, { nodeId: edgeId } )
+               };
+            }
+
+            return disconnectOp;
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function makeCompositionOp( /* args */ ) {
+            var args = arguments;
+            var n = arguments.length;
+            function compositionOp() {
+               for ( var i = 0; i < n; ++i ) {
+                  args[ i ]();
+               }
+            }
+            compositionOp.undo = function() {
+               for ( var i = n - 1; i >= 0; --i ) {
+                  args[ i ].undo();
+               }
+            };
+            return compositionOp();
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         // :TODO: turn into op
+         function deleteEdge( edgeId ) {
+            ng.forEach( model.vertices, function( vertex, vertexId ) {
+               vertex.ports.forEach( function( port ) {
+                  if( port.edgeId === edgeId ) {
+                     disconnect( vertexId, port );
+                  }
+               } );
             } );
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function createLink( sourceNodeId, sourcePort, destNodeId, destPort ) {
-            var link = {
-               id: nextLinkId(),
-               type: ( sourcePort || destPort ).type,
-               source: { nodeId: sourceNodeId, portId: sourcePort && sourcePort.id },
-               dest: { nodeId: destNodeId, portId: destPort && destPort.id }
-            };
-            function add( map, outerKey, innerKey, value ) {
-               if ( map[ outerKey ] === undefined ) {
-                  map[ outerKey ] = { };
+         function handleKeys( event ) {
+            var DELETE = 46;
+            if ( event.keyCode === DELETE ) {
+               if ( $scope.selection.kind === 'EDGE' ) {
+                  deleteEdge( $scope.selection.id );
                }
-               map[ outerKey ][ innerKey ] = value;
             }
-            add( sourcePort ? linksByVertex : linksByEdge, sourceNodeId, link.id, link );
-            add( destPort   ? linksByVertex : linksByEdge, destNodeId,   link.id, link );
+            event.preventDefault();
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function createLink( fromRef, toRef ) {
+            var link = {
+               id: generateLinkId(),
+               type: ( fromRef.port || toRef.port ).type,
+               source: fromRef,
+               dest: toRef
+            };
+            function add( fromRef, innerKey, value ) {
+               var map = fromRef.port ? linksByVertex : linksByEdge;
+               if ( map[ fromRef.nodeId ] === undefined ) {
+                  map[ fromRef.nodeId ] = { };
+               }
+               map[ fromRef.nodeId ][ innerKey ] = value;
+            }
+            add( fromRef, link.id, link );
+            add( toRef,   link.id, link );
             links[ link.id ] = link;
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function createEdge( sourceVertexId, sourcePort, destVertexId, destPort ) {
-            var id = nextEdgeId();
-            var type = sourcePort.type;
+         function createEdge( fromRef, toRef ) {
+            var id = generateEdgeId();
+            var edgeRef = { nodeId: id };
+            var type = fromRef.port.type;
             model.edges[ id ] = {
                type: type,
-               label: type + ' ' + id
+               label: type.toLowerCase() + ' ' + id
             };
-            var sourceLayout =  layout.vertices[ sourceVertexId ];
-            var destLayout =  layout.vertices[ destVertexId ];
-            var centerX = ( parseFloat( sourceLayout.left ) + parseFloat( destLayout.left ) ) / 2;
-            var centerY = ( parseFloat( sourceLayout.top ) + parseFloat( destLayout.top ) ) / 2;
+            var fromLayout =  layout.vertices[ fromRef.nodeId ];
+            var toLayout =  layout.vertices[ toRef.nodeId ];
+            var centerX = ( parseFloat( fromLayout.left ) + parseFloat( toLayout.left ) ) / 2;
+            var centerY = ( parseFloat( fromLayout.top ) + parseFloat( toLayout.top ) ) / 2;
             layout.edges[ id ] = { left: centerX, top: centerY };
-            createLink( sourceVertexId, sourcePort, id, null, type );
-            createLink( id, null, destVertexId, destPort, type );
+            createLink( fromRef, edgeRef );
+            createLink( edgeRef, toRef );
             return id;
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function destroyLink( link ) {
-            function remove( map, outerKey, innerKey ) {
-               delete map[ outerKey ][ innerKey ];
+            function remove( map, nodeId, linkId ) {
+               delete map[ nodeId ][ linkId ];
             }
-            remove( link.source.portId ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
-            remove( link.dest.portId   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
+            remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
+            remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
             delete links[ link.id ];
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function vertexLinkControllers( vertexId ) {
             if( linksByVertex[ vertexId ] === undefined ) {
@@ -277,51 +339,103 @@ function ( _, $, ng, async, undefined ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function linkByPort( vertexId, port ) {
+            var portId = port.id;
             var links = linksByVertex[ vertexId ];
             var keys = Object.keys( links );
+
             for ( var i = keys.length; i --> 0; ) {
                var linkId = keys[ i ];
                var link = links[ linkId ];
-               if( link.source.portId === port.id || link.dest.portId === port.id ) {
-                  return links[ linkId ];
+               if ( link.source.port && link.source.port.id === portId ) {
+                  return link;
+               }
+               if ( link.dest.port && link.dest.port.id === portId ) {
+                  return link;
                }
             }
             return null;
          }
 
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function idGenerator( prefix, currentMap ) {
+            var prefixLength = prefix ? prefix.length : 0;
+            var maxIndex = Object.keys( currentMap )
+               .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
+               .map( function( k ) { return parseInt( k.substring( prefixLength ), 10 ); } )
+               .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
+
+            return function nextId() {
+               ++maxIndex;
+               return prefix + maxIndex;
+            }
+         }
+
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function clearSelection() {
-            $scope.selection.id = null;
-            $scope.selection.kind = null;
-            $( document ).off( 'keyup', handleKeys );
+            selection.id = null;
+            selection.kind = null;
          }
 
          function selectEdge( edgeId ) {
-            $scope.selection.id = edgeId;
-            $scope.selection.kind = 'EDGE';
-            $( document ).on( 'keyup', handleKeys );
+            selection.id = edgeId;
+            selection.kind = 'EDGE';
          }
 
-         function handleKeys( event ) {
-            var DELETE = 46;
-            if ( event.keyCode === DELETE ) {
-               if ( $scope.selection.kind === 'EDGE' ) {
-                  deleteEdge( $scope.selection.id );
-               }
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         self.dragDrop = (function() {
+
+            /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
+            var dropRef;
+
+            /** While a port is being dragged, it can be accessed here. */
+            var dragRef;
+
+            /** For undo/redo purposes, any operations of one drag/drop interaction are grouped into a transaction */
+            var transaction;
+
+
+            function clear() {
+               jqGraph.removeClass( 'highlight-' + dragRef.port.type );
+               jqGraph.removeClass( 'highlight-' + ( dragRef.port.direction === 'in' ? 'out' : 'in' ) );
+               dropRef = dragRef = null;
             }
-            event.preventDefault();
-         }
 
-         function deleteEdge( edgeId ) {
-            ng.forEach( model.vertices, function( vertex, vertexId ) {
-               vertex.ports.forEach( function( port ) {
-                  if( port.edgeId === edgeId ) {
-                     disconnect( vertexId, port );
-                  }
-               } );
+            return Object.freeze( {
+               start: function( ref ) {
+                  transaction = operations.startTransaction();
+                  dragRef = { nodeId: ref.nodeId, port: ref.port };
+                  jqGraph.addClass( 'highlight-' + ref.port.type );
+                  jqGraph.addClass( 'highlight-' + ( ref.port.direction === 'in' ? 'out' : 'in' ) );
+                  return transaction;
+               },
+
+               dropRef: function() {
+                  return dropRef;
+               },
+
+               transaction: function() {
+                  return transaction;
+               },
+
+               setDropRef: function( ref ) {
+                  dropRef = ref;
+               },
+
+               finish: function() {
+                  transaction.commit();
+                  clear();
+               },
+
+               cancel: function() {
+                  transaction.rollBack();
+                  clear();
+               }
             } );
-         }
+         })();
+
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

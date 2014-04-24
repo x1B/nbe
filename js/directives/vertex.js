@@ -64,7 +64,6 @@ function( _, $, jqueryUi, ng, layout, async, undefined ) {
 
             function handleVertexDragStop( event, ui ) {
                linksToRepaint = [];
-
                var layout = $scope.layout.vertices[ id ];
                layout.left = ui.position.left / $scope.canvas.width;
                layout.top = ui.position.top / $scope.canvas.height;
