@@ -1,7 +1,5 @@
 define( [
-   'underscore',
    'jquery',
-   'jquery.ui',
    'angular',
    'directives/graph',
    'directives/edge',
@@ -12,9 +10,7 @@ define( [
    'json!../data/dummy_layout.json'
 ],
 function (
-   _,
    $,
-   jqueryUi,
    ng,
    graphDirective,
    edgeDirective,
@@ -22,8 +18,7 @@ function (
    linkDirective,
    portDirective,
    dummyModel,
-   dummyLayout,
-   undefined ) {
+   dummyLayout ) {
    'use strict';
 
    var module = ng.module( 'GraphWidget', [ ] );

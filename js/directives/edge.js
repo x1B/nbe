@@ -4,13 +4,13 @@
  * It represents a multi-edge in a directed graph model, and may connect an arbitrary number of vertices.
  */
 define( [
-   'underscore',
    'jquery',
-   'jquery.ui',
    'angular',
-   '../utilities/async'
+   '../utilities/async',
+   'jquery_ui/draggable',
+   'jquery_ui/droppable'
 ],
-function ( _, $, jqueryUi, ng, async, undefined ) {
+function ( $, ng, async ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

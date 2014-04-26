@@ -71,25 +71,22 @@
   </div>
 
   </body>
-  <script type="text/javascript" src="js/lib/require.js"></script>
+  <script type="text/javascript" data-main="js/start.js" src="bower_components/requirejs/require.js"></script>
   <script type="text/javascript">
     require.config( {
       baseUrl: 'js',
       shim: {
         underscore: { exports: '_' },
-        angular: { exports: 'angular' },
-        "jquery.ui": [ 'jquery' ]
+        angular: { exports: 'angular' }
       },
       paths: {
-        "jquery": 'lib/jquery2',
-        "jquery.ui": 'lib/jquery-ui.core.interactions',
-        "underscore": 'lib/underscore',
-        "angular": 'lib/angular',
-        "text": 'lib/require/text',
-        "json": 'lib/require/json',
-        "domReady": 'lib/require/domReady'
-      },
-      deps: [ './start' ]
+        "jquery": '../bower_components/jquery/dist/jquery',
+        "jquery_ui": '../bower_components/jquery_ui',
+        "underscore": '../bower_components/underscore/underscore',
+        "angular": '../bower_components/angular/angular',
+        "text": '../bower_components/requirejs-plugins/lib/text',
+        "json": '../bower_components/requirejs-plugins/src/json'
+      }
     } );
   </script>
 

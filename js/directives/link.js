@@ -11,12 +11,13 @@
  */
 define( [
    'jquery',
-   'jquery.ui',
    'angular',
    '../utilities/layout',
-   '../utilities/pathing'
+   '../utilities/pathing',
+   'jquery_ui/draggable',
+   'jquery_ui/droppable'
 ],
-function ( $, jqueryUi, ng, layout, svgLinkPath, undefined ) {
+function ( $, ng, layout, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

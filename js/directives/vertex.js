@@ -6,14 +6,14 @@
  * It represents a vertex in a directed graph model, and may participate in an arbitrary number of edges.
  */
 define( [
-   'underscore',
    'jquery',
-   'jquery.ui',
    'angular',
    '../utilities/layout',
-   '../utilities/async'
+   '../utilities/async',
+   'jquery_ui/draggable',
+   'jquery_ui/droppable'
 ],
-function( _, $, jqueryUi, ng, layout, async, undefined ) {
+function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,6 @@ function( _, $, jqueryUi, ng, layout, async, undefined ) {
          controller: function VertexController( $scope, $element ) {
 
             var graphController = $scope.nbeGraph;
-            var vertex = $scope.vertex;
             var id = $scope.vertexId;
 
             $( $element[ 0 ] ).draggable( {

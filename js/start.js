@@ -1,12 +1,9 @@
 define( [
-   'require',
    'angular',
    'GraphWidget'
-], function start( require, ng ) {
+], function start( ng ) {
    'use strict';
 
-   require( [ 'domReady!' ], function handleDomReady( document ) {
-      ng.bootstrap( document, [ 'GraphWidget' ] );
-   } );
+   ng.bootstrap( document, [ 'GraphWidget' ] );
 
 } );

@@ -4,7 +4,7 @@ define( [
    'angular',
    '../utilities/async'
 ],
-function ( _, $, ng, async, undefined ) {
+function ( underscore, $, ng, async, undefined ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ function ( _, $, ng, async, undefined ) {
             } );
          }
 
-         $( window ).on( 'resize', async.repeatAfter( _.debounce( repaint, 20 ), $timeout, 20 ) );
+         $( window ).on( 'resize', async.repeatAfter( underscore.debounce( repaint, 20 ), $timeout, 20 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
