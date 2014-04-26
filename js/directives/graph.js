@@ -56,46 +56,44 @@ function ( underscore, $, ng, async, undefined ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          var operations = this.operations = ( function() {
-
-            var undoStack = [];
-            var redoStack = [];
-
+            var past = [];
+            var future = [];
             return {
                perform: function( op ) {
-                  if ( op === noOp ) {
-                     return;
+                  if ( op !== noOp ) {
+                     $scope.$apply( op );
+                     past.push( op );
                   }
-                  console.log( 'op: ', op );
-                  $scope.$apply( op );
-                  undoStack.push( op );
                },
                startTransaction: function() {
-                  var transactionOps = [];
+                  var tx = [];
                   return {
                      perform: function( op ) {
-                        // :TODO: manage transaction state
-                        operations.perform( op );
+                        if ( op !== noOp ) {
+                           $scope.$apply( op );
+                           tx.push( op );
+                        }
                      },
                      commit: function() {
-                        // :TODO: manage transaction state
+                        past.push( makeCompositionOp( tx ) );
                      },
                      rollBack: function() {
-                        // :TODO: manage transaction state
+                        makeCompositionOp( tx ).undo();
                      }
                   }
                },
                undo: function() {
-                  var op = undoStack.pop();
+                  var op = past.pop();
                   if ( op ) {
                      $scope.$apply( op.undo );
-                     redoStack.push( op );
+                     future.push( op );
                   }
                },
                redo: function() {
-                  var op = redoStack.pop();
+                  var op = future.pop();
                   if ( op ) {
                      $scope.$apply( op );
-                     undoStack.push( op );
+                     past.push( op );
                   }
                }
             };
@@ -229,7 +227,7 @@ function ( underscore, $, ng, async, undefined ) {
                   fromRef.port.edgeId = edgeId;
                   toRef.port.edgeId = edgeId;
                   connectPortToPortOp.undo = function() {
-                     makeDisconnectOp( fromRef, toRef )();
+                     makeDeleteEdgeOp( edgeId )();
                      disconnectToOp.undo();
                      disconnectFromOp.undo();
                   }
@@ -279,16 +277,15 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function makeCompositionOp( /* args */ ) {
-            var args = arguments;
-            var n = arguments.length;
+         function makeCompositionOp( args ) {
+            var n = args.length;
             function compositionOp() {
                for ( var i = 0; i < n; ++i ) {
                   args[ i ]();
                }
             }
             compositionOp.undo = function() {
-               for ( var i = n - 1; i >= 0; --i ) {
+               for ( var i = n; i --> 0; ) {
                   args[ i ].undo();
                }
             };
@@ -306,7 +303,7 @@ function ( underscore, $, ng, async, undefined ) {
                   }
                } );
             } );
-            return makeCompositionOp.apply( this, steps );
+            return makeCompositionOp( steps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
