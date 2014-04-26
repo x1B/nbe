@@ -51,6 +51,7 @@ function ( underscore, $, ng, async, undefined ) {
 
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
+         this.makeDeleteEdgeOp = makeDeleteEdgeOp;
 
          this.selectEdge = selectEdge;
 
@@ -59,7 +60,6 @@ function ( underscore, $, ng, async, undefined ) {
                if ( op === noOp ) {
                   return;
                }
-               console.log( 'perform: ', op );
                $scope.$apply( op );
             },
             startTransaction: function() {
@@ -234,20 +234,21 @@ function ( underscore, $, ng, async, undefined ) {
                   args[ i ].undo();
                }
             };
-            return compositionOp();
+            return compositionOp;
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         // :TODO: turn into op
-         function deleteEdge( edgeId ) {
+         function makeDeleteEdgeOp( edgeId ) {
+            var steps = [];
             ng.forEach( model.vertices, function( vertex, vertexId ) {
                vertex.ports.forEach( function( port ) {
                   if( port.edgeId === edgeId ) {
-                     disconnect( vertexId, port );
+                     steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
                   }
                } );
             } );
+            return makeCompositionOp.apply( this, steps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +257,7 @@ function ( underscore, $, ng, async, undefined ) {
             var DELETE = 46;
             if ( event.keyCode === DELETE ) {
                if ( $scope.selection.kind === 'EDGE' ) {
-                  deleteEdge( $scope.selection.id );
+                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
                }
             }
             event.preventDefault();
