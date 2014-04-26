@@ -16,7 +16,8 @@
               data-ng-cloak>
 
         <div data-ng-repeat="(vertexId, vertex) in model.vertices"
-             data-ng-style="{ left: layout.vertices[ vertexId ].left * canvas.width, top: layout.vertices[ vertexId ].top * canvas.height }"
+             data-ng-style="{ left: (layout.vertices[ vertexId ].left * canvas.width) + 'px',
+                              top: (layout.vertices[ vertexId ].top * canvas.height) + 'px' }"
              data-nbe-vertex="{{ vertexId }}"
              class="node vertex">
            <div class="header">{{ vertex.label }}</div>
@@ -52,7 +53,8 @@
              data-ng-class="{ 'selected': (selection.kind == 'EDGE' && selection.id == edgeId) }"
              data-ng-click="handleEdgeClick()"
              data-nbe-edge="{{ edgeId }}"
-             data-ng-style="{ left: layout.edges[ edgeId ].left * canvas.width, top: layout.edges[ edgeId ].top * canvas.height }"><label>{{ edge.label }}</label></div>
+             data-ng-style="{ left: (layout.edges[ edgeId ].left * canvas.width) + 'px',
+                              top: layout.edges[ edgeId ].top * canvas.height + 'px' }"><label>{{ edge.label }}</label></div>
 
         <!--
         <div class="node edge GHOST"></div>
@@ -63,31 +65,32 @@
                  data-nbe-link
                  stroke-linejoin="round"
                  class="{{ ( selection.id == link.source.nodeId || selection.id == link.dest.nodeId ) && 'selected' || '' }} link {{ link.type }}"
-                 d="M0 0 L0 0"/>
-           <path class="link GHOST" />
+                 d="M0 0 L0 0"></path>
+           <path class="link GHOST"></path>
         </svg>
 
      </section>
   </div>
 
-  </body>
   <script type="text/javascript" data-main="js/start.js" src="bower_components/requirejs/require.js"></script>
   <script type="text/javascript">
-    require.config( {
-      baseUrl: 'js',
-      shim: {
+  require.config( {
+     baseUrl: 'js',
+     shim: {
         underscore: { exports: '_' },
         angular: { exports: 'angular' }
-      },
-      paths: {
+     },
+     paths: {
         "jquery": '../bower_components/jquery/dist/jquery',
         "jquery_ui": '../bower_components/jquery_ui',
         "underscore": '../bower_components/underscore/underscore',
         "angular": '../bower_components/angular/angular',
         "text": '../bower_components/requirejs-plugins/lib/text',
         "json": '../bower_components/requirejs-plugins/src/json'
-      }
-    } );
+     }
+  } );
   </script>
+
+  </body>
 
 </html>

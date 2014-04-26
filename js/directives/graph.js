@@ -45,41 +45,60 @@ function ( underscore, $, ng, async, undefined ) {
          initGraph( $scope );
 
          // Controller API:
-         this.linkByPort = linkByPort;
          this.vertexLinkControllers = vertexLinkControllers;
          this.edgeLinkControllers = edgeLinkControllers;
 
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
-         this.makeDeleteEdgeOp = makeDeleteEdgeOp;
 
          this.selectEdge = selectEdge;
 
-         var operations = this.operations = {
-            perform: function( op ) {
-               if ( op === noOp ) {
-                  return;
-               }
-               $scope.$apply( op );
-            },
-            startTransaction: function() {
-               var transactionOps = [];
-               return {
-                  perform: function( op ) {
-                     // :TODO: manage transaction state
-                     operations.perform( op );
-                  },
-                  commit: function() {
-                     // :TODO: manage transaction state
-                  },
-                  rollBack: function() {
-                     // :TODO: manage transaction state
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         var operations = this.operations = ( function() {
+            var past = [];
+            var future = [];
+            return {
+               perform: function( op ) {
+                  if ( op !== noOp ) {
+                     $scope.$apply( op );
+                     past.push( op );
+                  }
+               },
+               startTransaction: function() {
+                  var tx = [];
+                  return {
+                     perform: function( op ) {
+                        if ( op !== noOp ) {
+                           $scope.$apply( op );
+                           tx.push( op );
+                        }
+                     },
+                     commit: function() {
+                        past.push( makeCompositionOp( tx ) );
+                     },
+                     rollBack: function() {
+                        $scope.$apply( makeCompositionOp( tx ).undo );
+                     }
+                  }
+               },
+               undo: function() {
+                  var op = past.pop();
+                  if ( op ) {
+                     $scope.$apply( op.undo );
+                     future.push( op );
+                  }
+               },
+               redo: function() {
+                  var op = future.pop();
+                  if ( op ) {
+                     $scope.$apply( op );
+                     past.push( op );
                   }
                }
-            },
-            undo: function() {},
-            redo: function() {}
-         };
+            };
+
+         } )();
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,8 +144,38 @@ function ( underscore, $, ng, async, undefined ) {
                } );
             } );
 
-            $( document ).on( 'keyup', handleKeys );
+            $( document ).on( 'keydown', handleKeys );
             repaint();
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function handleKeys( event ) {
+            var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;
+
+            if ( event.keyCode === KEY_CODE_DELETE ) {
+               if ( $scope.selection.kind === 'EDGE' ) {
+                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
+               }
+            }
+            else if ( event.keyCode === KEY_CODE_ESCAPE ) {
+               if ( self.dragDrop.transaction() ) {
+                  self.dragDrop.cancel();
+               }
+            }
+            else if ( event.metaKey || event.ctrlKey ) {
+               if ( event.keyCode === KEY_CODE_Z ) {
+                  if ( event.shiftKey ) {
+                     operations.redo();
+                  }
+                  else {
+                     operations.undo();
+                  }
+               }
+               else if ( event.keyCode === KEY_CODE_Y ) {
+                  operations.redo();
+               }
+            }
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,9 +206,14 @@ function ( underscore, $, ng, async, undefined ) {
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
-                  createLink( vertexRef, edgeRef );
+                  if ( vertexRef.port.direction === 'in' ) {
+                     createLink( edgeRef, vertexRef );
+                  }
+                  else {
+                     createLink( vertexRef, edgeRef );
+                  }
                }
-               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef, edgeRef );
+               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
                return connectPortToEdgeOp;
             }
 
@@ -178,7 +232,7 @@ function ( underscore, $, ng, async, undefined ) {
                   fromRef.port.edgeId = edgeId;
                   toRef.port.edgeId = edgeId;
                   connectPortToPortOp.undo = function() {
-                     makeDisconnectOp( fromRef, toRef )();
+                     makeDeleteEdgeOp( edgeId )();
                      disconnectToOp.undo();
                      disconnectFromOp.undo();
                   }
@@ -191,14 +245,15 @@ function ( underscore, $, ng, async, undefined ) {
 
          function makeDisconnectOp( ref ) {
             Object.freeze( ref );
-            if ( !ref.port.edgeId ) {
-               return noOp;
-            }
-
-            var edgeId = ref.port.edgeId;
-            var link = linkByPort( ref.nodeId, ref.port );
 
             function disconnectOp() {
+               if ( !ref.port.edgeId ) {
+                  disconnectOp.undo = noOp;
+                  return;
+               }
+               var edgeId = ref.port.edgeId;
+               var link = linkByPort( ref.nodeId, ref.port );
+
                destroyLink( link );
                delete ref.port.edgeId;
                var removedEdge;
@@ -211,8 +266,14 @@ function ( underscore, $, ng, async, undefined ) {
                   if ( removedEdge ) {
                      model.edges[ edgeId ] = removedEdge;
                   }
-                  port.edgeId = edgeId;
-                  createLink( ref, { nodeId: edgeId } )
+                  var edgeRef = { nodeId: edgeId };
+                  ref.port.edgeId = edgeId;
+                  if ( ref.port.direction === 'in' ) {
+                     createLink( edgeRef, ref );
+                  }
+                  else {
+                     createLink( ref, edgeRef );
+                  }
                };
             }
 
@@ -221,16 +282,15 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function makeCompositionOp( /* args */ ) {
-            var args = arguments;
-            var n = arguments.length;
+         function makeCompositionOp( args ) {
+            var n = args.length;
             function compositionOp() {
                for ( var i = 0; i < n; ++i ) {
                   args[ i ]();
                }
             }
             compositionOp.undo = function() {
-               for ( var i = n - 1; i >= 0; --i ) {
+               for ( var i = n; i --> 0; ) {
                   args[ i ].undo();
                }
             };
@@ -248,19 +308,7 @@ function ( underscore, $, ng, async, undefined ) {
                   }
                } );
             } );
-            return makeCompositionOp.apply( this, steps );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function handleKeys( event ) {
-            var DELETE = 46;
-            if ( event.keyCode === DELETE ) {
-               if ( $scope.selection.kind === 'EDGE' ) {
-                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
-               }
-            }
-            event.preventDefault();
+            return makeCompositionOp( steps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +434,7 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         self.dragDrop = (function() {
+         self.dragDrop = ( function() {
 
             /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
             var dropRef;
@@ -397,15 +445,17 @@ function ( underscore, $, ng, async, undefined ) {
             /** For undo/redo purposes, any operations of one drag/drop interaction are grouped into a transaction */
             var transaction;
 
+            var onCancel;
 
             function clear() {
                jqGraph.removeClass( 'highlight-' + dragRef.port.type );
                jqGraph.removeClass( 'highlight-' + ( dragRef.port.direction === 'in' ? 'out' : 'in' ) );
-               dropRef = dragRef = null;
+               dropRef = dragRef = transaction = null;
             }
 
             return Object.freeze( {
-               start: function( ref ) {
+               start: function( ref, cancel ) {
+                  onCancel = cancel;
                   transaction = operations.startTransaction();
                   dragRef = { nodeId: ref.nodeId, port: ref.port };
                   jqGraph.addClass( 'highlight-' + ref.port.type );
@@ -426,16 +476,21 @@ function ( underscore, $, ng, async, undefined ) {
                },
 
                finish: function() {
-                  transaction.commit();
-                  clear();
+                  if ( transaction ) {
+                     transaction.commit();
+                     clear();
+                  }
                },
 
                cancel: function() {
-                  transaction.rollBack();
-                  clear();
+                  if ( transaction ) {
+                     transaction.rollBack();
+                     clear();
+                     onCancel();
+                  }
                }
             } );
-         })();
+         } )();
 
       }
 

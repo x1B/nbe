@@ -19,7 +19,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createPortDirective( $timeout ) {
+   function createPortDirective() {
 
       return {
          restrict: 'A',
@@ -64,11 +64,13 @@ function ( $, ng, layout, svgLinkPath ) {
                var jqHandle = $( event.target );
 
                var dd = graph.dragDrop;
-               var transaction = dd.start( { nodeId: $scope.vertexId, port: $scope.port} );
+               var transaction = dd.start( { nodeId: $scope.vertexId, port: $scope.port}, function() {
+                  $( 'i', $element[ 0 ] ).trigger( 'mouseup' );
+               } );
 
                if ( $scope.port.edgeId ) {
-                  var disonnectOp = graph.makeDisconnectOp( { nodeId: $scope.vertexId, port: $scope.port } );
-                  transaction.perform( disonnectOp );
+                  var disconnectOp = graph.makeDisconnectOp( { nodeId: $scope.vertexId, port: $scope.port } );
+                  transaction.perform( disconnectOp );
                }
 
                var p = jqHandle.offset();
@@ -123,7 +125,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', createPortDirective ] );
+         module.directive( DIRECTIVE_NAME, createPortDirective );
       }
    }
 
