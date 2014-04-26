@@ -78,7 +78,7 @@ function ( underscore, $, ng, async, undefined ) {
                         past.push( makeCompositionOp( tx ) );
                      },
                      rollBack: function() {
-                        makeCompositionOp( tx ).undo();
+                        $scope.$apply( makeCompositionOp( tx ).undo );
                      }
                   }
                },
@@ -151,11 +151,16 @@ function ( underscore, $, ng, async, undefined ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function handleKeys( event ) {
-            var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90;
+            var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;
 
             if ( event.keyCode === KEY_CODE_DELETE ) {
                if ( $scope.selection.kind === 'EDGE' ) {
                   operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
+               }
+            }
+            else if ( event.keyCode === KEY_CODE_ESCAPE ) {
+               if ( self.dragDrop.transaction() ) {
+                  self.dragDrop.cancel();
                }
             }
             else if ( event.metaKey || event.ctrlKey ) {
@@ -440,15 +445,17 @@ function ( underscore, $, ng, async, undefined ) {
             /** For undo/redo purposes, any operations of one drag/drop interaction are grouped into a transaction */
             var transaction;
 
+            var onCancel;
 
             function clear() {
                jqGraph.removeClass( 'highlight-' + dragRef.port.type );
                jqGraph.removeClass( 'highlight-' + ( dragRef.port.direction === 'in' ? 'out' : 'in' ) );
-               dropRef = dragRef = null;
+               dropRef = dragRef = transaction = null;
             }
 
             return Object.freeze( {
-               start: function( ref ) {
+               start: function( ref, cancel ) {
+                  onCancel = cancel;
                   transaction = operations.startTransaction();
                   dragRef = { nodeId: ref.nodeId, port: ref.port };
                   jqGraph.addClass( 'highlight-' + ref.port.type );
@@ -469,13 +476,18 @@ function ( underscore, $, ng, async, undefined ) {
                },
 
                finish: function() {
-                  transaction.commit();
-                  clear();
+                  if ( transaction ) {
+                     transaction.commit();
+                     clear();
+                  }
                },
 
                cancel: function() {
-                  transaction.rollBack();
-                  clear();
+                  if ( transaction ) {
+                     transaction.rollBack();
+                     clear();
+                     onCancel();
+                  }
                }
             } );
          } )();
