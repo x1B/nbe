@@ -45,41 +45,62 @@ function ( underscore, $, ng, async, undefined ) {
          initGraph( $scope );
 
          // Controller API:
-         this.linkByPort = linkByPort;
          this.vertexLinkControllers = vertexLinkControllers;
          this.edgeLinkControllers = edgeLinkControllers;
 
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
-         this.makeDeleteEdgeOp = makeDeleteEdgeOp;
 
          this.selectEdge = selectEdge;
 
-         var operations = this.operations = {
-            perform: function( op ) {
-               if ( op === noOp ) {
-                  return;
-               }
-               $scope.$apply( op );
-            },
-            startTransaction: function() {
-               var transactionOps = [];
-               return {
-                  perform: function( op ) {
-                     // :TODO: manage transaction state
-                     operations.perform( op );
-                  },
-                  commit: function() {
-                     // :TODO: manage transaction state
-                  },
-                  rollBack: function() {
-                     // :TODO: manage transaction state
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         var operations = this.operations = ( function() {
+
+            var undoStack = [];
+            var redoStack = [];
+
+            return {
+               perform: function( op ) {
+                  if ( op === noOp ) {
+                     return;
+                  }
+                  console.log( 'op: ', op );
+                  $scope.$apply( op );
+                  undoStack.push( op );
+               },
+               startTransaction: function() {
+                  var transactionOps = [];
+                  return {
+                     perform: function( op ) {
+                        // :TODO: manage transaction state
+                        operations.perform( op );
+                     },
+                     commit: function() {
+                        // :TODO: manage transaction state
+                     },
+                     rollBack: function() {
+                        // :TODO: manage transaction state
+                     }
+                  }
+               },
+               undo: function() {
+                  var op = undoStack.pop();
+                  if ( op ) {
+                     $scope.$apply( op.undo );
+                     redoStack.push( op );
+                  }
+               },
+               redo: function() {
+                  var op = redoStack.pop();
+                  if ( op ) {
+                     $scope.$apply( op );
+                     undoStack.push( op );
                   }
                }
-            },
-            undo: function() {},
-            redo: function() {}
-         };
+            };
+
+         } )();
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,8 +146,33 @@ function ( underscore, $, ng, async, undefined ) {
                } );
             } );
 
-            $( document ).on( 'keyup', handleKeys );
+            $( document ).on( 'keydown', handleKeys );
             repaint();
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function handleKeys( event ) {
+            var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90;
+
+            if ( event.keyCode === KEY_CODE_DELETE ) {
+               if ( $scope.selection.kind === 'EDGE' ) {
+                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
+               }
+            }
+            else if ( event.metaKey || event.ctrlKey ) {
+               if ( event.keyCode === KEY_CODE_Z ) {
+                  if ( event.shiftKey ) {
+                     operations.redo();
+                  }
+                  else {
+                     operations.undo();
+                  }
+               }
+               else if ( event.keyCode === KEY_CODE_Y ) {
+                  operations.redo();
+               }
+            }
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,9 +203,14 @@ function ( underscore, $, ng, async, undefined ) {
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
-                  createLink( vertexRef, edgeRef );
+                  if ( vertexRef.port.direction === 'in' ) {
+                     createLink( edgeRef, vertexRef );
+                  }
+                  else {
+                     createLink( vertexRef, edgeRef );
+                  }
                }
-               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef, edgeRef );
+               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
                return connectPortToEdgeOp;
             }
 
@@ -191,14 +242,15 @@ function ( underscore, $, ng, async, undefined ) {
 
          function makeDisconnectOp( ref ) {
             Object.freeze( ref );
-            if ( !ref.port.edgeId ) {
-               return noOp;
-            }
-
-            var edgeId = ref.port.edgeId;
-            var link = linkByPort( ref.nodeId, ref.port );
 
             function disconnectOp() {
+               if ( !ref.port.edgeId ) {
+                  disconnectOp.undo = noOp;
+                  return;
+               }
+               var edgeId = ref.port.edgeId;
+               var link = linkByPort( ref.nodeId, ref.port );
+
                destroyLink( link );
                delete ref.port.edgeId;
                var removedEdge;
@@ -211,8 +263,14 @@ function ( underscore, $, ng, async, undefined ) {
                   if ( removedEdge ) {
                      model.edges[ edgeId ] = removedEdge;
                   }
-                  port.edgeId = edgeId;
-                  createLink( ref, { nodeId: edgeId } )
+                  var edgeRef = { nodeId: edgeId };
+                  ref.port.edgeId = edgeId;
+                  if ( ref.port.direction === 'in' ) {
+                     createLink( edgeRef, ref );
+                  }
+                  else {
+                     createLink( ref, edgeRef );
+                  }
                };
             }
 
@@ -249,18 +307,6 @@ function ( underscore, $, ng, async, undefined ) {
                } );
             } );
             return makeCompositionOp.apply( this, steps );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function handleKeys( event ) {
-            var DELETE = 46;
-            if ( event.keyCode === DELETE ) {
-               if ( $scope.selection.kind === 'EDGE' ) {
-                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
-               }
-            }
-            event.preventDefault();
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +432,7 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         self.dragDrop = (function() {
+         self.dragDrop = ( function() {
 
             /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
             var dropRef;
@@ -435,7 +481,7 @@ function ( underscore, $, ng, async, undefined ) {
                   clear();
                }
             } );
-         })();
+         } )();
 
       }
 
