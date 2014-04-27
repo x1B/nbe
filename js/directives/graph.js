@@ -158,6 +158,9 @@ function ( underscore, $, ng, async, undefined ) {
                if ( $scope.selection.kind === 'EDGE' ) {
                   operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
                }
+               else if ( $scope.selection.kind === 'VERTEX' ) {
+                  operations.perform( makeDeleteVertexOp( $scope.selection.id ) );
+               }
             }
             else if ( event.keyCode === KEY_CODE_ESCAPE ) {
                if ( self.dragDrop.transaction() ) {
@@ -309,6 +312,24 @@ function ( underscore, $, ng, async, undefined ) {
                   }
                } );
             } );
+            return makeCompositionOp( steps );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function makeDeleteVertexOp( vertexId ) {
+            var steps = [];
+            var vertex = model.vertices[ vertexId ];
+            vertex.ports.forEach( function( port ) {
+               steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
+            } );
+            function deleteVertexOp() {
+               delete model.vertices[ vertexId ];
+               deleteVertexOp.undo = function deleteVertexUndoOp() {
+                  model.vertices[ vertexId ] = vertex;
+               };
+            }
+            steps.push( deleteVertexOp );
             return makeCompositionOp( steps );
          }
 
