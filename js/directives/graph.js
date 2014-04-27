@@ -1,10 +1,10 @@
 define( [
-   'underscore',
    'jquery',
    'angular',
-   '../utilities/async'
+   '../utilities/async',
+   'text!./graph.html'
 ],
-function ( underscore, $, ng, async, undefined ) {
+function ( $, ng, async, graphHtml, undefined ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +20,19 @@ function ( underscore, $, ng, async, undefined ) {
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
    function createGraphDirective( $timeout ) {
+
+      return {
+         template: graphHtml,
+         replace: true,
+         restrict: 'A',
+         scope: {
+            model: '=nbeGraph',
+            layout: '=nbeGraphLayout'
+         },
+         controller: GraphController
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function GraphController( $scope, $element ) {
 
@@ -114,21 +127,21 @@ function ( underscore, $, ng, async, undefined ) {
             } );
          }
 
-         $( window ).on( 'resize', async.repeatAfter( underscore.debounce( repaint, 20 ), $timeout, 20 ) );
+         $( window ).on( 'resize', async.ensure( repaint, $timeout, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function initGraph( $scope ) {
             model = $scope.model;
             layout = $scope.layout;
-            view = $scope.view;
+            view = $scope.view = {};
             selection = $scope.selection = { kind: null, id: null };
 
             linksByEdge = { };
             linksByVertex = { };
             self.linkControllers = linkControllers = { };
 
-            view.links = links = { };
+            links = $scope.view.links = {};
             generateEdgeId = idGenerator( '#', model.edges );
             generateLinkId = idGenerator( 'lnk', links );
 
@@ -518,19 +531,6 @@ function ( underscore, $, ng, async, undefined ) {
 
       }
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      return {
-         restrict: 'A',
-         /**
-          * @type {{
-          *    model: {edges: Object, vertices: {ports: {in: Object, out: Object}}},
-          *    layout: Object,
-          *    view: Object
-          * }}
-          */
-         controller: GraphController
-      };
    }
 
 

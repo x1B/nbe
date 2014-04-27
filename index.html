@@ -1,96 +1,17 @@
 <!doctype html>
 <html>
   <head>
-    <title>NBE</title>
+    <title>NBE Demo</title>
     <meta charset="UTF-8">
-    <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
   </head>
   <body>
 
-  <!-- Template for the node based editor -->
-  <div data-ng-controller="GraphWidget">
-     <section class="graph"
-              data-nbe-graph
-              data-ng-cloak>
-
-        <div data-ng-repeat="(vertexId, vertex) in model.vertices"
-             data-ng-style="{ left: (layout.vertices[ vertexId ].left * canvas.width) + 'px',
-                              top: (layout.vertices[ vertexId ].top * canvas.height) + 'px' }"
-             data-nbe-vertex="{{ vertexId }}"
-             data-ng-click="handleVertexClick()"
-             data-ng-class="{ 'selected': (selection.kind == 'VERTEX' && selection.id == vertexId) }"
-             class="node vertex">
-           <div class="header">{{ vertex.label }}</div>
-           <div class="port-group">
-              <div class="ports in">
-                 <div data-ng-class="port.type"
-                      data-ng-repeat="port in vertex.ports | nbeInputPorts"
-                      data-nbe-port="{{ port.id }}"
-                      data-nbe-port-group="in"
-                      class="port"><i></i>{{ port.label }}
-                 </div>
-              </div>
-              <div class="ports out">
-                 <div data-ng-class="port.type"
-                      data-ng-repeat="port in vertex.ports | nbeOutputPorts"
-                      data-nbe-port="{{ port.id }}"
-                      data-nbe-port-group="out"
-                      class="port">{{ port.label }}<i></i></div>
-              </div>
-           </div>
-        </div>
-
-        <!--
-        <div clas="node vertex GHOST">
-           <div class="header">New {{ ghost.vertex.label }}</div>
-        </div>
-        -->
-
-        <div class="port GHOST" style="display: none;"><i></i></div>
-
-        <div data-ng-repeat="(edgeId, edge) in model.edges"
-             class="node edge {{ edge.type }}"
-             data-ng-class="{ 'selected': (selection.kind == 'EDGE' && selection.id == edgeId) }"
-             data-ng-click="handleEdgeClick()"
-             data-nbe-edge="{{ edgeId }}"
-             data-ng-style="{ left: (layout.edges[ edgeId ].left * canvas.width) + 'px',
-                              top: layout.edges[ edgeId ].top * canvas.height + 'px' }"><label>{{ edge.label }}</label></div>
-
-        <!--
-        <div class="node edge GHOST"></div>
-        -->
-        <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
-           <!-- ngClass does not seem to work for SVG, is added by nbeLink -->
-           <path data-ng-repeat="(id, link) in view.links"
-                 data-nbe-link
-                 stroke-linejoin="round"
-                 class="{{ ( selection.id == link.source.nodeId || selection.id == link.dest.nodeId ) && 'selected' || '' }} link {{ link.type }}"
-                 d="M0 0 L0 0"></path>
-           <path class="link GHOST"></path>
-        </svg>
-
-     </section>
+  <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <div data-ng-controller="GraphWidget" data-ng-cloak>
+     <div data-nbe-graph="model" data-nbe-graph-layout="layout"></div>
   </div>
-
   <script type="text/javascript" data-main="js/start.js" src="bower_components/requirejs/require.js"></script>
-  <script type="text/javascript">
-  require.config( {
-     baseUrl: 'js',
-     shim: {
-        underscore: { exports: '_' },
-        angular: { exports: 'angular' }
-     },
-     paths: {
-        "jquery": '../bower_components/jquery/dist/jquery',
-        "jquery_ui": '../bower_components/jquery_ui',
-        "underscore": '../bower_components/underscore/underscore',
-        "angular": '../bower_components/angular/angular',
-        "text": '../bower_components/requirejs-plugins/lib/text',
-        "json": '../bower_components/requirejs-plugins/src/json'
-     }
-  } );
-  </script>
+  <script type="text/javascript" src="require_config.js"></script>
 
   </body>
-
 </html>

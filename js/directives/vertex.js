@@ -10,10 +10,11 @@ define( [
    'angular',
    '../utilities/layout',
    '../utilities/async',
+   'text!./vertex.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function( $, ng, layout, async ) {
+function( $, ng, layout, async, vertexHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,12 +26,11 @@ function( $, ng, layout, async ) {
    function createVertexDirective( $timeout ) {
       return {
          restrict: 'A',
+         replace: true,
+         template: vertexHtml,
          controller: function VertexController( $scope, $element ) {
-
             var graphController = $scope.nbeGraph;
             var id = $scope[ ATTR_VERTEX_ID ];
-
-            var linksToRepaint = [];
 
             var jqVertex = $( $element[ 0 ] );
             jqVertex.draggable( {
@@ -45,6 +45,8 @@ function( $, ng, layout, async ) {
             var jqGraph = jqVertex.parent();
             this.calculateBox = calculateBox;
             $scope.nbeVertex = this;
+            // Keep track of links that need repainting
+            var linksToRepaint = [];
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
