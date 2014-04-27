@@ -16,7 +16,8 @@
                { "id": "i1", "label": "Another Resource (S)", "type": "RESOURCE", "direction": "in"  },
                { "id": "i2", "label": "Play Music On", "type": "FLAG", "direction": "in"  },
                { "id": "o0", "label": "Other Resource (M)", "type": "RESOURCE", "edgeId": "e0" },
-               { "id": "o1", "label": "Cancel Action", "type": "ACTION" }
+               { "id": "o1", "label": "Cancel Action", "type": "ACTION" },
+               { "id": "o2", "label": "Active Badness", "type": "FLAG", "edgeId": "e2" }
          ]
       },
       "v2": {
