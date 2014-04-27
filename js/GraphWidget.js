@@ -28,7 +28,6 @@ function (
    function GraphWidget( $scope ) {
       $scope.model = dummyModel;
       $scope.layout = dummyLayout;
-      $scope.view = { };
    }
 
    GraphWidget.$inject = [ '$scope' ];

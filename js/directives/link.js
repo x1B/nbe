@@ -26,7 +26,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createLinkDirective( $timeout ) {
+   function createLinkDirective( $window ) {
 
       return {
          restrict: 'A',
@@ -41,22 +41,23 @@ function ( $, ng, layout, svgLinkPath ) {
             // API to be called when attached edges or vertices have been moved:
             var repaint = this.repaint = pathUpdater();
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
             // Draw links after nodes, so that bounding boxes are available:
-            $timeout( init, 0 );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            function jqVertexPlusHandle( ref ) {
-               var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
-               var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
-               return [ jqNode, jqHandle ];
+            var initTimeout;
+            function tryInit() {
+               if( !init() ) {
+                  // $timeout is not needed (no $scope manipulation)
+                  initTimeout = $window.setTimeout( tryInit, 5 );
+               }
             }
+            tryInit();
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            function jqEdge( ref ) {
-               return $( '[data-nbe-edge="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
-            }
+            $scope.$on( '$destroy', function() {
+               if ( initTimeout ) {
+                  $window.clearTimeout( initTimeout );
+               }
+            } );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -106,23 +107,52 @@ function ( $, ng, layout, svgLinkPath ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
                   jqSourceNode = jqSourceInfo[ 0 ];
                   jqSourceHandle = jqSourceInfo[ 1 ];
+                  if ( !jqSourceHandle.length ) {
+                     return false;
+                  }
                }
                else {
                   jqSourceNode = jqEdge( $scope.link.source );
                   jqSourceHandle = null;
+                  if ( !jqSourceNode.length ) {
+                     return false;
+                  }
                }
+
 
                var dest = $scope.link.dest;
                if ( dest.port ) {
                   var jqDestInfo = jqVertexPlusHandle( dest );
                   jqDestNode = jqDestInfo[ 0 ];
                   jqDestHandle = jqDestInfo[ 1 ];
+                  if ( !jqDestHandle.length ) {
+                     return false;
+                  }
                }
                else {
                   jqDestNode = jqEdge( dest );
                   jqDestHandle = null;
+                  if ( !jqDestNode.length ) {
+                     return false;
+                  }
                }
+
                repaint();
+               return true;
+
+               ///////////////////////////////////////////////////////////////////////////////////////////////
+
+               function jqVertexPlusHandle( ref ) {
+                  var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
+                  var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
+                  return [ jqNode, jqHandle ];
+               }
+
+               ///////////////////////////////////////////////////////////////////////////////////////////////
+
+               function jqEdge( ref ) {
+                  return $( '[data-nbe-edge="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +166,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', createLinkDirective ] );
+         module.directive( DIRECTIVE_NAME, [ '$window', createLinkDirective ] );
       }
    }
 

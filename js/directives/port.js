@@ -3,10 +3,11 @@ define( [
    'angular',
    '../utilities/layout',
    '../utilities/pathing',
+   'text!./port.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, layout, pathing ) {
+function ( $, ng, layout, pathing, portHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +23,9 @@ function ( $, ng, layout, pathing ) {
 
       return {
          restrict: 'A',
-         controller: function PortController( $scope, $element, $attrs ) {
+         replace: true,
+         template: portHtml,
+         link: function linkPort( $scope, $element, $attrs ) {
 
             // Quick access to essential data for drawing links:
             var graph = $scope.nbeGraph;
@@ -31,7 +34,7 @@ function ( $, ng, layout, pathing ) {
             var vertexId = $scope[ ATTR_VERTEX_ID ];
             var jqGraph = graph.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
-            var jqLinkGhost= $( '.link.GHOST', jqGraph );
+            var jqLinkGhost = $( '.link.GHOST', jqGraph );
             // Drag starting position, relative to graph canvas.
             var fromLeft, fromTop, fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -65,7 +68,10 @@ function ( $, ng, layout, pathing ) {
                } );
 
                if ( $scope.port.edgeId ) {
-                  var disconnectOp = graph.makeDisconnectOp( { nodeId: $scope[ ATTR_VERTEX_ID ], port: $scope.port } );
+                  var disconnectOp = graph.makeDisconnectOp( {
+                     nodeId: $scope[ ATTR_VERTEX_ID ],
+                     port: $scope.port
+                  } );
                   transaction.perform( disconnectOp );
                }
 
@@ -87,7 +93,10 @@ function ( $, ng, layout, pathing ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
                var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
-               jqLinkGhost.attr( 'd', pathing.cubic( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true ) );
+               jqLinkGhost.attr(
+                  'd',
+                  pathing.cubic( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true )
+               );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-define([], function () {
+define([ 'underscore' ], function ( underscore ) {
 
    function repeatAfter( f, $timeout, delay ) {
       delay = delay || 50;
@@ -14,7 +14,12 @@ define([], function () {
       }
    }
 
+   function ensure( f, $timeout, t ) {
+      return repeatAfter( underscore.debounce( f, t || 3 ), $timeout, t || 10 );
+   }
+
    return {
+      ensure: ensure,
       repeatAfter: repeatAfter
    }
 

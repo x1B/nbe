@@ -7,10 +7,11 @@ define( [
    'jquery',
    'angular',
    '../utilities/async',
+   'text!./edge.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, async ) {
+function ( $, ng, async, edgeHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,19 +23,17 @@ function ( $, ng, async ) {
    function createEdgeDirective( $timeout ) {
       return {
          restrict: 'A',
+         replace: true,
+         template: edgeHtml,
          controller: function EdgeController( $scope, $element ) {
 
-            var jqEdge = $( $element[ 0 ] );
-
-            jqEdge.draggable( {
+            $( $element[ 0 ] ).draggable( {
                stack: '.graph *',
                containment: 'parent',
                start: handleEdgeDragStart,
-               drag: async.repeatAfter( handleEdgeDrag, $timeout ),
+               drag: async.ensure( handleEdgeDrag, $timeout ),
                stop: handleDrop
-            } );
-
-            jqEdge.droppable( {
+            } ).droppable( {
                accept: 'i',
                hoverClass: 'drop-hover',
                drop: handleDrop
