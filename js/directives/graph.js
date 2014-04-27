@@ -52,6 +52,7 @@ function ( underscore, $, ng, async, undefined ) {
          this.makeDisconnectOp = makeDisconnectOp;
 
          this.selectEdge = selectEdge;
+         this.selectVertex = selectVertex;
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -156,6 +157,9 @@ function ( underscore, $, ng, async, undefined ) {
             if ( event.keyCode === KEY_CODE_DELETE ) {
                if ( $scope.selection.kind === 'EDGE' ) {
                   operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
+               }
+               else if ( $scope.selection.kind === 'VERTEX' ) {
+                  operations.perform( makeDeleteVertexOp( $scope.selection.id ) );
                }
             }
             else if ( event.keyCode === KEY_CODE_ESCAPE ) {
@@ -313,6 +317,24 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         function makeDeleteVertexOp( vertexId ) {
+            var steps = [];
+            var vertex = model.vertices[ vertexId ];
+            vertex.ports.forEach( function( port ) {
+               steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
+            } );
+            function deleteVertexOp() {
+               delete model.vertices[ vertexId ];
+               deleteVertexOp.undo = function deleteVertexUndoOp() {
+                  model.vertices[ vertexId ] = vertex;
+               };
+            }
+            steps.push( deleteVertexOp );
+            return makeCompositionOp( steps );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          function createLink( fromRef, toRef ) {
             var link = {
                id: generateLinkId(),
@@ -430,6 +452,11 @@ function ( underscore, $, ng, async, undefined ) {
          function selectEdge( edgeId ) {
             selection.id = edgeId;
             selection.kind = 'EDGE';
+         }
+
+         function selectVertex( vertexId ) {
+            selection.id = vertexId;
+            selection.kind = 'VERTEX';
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
