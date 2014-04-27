@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#7](https://github.com/x1B/nbe/issues/7): Cleaned up most dead code.
 - [#13](https://github.com/x1B/nbe/issues/13): Fixed link direction when connecting input-port to output-port.
 - [#10](https://github.com/x1B/nbe/issues/10): Remove embedded bootstrap code.
 - [#5](https://github.com/x1B/nbe/issues/5): Allow to select vertices and remove them using DELETE key.

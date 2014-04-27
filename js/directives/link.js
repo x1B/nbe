@@ -28,30 +28,26 @@ function ( $, ng, layout, svgLinkPath ) {
 
    function createLinkDirective( $timeout ) {
 
-      // :TODO: use isolate scope
       return {
          restrict: 'A',
          controller: function LinkController( $scope, $element ) {
 
-            var graph = $scope.nbeGraph;
-            graph.linkControllers[ $scope.link.id ] = this;
-            var jqGraph = graph.jqGraph;
-            var graphOffset = jqGraph.offset();
+            $scope.nbeGraph.linkControllers[ $scope.link.id ] = this;
 
-            var source = $scope.link.source;
-            var dest = $scope.link.dest;
-
+            // Cache information that frequently accessed when repainting (during drag/drop):
             var jqSourceNode, jqSourceHandle;
             var jqDestNode, jqDestHandle;
 
+            // API to be called when attached edges or vertices have been moved:
             var repaint = this.repaint = pathUpdater();
 
+            // Draw links after nodes, so that bounding boxes are available:
             $timeout( init, 0 );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function jqVertexPlusHandle( ref ) {
-               var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', jqGraph );
+               var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
                var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
                return [ jqNode, jqHandle ];
             }
@@ -59,12 +55,14 @@ function ( $, ng, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function jqEdge( ref ) {
-               return $( '[data-nbe-edge="' + ref.nodeId + '"]', jqGraph );
+               return $( '[data-nbe-edge="' + ref.nodeId + '"]', $scope.nbeGraph.jqGraph );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function pathUpdater() {
+               var jqGraph = $scope.nbeGraph.jqGraph;
+
                var from = [ 0, 0 ];
                var fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
                var to = [ 0, 0 ];
@@ -75,6 +73,7 @@ function ( $, ng, layout, svgLinkPath ) {
                    boundingBox = layout.boundingBox;
 
                function calculateLinkEnd( jqNode, jqHandle, coords ) {
+                  var graphOffset = jqGraph.offset();
                   if( jqHandle ) {
                      var portPos = jqHandle.offset();
                      coords[ 0 ] = portPos.left - graphOffset.left + portOffset;
@@ -92,7 +91,7 @@ function ( $, ng, layout, svgLinkPath ) {
                   calculateLinkEnd( jqDestNode, jqDestHandle, to );
                   boundingBox( jqSourceNode, jqGraph, fromBox );
                   boundingBox( jqDestNode, jqGraph, toBox );
-                  var path = svgLinkPath( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox, false);
+                  var path = svgLinkPath.cubic( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox, false );
                   $element.attr( 'd', path );
                }
 
@@ -102,16 +101,18 @@ function ( $, ng, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function init() {
+               var source = $scope.link.source;
                if ( source.port ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
                   jqSourceNode = jqSourceInfo[ 0 ];
                   jqSourceHandle = jqSourceInfo[ 1 ];
                }
                else {
-                  jqSourceNode = jqEdge( source );
+                  jqSourceNode = jqEdge( $scope.link.source );
                   jqSourceHandle = null;
                }
 
+               var dest = $scope.link.dest;
                if ( dest.port ) {
                   var jqDestInfo = jqVertexPlusHandle( dest );
                   jqDestNode = jqDestInfo[ 0 ];

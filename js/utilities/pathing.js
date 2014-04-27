@@ -2,15 +2,7 @@ define( [], function() {
 
    // Length of a horizontal link stub that helps visualizing where a link is attached
    var STUB_LENGTH = 20;
-
-   // Stub length multiplier for a link attached to the left/right edge of a box.
-   var STUB_IN = -1,  STUB_OUT = 1;
-
-   // Stub length multiplier for no stub (link attached to mouse cursor).
-   var STUB_NONE = 0;
-
    var ARROW_HEAD_LENGTH = 3;
-
    var CURVE_PADDING = 8;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,13 +11,15 @@ define( [], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStub, toStub, fromBox, toBox, noArrow ) {
-      var fromX = round( fromLeft), fromY = round( fromTop ), toX = round( toLeft ), toY = round( toTop );
-      var useStubsX = abs( fromX - toX ) > STUB_LENGTH * 2;
+   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn, fromBox, toBox, noArrow ) {
+      var fromX = round( fromLeft ),
+          fromY = round( fromTop ),
+          toX = round( toLeft ),
+          toY = round( toTop );
 
       var path = [ 'M', fromX, ',', fromY ];
-      path.push( 'H', fromX + fromStub*STUB_LENGTH );
-      path.push( 'L', toX + toStub*STUB_LENGTH, ',', toY );
+      path.push( 'H', fromX + fromStubSgn * STUB_LENGTH );
+      path.push( 'L', toX + toStubSgn * STUB_LENGTH, ',', toY );
       path.push( 'H', toX );
 
       return path.join('');
@@ -41,9 +35,8 @@ define( [], function() {
       var curvePadding = CURVE_PADDING;
       var stubLength = STUB_LENGTH;
       var arrowHeadLength = ARROW_HEAD_LENGTH;
-      var reverse;
-      // Path state:
-      var x0, y0, xN, yN, stub0, stubN, box0, boxN;
+
+      var reverse, x0, y0, xN, yN, stub0, stubN, box0, boxN;
       initializeParameters();
 
       // Current path and position:
@@ -72,8 +65,7 @@ define( [], function() {
          arrowHead();
       }
 
-      var d = path.join('');
-      return d;
+      return path.join('');
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,7 +88,7 @@ define( [], function() {
             curvePadding = max( 1, round( xRatio*CURVE_PADDING ) );
          }
 
-         // Simplify by always drawing a path from left to right.
+         // Simplify by always drawing a path from left to right:
          reverse = fromLeft + fromStubSgn*stubLength > toLeft + toStubSgn*stubLength;
          if ( reverse  ) {
             x0 = round( toLeft);   xN = round( fromLeft );
@@ -152,11 +144,11 @@ define( [], function() {
             return;
          }
          var ax = x - 20 - arrowHeadLength, ay = y;
-         path.push( 'M', ax, ',', ay-arrowHeadLength,
+         path.push( 'M', ax, ',', ay - arrowHeadLength,
                     'L', ax + 20/2, ',', ay,
-                    'L', ax, ',', ay+arrowHeadLength,
-                    'L', ax+arrowHeadLength, ',', ay,
-                    'L', ax, ',', ay-arrowHeadLength,
+                    'L', ax, ',', ay + arrowHeadLength,
+                    'L', ax + arrowHeadLength, ',', ay,
+                    'L', ax, ',', ay - arrowHeadLength,
                     'M', x, ',', y );
       }
 
@@ -238,6 +230,9 @@ define( [], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   return svgCubicBezierLinkPath;
+   return {
+      cubic: svgCubicBezierLinkPath,
+      linear: svgLinearLinkPath
+   };
 
 } );

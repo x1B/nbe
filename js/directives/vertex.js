@@ -13,8 +13,12 @@ define( [
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
+function( $, ng, layout, async ) {
    'use strict';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var ATTR_VERTEX_ID = 'vertexId';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +28,7 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
          controller: function VertexController( $scope, $element ) {
 
             var graphController = $scope.nbeGraph;
-            var id = $scope.vertexId;
+            var id = $scope[ ATTR_VERTEX_ID ];
 
             var linksToRepaint = [];
 
@@ -37,23 +41,20 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
                stop: handleVertexDragStop
             } );
 
-            var jqGraph = $( $element[ 0 ].parentNode );
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
+            // When dragging from a port, it gets access to the bounding box for path rendering:
+            var jqGraph = jqVertex.parent();
             this.calculateBox = calculateBox;
-
             $scope.nbeVertex = this;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleVertexDragStart( event, ui ) {
+            function handleVertexDragStart() {
                linksToRepaint = graphController.vertexLinkControllers( id );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleVertexDrag( event, ui ) {
+            function handleVertexDrag() {
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
@@ -61,6 +62,7 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
+            // noinspection JSUnusedLocalSymbols
             function handleVertexDragStop( event, ui ) {
                linksToRepaint = [];
                var layout = $scope.layout.vertices[ id ];

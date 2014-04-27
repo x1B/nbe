@@ -47,10 +47,8 @@ function ( underscore, $, ng, async, undefined ) {
          // Controller API:
          this.vertexLinkControllers = vertexLinkControllers;
          this.edgeLinkControllers = edgeLinkControllers;
-
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
-
          this.selectEdge = selectEdge;
          this.selectVertex = selectVertex;
 
@@ -431,7 +429,7 @@ function ( underscore, $, ng, async, undefined ) {
             return null;
          }
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function idGenerator( prefix, currentMap ) {
             var prefixLength = prefix ? prefix.length : 0;
@@ -447,11 +445,6 @@ function ( underscore, $, ng, async, undefined ) {
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function clearSelection() {
-            selection.id = null;
-            selection.kind = null;
-         }
 
          function selectEdge( edgeId ) {
             selection.id = edgeId;
@@ -473,7 +466,7 @@ function ( underscore, $, ng, async, undefined ) {
             /** While a port is being dragged, it can be accessed here. */
             var dragRef;
 
-            /** For undo/redo purposes, any operations of one drag/drop interaction are grouped into a transaction */
+            /** For undo/redo, operations of a single drag/drop interaction are grouped as a transaction. */
             var transaction;
 
             var onCancel;

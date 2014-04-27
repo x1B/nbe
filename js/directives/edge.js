@@ -25,8 +25,6 @@ function ( $, ng, async ) {
          controller: function EdgeController( $scope, $element ) {
 
             var jqEdge = $( $element[ 0 ] );
-            var graph = $scope.nbeGraph;
-            var edgeId = $scope.edgeId;
 
             jqEdge.draggable( {
                stack: '.graph *',
@@ -43,20 +41,17 @@ function ( $, ng, async ) {
             } );
 
             var linksToRepaint = [];
-            this.jqEdge = $( $element[ 0 ] );
-            this.jqGraph = $( $element[ 0 ].parentNode );
-
             $scope.nbeEdge = this;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleEdgeDragStart( event, ui ) {
-               linksToRepaint = graph.edgeLinkControllers( edgeId );
+            function handleEdgeDragStart() {
+               linksToRepaint = $scope.nbeGraph.edgeLinkControllers( $scope.edgeId );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleEdgeDrag( event, ui ) {
+            function handleEdgeDrag() {
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
@@ -64,24 +59,25 @@ function ( $, ng, async ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
+            // noinspection JSUnusedLocalSymbols
             function handleDrop( event, ui ) {
                if ( $( ui.helper ).hasClass( 'edge' ) ) {
                   // stopped dragging this edge
-                  var edgeLayout = $scope.layout.edges[ edgeId ];
+                  var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
                   edgeLayout.left = ui.position.left / $scope.canvas.width;
                   edgeLayout.top = ui.position.top / $scope.canvas.height;
                   linksToRepaint = [];
                }
                else {
                   // dropped a port onto this edge
-                  graph.dragDrop.setDropRef( { nodeId: edgeId } );
+                  $scope.nbeGraph.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
                }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             $scope.handleEdgeClick = function() {
-               graph.selectEdge( edgeId );
+               $scope.nbeGraph.selectEdge( $scope.edgeId );
             };
 
          }

@@ -6,16 +6,15 @@ define( [
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, layout, svgLinkPath ) {
+function ( $, ng, layout, pathing ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var DIRECTIVE_NAME = 'nbePort';
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   var PORT_CLASS_IN = 'in', PORT_CLASS_OUT = 'out';
+   var ATTR_VERTEX_ID = 'vertexId',
+       ATTR_PORT_GROUP = 'nbePortGroup';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,19 +24,16 @@ function ( $, ng, layout, svgLinkPath ) {
          restrict: 'A',
          controller: function PortController( $scope, $element, $attrs ) {
 
+            // Quick access to essential data for drawing links:
             var graph = $scope.nbeGraph;
-            // For drawing links:
-            var stubDirection = $attrs[ 'nbePortGroup' ] === PORT_CLASS_OUT ? 1 : -1;
-
-            var vertexId = $scope.vertexId;
-
+            var graphOffset;
+            var stubDirection = $attrs[ ATTR_PORT_GROUP ] !== 'in' ? 1 : -1;
+            var vertexId = $scope[ ATTR_VERTEX_ID ];
             var jqGraph = graph.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
             var jqLinkGhost= $( '.link.GHOST', jqGraph );
-
             // Drag starting position, relative to graph canvas.
             var fromLeft, fromTop, fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
-            var graphOffset;
 
             $( 'i', $element[ 0 ] ).draggable( {
                opacity: 0.8,
@@ -64,12 +60,12 @@ function ( $, ng, layout, svgLinkPath ) {
                var jqHandle = $( event.target );
 
                var dd = graph.dragDrop;
-               var transaction = dd.start( { nodeId: $scope.vertexId, port: $scope.port}, function() {
+               var transaction = dd.start( { nodeId: $scope[ ATTR_VERTEX_ID ], port: $scope.port}, function() {
                   $( 'i', $element[ 0 ] ).trigger( 'mouseup' );
                } );
 
                if ( $scope.port.edgeId ) {
-                  var disconnectOp = graph.makeDisconnectOp( { nodeId: $scope.vertexId, port: $scope.port } );
+                  var disconnectOp = graph.makeDisconnectOp( { nodeId: $scope[ ATTR_VERTEX_ID ], port: $scope.port } );
                   transaction.perform( disconnectOp );
                }
 
@@ -86,11 +82,12 @@ function ( $, ng, layout, svgLinkPath ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handlePortDrag( event, ui ) {
+            // noinspection JSUnusedLocalSymbols
+            function handlePortDrag( _, ui ) {
                var pos = ui.offset;
                var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
                var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
-               jqLinkGhost.attr( 'd', svgLinkPath( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true ) );
+               jqLinkGhost.attr( 'd', pathing.cubic( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true ) );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

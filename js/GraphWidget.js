@@ -26,9 +26,9 @@ function (
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function GraphWidget( $scope ) {
-      var model = $scope.model = dummyModel;
-      var layout = $scope.layout = dummyLayout;
-      var view = $scope.view = { };
+      $scope.model = dummyModel;
+      $scope.layout = dummyLayout;
+      $scope.view = { };
    }
 
    GraphWidget.$inject = [ '$scope' ];
