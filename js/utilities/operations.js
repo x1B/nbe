@@ -3,6 +3,25 @@ define( [], function () {
    function noOp() { };
    noOp.undo = noOp;
 
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function makeCompositionOp( args ) {
+      var n = args.length;
+      function compositionOp() {
+         for ( var i = 0; i < n; ++i ) {
+            args[ i ]();
+         }
+      }
+      compositionOp.undo = function() {
+         for ( var i = n; i --> 0; ) {
+            args[ i ].undo();
+         }
+      };
+      return compositionOp;
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    return {
 
       create: function( $scope ) {
@@ -53,20 +72,7 @@ define( [], function () {
 
       noOp: noOp,
 
-      compose: function makeCompositionOp( args ) {
-         var n = args.length;
-         function compositionOp() {
-            for ( var i = 0; i < n; ++i ) {
-               args[ i ]();
-            }
-         }
-         compositionOp.undo = function() {
-            for ( var i = n; i --> 0; ) {
-               args[ i ].undo();
-            }
-         };
-         return compositionOp;
-      }
+      compose: makeCompositionOp
 
    };
 
