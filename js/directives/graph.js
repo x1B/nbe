@@ -52,6 +52,7 @@ function ( underscore, $, ng, async, undefined ) {
          this.makeDisconnectOp = makeDisconnectOp;
 
          this.selectEdge = selectEdge;
+         this.selectVertex = selectVertex;
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -430,6 +431,11 @@ function ( underscore, $, ng, async, undefined ) {
          function selectEdge( edgeId ) {
             selection.id = edgeId;
             selection.kind = 'EDGE';
+         }
+
+         function selectVertex( vertexId ) {
+            selection.id = vertexId;
+            selection.kind = 'VERTEX';
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////

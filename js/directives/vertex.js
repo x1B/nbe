@@ -26,7 +26,10 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
             var graphController = $scope.nbeGraph;
             var id = $scope.vertexId;
 
-            $( $element[ 0 ] ).draggable( {
+            var linksToRepaint = [];
+
+            var jqVertex = $( $element[ 0 ] );
+            jqVertex.draggable( {
                stack: '.graph *',
                containment: 'parent',
                start: handleVertexDragStart,
@@ -34,9 +37,6 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
                stop: handleVertexDragStop
             } );
 
-            var linksToRepaint = [];
-
-            var jqVertex = $( $element[ 0 ] );
             var jqGraph = $( $element[ 0 ].parentNode );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +74,11 @@ function( $, ng, layout, async, uiDraggable, uiDroppable, undefined ) {
                layout.boundingBox( jqVertex, jqGraph, box );
             }
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            $scope.handleVertexClick = function() {
+               graphController.selectVertex( id );
+            }
          }
       };
    }
