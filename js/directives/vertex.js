@@ -37,7 +37,7 @@ function( $, ng, layout, async, vertexHtml ) {
                stack: '.graph *',
                containment: 'parent',
                start: handleVertexDragStart,
-               drag: async.repeatAfter( handleVertexDrag, $timeout ),
+               drag: async.ensure( handleVertexDrag, $timeout ),
                stop: handleVertexDragStop
             } );
 

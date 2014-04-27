@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#8](https://github.com/x1B/nbe/issues/8): Refactoring: Moved operations (undo/redo) to a new module.
 - [#6](https://github.com/x1B/nbe/issues/6): Moved graph HTML into the directives.
 - [#7](https://github.com/x1B/nbe/issues/7): Cleaned up most dead code.
 - [#13](https://github.com/x1B/nbe/issues/13): Fixed link direction when connecting input-port to output-port.
