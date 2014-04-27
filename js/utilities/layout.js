@@ -1,4 +1,4 @@
-define([], function () {
+define( [], function () {
 
    function boundingBox( jqNode, jqGraph, box ) {
       var v = jqNode.offset();

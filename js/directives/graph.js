@@ -2,9 +2,10 @@ define( [
    'jquery',
    'angular',
    '../utilities/async',
+   '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, ng, async, graphHtml, undefined ) {
+function ( $, ng, async, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,8 @@ function ( $, ng, async, graphHtml, undefined ) {
       function GraphController( $scope, $element ) {
 
          /** Shorthands to $scope.* */
+
+         /** @type {{ edges: {}, vertices: {}<String, {ports: []}> }} */
          var model;
          var layout;
          var view;
@@ -67,52 +70,7 @@ function ( $, ng, async, graphHtml, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         var operations = this.operations = ( function() {
-            var past = [];
-            var future = [];
-            return {
-               perform: function( op ) {
-                  if ( op !== noOp ) {
-                     $scope.$apply( op );
-                     past.push( op );
-                     future.splice( 0, future.length );
-                  }
-               },
-               startTransaction: function() {
-                  var tx = [];
-                  return {
-                     perform: function( op ) {
-                        if ( op !== noOp ) {
-                           $scope.$apply( op );
-                           future.splice( 0, future.length );
-                           tx.push( op );
-                        }
-                     },
-                     commit: function() {
-                        past.push( makeCompositionOp( tx ) );
-                     },
-                     rollBack: function() {
-                        $scope.$apply( makeCompositionOp( tx ).undo );
-                     }
-                  }
-               },
-               undo: function() {
-                  var op = past.pop();
-                  if ( op ) {
-                     $scope.$apply( op.undo );
-                     future.push( op );
-                  }
-               },
-               redo: function() {
-                  var op = future.pop();
-                  if ( op ) {
-                     $scope.$apply( op );
-                     past.push( op );
-                  }
-               }
-            };
-
-         } )();
+         var ops = this.operations = operationsModule.create( $scope );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -164,10 +122,10 @@ function ( $, ng, async, graphHtml, undefined ) {
 
             if ( event.keyCode === KEY_CODE_DELETE ) {
                if ( $scope.selection.kind === 'EDGE' ) {
-                  operations.perform( makeDeleteEdgeOp( $scope.selection.id ) );
+                  ops.perform( makeDeleteEdgeOp( $scope.selection.id ) );
                }
                else if ( $scope.selection.kind === 'VERTEX' ) {
-                  operations.perform( makeDeleteVertexOp( $scope.selection.id ) );
+                  ops.perform( makeDeleteVertexOp( $scope.selection.id ) );
                }
             }
             else if ( event.keyCode === KEY_CODE_ESCAPE ) {
@@ -178,22 +136,17 @@ function ( $, ng, async, graphHtml, undefined ) {
             else if ( event.metaKey || event.ctrlKey ) {
                if ( event.keyCode === KEY_CODE_Z ) {
                   if ( event.shiftKey ) {
-                     operations.redo();
+                     ops.redo();
                   }
                   else {
-                     operations.undo();
+                     ops.undo();
                   }
                }
                else if ( event.keyCode === KEY_CODE_Y ) {
-                  operations.redo();
+                  ops.redo();
                }
             }
          }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function noOp() { }
-         noOp.undo = noOp;
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -213,7 +166,7 @@ function ( $, ng, async, graphHtml, undefined ) {
 
             function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
                if ( vertexRef.port.type !== model.edges[ toEdgeId ].type ) {
-                  return noOp;
+                  return operationsModule.noOp;
                }
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
@@ -227,7 +180,7 @@ function ( $, ng, async, graphHtml, undefined ) {
             function makeConnectPortToPortOp( fromRef, toRef ) {
                if ( fromRef.port.type !== toRef.port.type ||
                     fromRef.port.direction === toRef.port.direction ) {
-                  return noOp;
+                  return operationsModule.noOp;
                }
 
                var disconnectFromOp = makeDisconnectOp( fromRef );
@@ -255,7 +208,7 @@ function ( $, ng, async, graphHtml, undefined ) {
 
             function disconnectOp() {
                if ( !ref.port.edgeId ) {
-                  disconnectOp.undo = noOp;
+                  disconnectOp.undo = operationsModule.noOp;
                   return;
                }
                var edgeId = ref.port.edgeId;
@@ -284,23 +237,6 @@ function ( $, ng, async, graphHtml, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function makeCompositionOp( args ) {
-            var n = args.length;
-            function compositionOp() {
-               for ( var i = 0; i < n; ++i ) {
-                  args[ i ]();
-               }
-            }
-            compositionOp.undo = function() {
-               for ( var i = n; i --> 0; ) {
-                  args[ i ].undo();
-               }
-            };
-            return compositionOp;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
          function makeDeleteEdgeOp( edgeId ) {
             var steps = [];
             ng.forEach( model.vertices, function( vertex, vertexId ) {
@@ -310,7 +246,7 @@ function ( $, ng, async, graphHtml, undefined ) {
                   }
                } );
             } );
-            return makeCompositionOp( steps );
+            return operationsModule.compose( steps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,7 +264,7 @@ function ( $, ng, async, graphHtml, undefined ) {
                };
             }
             steps.push( deleteVertexOp );
-            return makeCompositionOp( steps );
+            return operationsModule.compose( steps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -493,7 +429,7 @@ function ( $, ng, async, graphHtml, undefined ) {
             return Object.freeze( {
                start: function( ref, cancel ) {
                   onCancel = cancel;
-                  transaction = operations.startTransaction();
+                  transaction = ops.startTransaction();
                   dragRef = { nodeId: ref.nodeId, port: ref.port };
                   jqGraph.addClass( 'highlight-' + ref.port.type );
                   jqGraph.addClass( 'highlight-' + ( ref.port.direction === 'in' ? 'out' : 'in' ) );
