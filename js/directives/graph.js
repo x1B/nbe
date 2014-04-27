@@ -64,6 +64,7 @@ function ( underscore, $, ng, async, undefined ) {
                   if ( op !== noOp ) {
                      $scope.$apply( op );
                      past.push( op );
+                     future.splice( 0, future.length );
                   }
                },
                startTransaction: function() {
@@ -72,6 +73,7 @@ function ( underscore, $, ng, async, undefined ) {
                      perform: function( op ) {
                         if ( op !== noOp ) {
                            $scope.$apply( op );
+                           future.splice( 0, future.length );
                            tx.push( op );
                         }
                      },
@@ -136,12 +138,7 @@ function ( underscore, $, ng, async, undefined ) {
                vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vertexId, port: port };
-                  if ( port.direction === 'in' ) {
-                     createLink( edgeRef, vertexRef );
-                  }
-                  else {
-                     createLink( vertexRef, edgeRef );
-                  }
+                  createLink( vertexRef, edgeRef );
                } );
             } );
 
@@ -210,12 +207,7 @@ function ( underscore, $, ng, async, undefined ) {
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
-                  if ( vertexRef.port.direction === 'in' ) {
-                     createLink( edgeRef, vertexRef );
-                  }
-                  else {
-                     createLink( vertexRef, edgeRef );
-                  }
+                  createLink( vertexRef, edgeRef );
                }
                connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
                return connectPortToEdgeOp;
@@ -272,12 +264,7 @@ function ( underscore, $, ng, async, undefined ) {
                   }
                   var edgeRef = { nodeId: edgeId };
                   ref.port.edgeId = edgeId;
-                  if ( ref.port.direction === 'in' ) {
-                     createLink( edgeRef, ref );
-                  }
-                  else {
-                     createLink( ref, edgeRef );
-                  }
+                  createLink( ref, edgeRef );
                };
             }
 
@@ -335,23 +322,40 @@ function ( underscore, $, ng, async, undefined ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function createLink( fromRef, toRef ) {
+         function createLink( refA, refB ) {
+
+            var reverse = isInput( refA.port ) || isOutput( refB.port );
+            var fromRef = reverse ? refB : refA;
+            var toRef = reverse ? refA : refB;
+
             var link = {
                id: generateLinkId(),
                type: ( fromRef.port || toRef.port ).type,
                source: fromRef,
                dest: toRef
             };
-            function add( fromRef, innerKey, value ) {
-               var map = fromRef.port ? linksByVertex : linksByEdge;
-               if ( map[ fromRef.nodeId ] === undefined ) {
-                  map[ fromRef.nodeId ] = { };
-               }
-               map[ fromRef.nodeId ][ innerKey ] = value;
-            }
-            add( fromRef, link.id, link );
-            add( toRef,   link.id, link );
+
+            insert( fromRef, link.id, link );
+            insert( toRef, link.id, link );
             links[ link.id ] = link;
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function isInput( port ) {
+               return port && port.direction === 'in'
+            }
+
+            function isOutput( port ) {
+               return port && port.direction !== 'in'
+            }
+
+            function insert( ref, linkId, link ) {
+               var map = ref.port ? linksByVertex : linksByEdge;
+               if ( !map[ ref.nodeId ] ) {
+                  map[ ref.nodeId ] = { };
+               }
+               map[ ref.nodeId ][ linkId ] = link;
+            }
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
