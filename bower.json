@@ -17,7 +17,8 @@
       "angular": "angular/bower-angular#1.2.x",
       "jquery_ui": "LaxarJS/jquery_ui#1.10.x",
       "requirejs": "jrburke/requirejs#2.1.x",
-      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x"
+      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x",
+      "dagre": "http://cpettitt.github.io/project/dagre/v0.4.5/dagre.js"
    },
    "devDependencies": {
       "es5-shim": "es-shims/es5-shim#2.3.x",
