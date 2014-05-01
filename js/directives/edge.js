@@ -45,7 +45,7 @@ function ( $, ng, async, edgeHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart() {
-               linksToRepaint = $scope.nbeGraph.edgeLinkControllers( $scope.edgeId );
+               linksToRepaint = $scope.nbeController.edgeLinkControllers( $scope.edgeId );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,14 +69,14 @@ function ( $, ng, async, edgeHtml ) {
                }
                else {
                   // dropped a port onto this edge
-                  $scope.nbeGraph.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
+                  $scope.nbeController.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
                }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             $scope.handleEdgeClick = function() {
-               $scope.nbeGraph.selectEdge( $scope.edgeId );
+               $scope.nbeController.selectEdge( $scope.edgeId );
             };
 
          }
