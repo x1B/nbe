@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#9](https://github.com/x1B/nbe/issues/9): Fixed placement of edges upon creation.
 - [#16](https://github.com/x1B/nbe/issues/16): Made it simpler to disconnect ports from edges: just click on the port.
 - [#3](https://github.com/x1B/nbe/issues/3): Implemented automatic layout calculation using Dagre.
 - [#14](https://github.com/x1B/nbe/issues/14): Fixed port dragging after refactoring.

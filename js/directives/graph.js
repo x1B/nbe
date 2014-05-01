@@ -3,10 +3,11 @@ define( [
    'underscore',
    'angular',
    '../utilities/async',
+   '../utilities/layout',
    '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, _, ng, async, operationsModule, graphHtml ) {
+function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,11 +328,23 @@ function ( $, _, ng, async, operationsModule, graphHtml ) {
                type: type,
                label: type.toLowerCase() + ' ' + id
             };
-            var fromLayout = layout.vertices[ fromRef.nodeId ];
-            var toLayout = layout.vertices[ toRef.nodeId ];
-            var centerX = ( parseFloat( fromLayout.left ) + parseFloat( toLayout.left ) ) / 2;
-            var centerY = ( parseFloat( fromLayout.top ) + parseFloat( toLayout.top ) ) / 2;
-            layout.edges[ id ] = { left: centerX, top: centerY };
+
+            function centerCoords( vertexId ) {
+               var vertexLayout = layout.vertices[ vertexId ];
+               var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
+               return [ vertexLayout.left + jqVertex.width()/2, vertexLayout.top + jqVertex.height()/2 ];
+            }
+
+            function mean( v1, v2 ) {
+               return [ 0, 1 ].map( function( i ) {
+                  return Math.round( (v1[i] + v2[i])/2 );
+               } );
+            }
+
+            var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
+            layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutModule.EDGE_DRAG_OFFSET,
+                                   top: edgeCenter[ 1 ] - layoutModule.EDGE_DRAG_OFFSET };
+
             createLink( fromRef, edgeRef );
             createLink( edgeRef, toRef );
             return id;

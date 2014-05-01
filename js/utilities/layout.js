@@ -1,4 +1,5 @@
 define( [], function () {
+   'use strict';
 
    function boundingBox( jqNode, jqGraph, box ) {
       var v = jqNode.offset();
@@ -15,6 +16,6 @@ define( [], function () {
       boundingBox: boundingBox,
       PORT_DRAG_OFFSET: 8,
       EDGE_DRAG_OFFSET: 15
-   }
+   };
 
 } );
