@@ -3,41 +3,51 @@
       "v0": {
          "label": "Command Button",
          "ports": [
-               { "id": "i0", "label": "delete.enableOn", "type": "FLAG", "direction": "in" },
-               { "id": "i1", "label": "buttons[ 0 ].enableOn", "type": "ACTION", "direction": "in"  },
-               { "id": "o0", "label": "Resource (M)", "type": "RESOURCE" },
-               { "id": "o1", "label": "Confirm", "type": "ACTION", "edgeId": "e1" }
+            { "id": "i0", "label": "delete.enableOn", "type": "FLAG", "direction": "in" },
+            { "id": "i1", "label": "buttons[ 0 ].enableOn", "type": "ACTION", "direction": "in"  },
+            { "id": "o0", "label": "Resource (M)", "type": "RESOURCE" },
+            { "id": "o1", "label": "Confirm", "type": "ACTION", "edgeId": "e1" }
          ]
       },
       "v1": {
          "label": "Weird Stuff",
          "ports": [
-               { "id": "i0", "label": "Some Resource (S)", "type": "RESOURCE", "direction": "in"  },
-               { "id": "i1", "label": "Another Resource (S)", "type": "RESOURCE", "direction": "in"  },
-               { "id": "i2", "label": "Play Music On", "type": "FLAG", "direction": "in"  },
-               { "id": "o0", "label": "Other Resource (M)", "type": "RESOURCE", "edgeId": "e0" },
-               { "id": "o1", "label": "Cancel Action", "type": "ACTION" }
+            { "id": "i0", "label": "Some Resource (S)", "type": "RESOURCE", "direction": "in"  },
+            { "id": "i1", "label": "Another Resource (S)", "type": "RESOURCE", "direction": "in"  },
+            { "id": "i2", "label": "Play Music On", "type": "FLAG", "direction": "in"  },
+            { "id": "o0", "label": "Other Resource (M)", "type": "RESOURCE", "edgeId": "e0" },
+            { "id": "o1", "label": "Cancel Action", "type": "ACTION", "edgeId": "e1" },
+            { "id": "o2", "label": "Active Badness", "type": "FLAG", "edgeId": "e2" }
          ]
       },
       "v2": {
-         "label": "Silly Stuff",
+         "label": "Standalone Stuff",
          "ports": [
-               { "id": "i0", "label": "The Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
-               { "id": "i1", "label": "Shuffle Action", "type": "ACTION", "direction": "in"  },
-               { "id": "o0", "label": "Another Resource (M)", "type": "RESOURCE" },
-               { "id": "o1", "label": "Refresh Action", "type": "ACTION" }
+            { "id": "i0", "label": "The Resource (S)", "type": "RESOURCE", "direction": "in"  },
+            { "id": "i1", "label": "Shuffle Action", "type": "ACTION", "direction": "in"  },
+            { "id": "o0", "label": "Another Resource (M)", "type": "RESOURCE" },
+            { "id": "o1", "label": "Refresh Action", "type": "ACTION" }
          ]
       },
       "v3": {
          "label": "A Big One",
          "ports": [
-               { "id": "i0", "label": "First Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
-               { "id": "i1", "label": "Second Resource (S)", "type": "RESOURCE", "direction": "in"  },
-               { "id": "i2", "label": "Take a Second", "type": "FLAG", "edgeId": "e2", "direction": "in" },
-               { "id": "i3", "label": "Save Action", "type": "ACTION", "edgeId": "e1", "direction": "in"  },
-               { "id": "o0", "label": "Third Resource (M)", "type": "RESOURCE" },
-               { "id": "o1", "label": "Fourth Resource (M)", "type": "RESOURCE" },
-               { "id": "o2", "label": "Use the Fourth", "type": "FLAG" }
+            { "id": "i0", "label": "First Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
+            { "id": "i1", "label": "Second Resource (S)", "type": "RESOURCE", "direction": "in"  },
+            { "id": "i2", "label": "Take a Second", "type": "FLAG", "edgeId": "e2", "direction": "in" },
+            { "id": "i3", "label": "Save Action", "type": "ACTION", "edgeId": "e1", "direction": "in"  },
+            { "id": "o0", "label": "Third Resource (M)", "type": "RESOURCE" },
+            { "id": "o1", "label": "Fourth Resource (M)", "type": "RESOURCE" },
+            { "id": "o2", "label": "Use the Fourth", "type": "FLAG" }
+         ]
+      },
+      "v4": {
+         "label": "More Stuff",
+         "ports": [
+            { "id": "i0", "label": "The Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
+            { "id": "i1", "label": "Shuffle Action", "type": "ACTION", "direction": "in"  },
+            { "id": "o0", "label": "Another Resource (M)", "type": "RESOURCE" },
+            { "id": "o1", "label": "Refresh Action", "type": "ACTION" }
          ]
       }
    },

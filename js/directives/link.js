@@ -12,12 +12,13 @@
 define( [
    'jquery',
    'angular',
+      '../utilities/async',
    '../utilities/layout',
    '../utilities/pathing',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, layout, svgLinkPath ) {
+function ( $, ng, async, layout, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,20 +45,7 @@ function ( $, ng, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Draw links after nodes, so that bounding boxes are available:
-            var initTimeout;
-            function tryInit() {
-               if( !init() ) {
-                  // $timeout is not needed (no $scope manipulation)
-                  initTimeout = $window.setTimeout( tryInit, 5 );
-               }
-            }
-            tryInit();
-
-            $scope.$on( '$destroy', function() {
-               if ( initTimeout ) {
-                  $window.clearTimeout( initTimeout );
-               }
-            } );
+            async.runEventually( init, $window, $scope );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -158,7 +146,7 @@ function ( $, ng, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
          }
-      }
+      };
    }
 
 
@@ -168,6 +156,6 @@ function ( $, ng, layout, svgLinkPath ) {
       define: function( module ) {
          module.directive( DIRECTIVE_NAME, [ '$window', createLinkDirective ] );
       }
-   }
+   };
 
 } );

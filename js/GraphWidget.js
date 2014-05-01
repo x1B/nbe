@@ -1,6 +1,7 @@
 define( [
    'jquery',
    'angular',
+   'services/auto-layout',
    'directives/graph',
    'directives/edge',
    'directives/vertex',
@@ -12,6 +13,7 @@ define( [
 function (
    $,
    ng,
+   autoLayoutService,
    graphDirective,
    edgeDirective,
    vertexDirective,
@@ -27,20 +29,20 @@ function (
 
    function GraphWidget( $scope ) {
       $scope.model = dummyModel;
-      $scope.layout = dummyLayout;
    }
-
-   GraphWidget.$inject = [ '$scope' ];
-
-   module.controller( 'GraphWidget', GraphWidget );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   autoLayoutService.define( module );
    graphDirective.define( module );
    edgeDirective.define( module );
    vertexDirective.define( module );
    linkDirective.define( module );
    portDirective.define( module );
+
+   GraphWidget.$inject = [ '$scope', 'nbeAutoLayout' ];
+
+   module.controller( 'GraphWidget', GraphWidget );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

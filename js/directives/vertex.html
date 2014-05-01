@@ -1,5 +1,5 @@
-<div data-ng-style="{ left: (layout.vertices[ vertexId ].left * canvas.width) + 'px',
-                      top: (layout.vertices[ vertexId ].top * canvas.height) + 'px' }"
+<div data-ng-style="{ left: layout.vertices[ vertexId ].left + 'px',
+                      top: layout.vertices[ vertexId ].top + 'px' }"
      data-ng-click="handleVertexClick()"
      data-ng-class="{ 'selected': (selection.kind == 'VERTEX' && selection.id == vertexId) }"
      class="node vertex">

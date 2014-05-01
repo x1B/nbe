@@ -133,6 +133,6 @@ function ( $, ng, layout, pathing, portHtml ) {
       define: function( module ) {
          module.directive( DIRECTIVE_NAME, createPortDirective );
       }
-   }
+   };
 
 } );

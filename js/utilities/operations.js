@@ -1,6 +1,7 @@
 define( [], function () {
+   'use strict';
 
-   function noOp() { };
+   function noOp() { }
    noOp.undo = noOp;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +52,7 @@ define( [], function () {
                   rollBack: function() {
                      $scope.$apply( makeCompositionOp( tx ).undo );
                   }
-               }
+               };
             },
             undo: function() {
                var op = past.pop();

@@ -1,7 +1,7 @@
 <div class="node edge {{ edge.type }}"
      data-ng-class="{ 'selected': (selection.kind == 'EDGE' && selection.id == edgeId) }"
      data-ng-click="handleEdgeClick()"
-     data-ng-style="{ left: (layout.edges[ edgeId ].left * canvas.width) + 'px',
-                      top: layout.edges[ edgeId ].top * canvas.height + 'px' }"
+     data-ng-style="{ left: layout.edges[ edgeId ].left + 'px',
+                      top: layout.edges[ edgeId ].top + 'px' }"
         ><label>{{ edge.label }}</label
 ></div>
