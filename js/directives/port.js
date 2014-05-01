@@ -53,9 +53,21 @@ function ( $, ng, layout, pathing, portHtml ) {
                accept: 'i',
                hoverClass: 'drop-hover',
                drop: handlePortDrop
-            } );
+            } ).on( 'click', handlePortClick );
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function handlePortClick() {
+               if ( $scope.port.edgeId ) {
+                  var disconnectOp = graph.makeDisconnectOp( {
+                     nodeId: $scope[ ATTR_VERTEX_ID ],
+                     port: $scope.port
+                  } );
+                  graph.operations.perform( disconnectOp );
+               }
+            }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
