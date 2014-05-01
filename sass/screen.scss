@@ -227,6 +227,19 @@ body {
          stroke: lighten( $typeColor1, 15 );
       }
    }
+
+   .tools {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      button {
+         opacity: 0.5;
+         &:hover {
+            opacity: 1;
+         }
+      }
+   }
 }
 
 

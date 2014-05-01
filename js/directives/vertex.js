@@ -29,7 +29,7 @@ function( $, ng, layout, async, vertexHtml ) {
          replace: true,
          template: vertexHtml,
          controller: function VertexController( $scope, $element ) {
-            var graphController = $scope.nbeGraph;
+            var graphController = $scope.nbeController;
             var id = $scope[ ATTR_VERTEX_ID ];
 
             var jqVertex = $( $element[ 0 ] );

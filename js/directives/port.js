@@ -28,11 +28,11 @@ function ( $, ng, layout, pathing, portHtml ) {
          link: function linkPort( $scope, $element, $attrs ) {
 
             // Quick access to essential data for drawing links:
-            var graph = $scope.nbeGraph;
+            var graphController = $scope.nbeController;
             var graphOffset;
             var stubDirection = $attrs[ ATTR_PORT_GROUP ] !== 'in' ? 1 : -1;
             var vertexId = $scope[ ATTR_VERTEX_ID ];
-            var jqGraph = graph.jqGraph;
+            var jqGraph = graphController.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
             var jqLinkGhost = $( '.link.GHOST', jqGraph );
             // Drag starting position, relative to graph canvas.
@@ -61,11 +61,11 @@ function ( $, ng, layout, pathing, portHtml ) {
 
             function handlePortClick() {
                if ( $scope.port.edgeId ) {
-                  var disconnectOp = graph.makeDisconnectOp( {
+                  var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: $scope[ ATTR_VERTEX_ID ],
                      port: $scope.port
                   } );
-                  graph.operations.perform( disconnectOp );
+                  graphController.operations.perform( disconnectOp );
                }
             }
 
@@ -74,13 +74,13 @@ function ( $, ng, layout, pathing, portHtml ) {
             function handlePortDragStart( event, ui ) {
                var jqHandle = $( event.target );
 
-               var dd = graph.dragDrop;
+               var dd = graphController.dragDrop;
                var transaction = dd.start( { nodeId: $scope[ ATTR_VERTEX_ID ], port: $scope.port}, function() {
                   $( 'i', $element[ 0 ] ).trigger( 'mouseup' );
                } );
 
                if ( $scope.port.edgeId ) {
-                  var disconnectOp = graph.makeDisconnectOp( {
+                  var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: $scope[ ATTR_VERTEX_ID ],
                      port: $scope.port
                   } );
@@ -117,13 +117,13 @@ function ( $, ng, layout, pathing, portHtml ) {
                jqPortGhost.removeClass( $scope.port.type );
                jqLinkGhost.attr( 'class', basicLinkClass ).hide();
 
-               var dd = graph.dragDrop;
+               var dd = graphController.dragDrop;
                if ( !dd.dropRef() ) {
                   dd.finish();
                   return;
                }
 
-               var op = graph.makeConnectOp( { nodeId: vertexId, port: $scope.port }, dd.dropRef() );
+               var op = graphController.makeConnectOp( { nodeId: vertexId, port: $scope.port }, dd.dropRef() );
                dd.transaction().perform( op );
                dd.finish();
             }
@@ -131,7 +131,7 @@ function ( $, ng, layout, pathing, portHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDrop() {
-               graph.dragDrop.setDropRef( { nodeId: vertexId, port: $scope.port } );
+               graphController.dragDrop.setDropRef( { nodeId: vertexId, port: $scope.port } );
             }
 
          }

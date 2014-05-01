@@ -29,9 +29,11 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          replace: true,
          restrict: 'A',
          scope: {
+            nbeController: '=nbeGraphController',
             model: '=nbeGraph',
             layout: '=nbeGraphLayout'
          },
+         transclude: true,
          controller: GraphController
       };
 
@@ -55,7 +57,8 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          var generateLinkId;
          var generateEdgeId;
 
-         var self = $scope.nbeGraph = this;
+         // var self = $scope.nbeTools = $scope.nbeController = this;
+         var self = $scope.nbeController = this;
 
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
@@ -68,15 +71,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          this.selectEdge = selectEdge;
          this.selectVertex = selectVertex;
 
-         $scope.calculateLayout = function() {
-            async.runEventually( function() {
-               var autoLayout = nbeAutoLayout.calculate( $scope, jqGraph );
-               if ( autoLayout ) {
-                  layout = $scope.layout = autoLayout;
-               }
-               return !!autoLayout;
-            }, $window, $scope, 1500 );
-         };
+         this.calculateLayout = calculateLayout;
 
          var ops = this.operations = operationsModule.create( $scope );
 
@@ -428,6 +423,19 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          function selectVertex( vertexId ) {
             selection.id = vertexId;
             selection.kind = 'VERTEX';
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function calculateLayout() {
+            async.runEventually( function() {
+               var autoLayout = nbeAutoLayout.calculate( $scope, jqGraph );
+               if ( autoLayout ) {
+                  layout = $scope.layout = autoLayout;
+                  $timeout( repaint );
+               }
+               return !!autoLayout;
+            }, $window, $scope, 1500 );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
