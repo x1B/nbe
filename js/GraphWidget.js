@@ -1,7 +1,7 @@
 define( [
    'jquery',
    'angular',
-   'dagre',
+   'services/auto-layout',
    'directives/graph',
    'directives/edge',
    'directives/vertex',
@@ -13,7 +13,7 @@ define( [
 function (
    $,
    ng,
-   dagre,
+   autoLayoutService,
    graphDirective,
    edgeDirective,
    vertexDirective,
@@ -29,36 +29,20 @@ function (
 
    function GraphWidget( $scope ) {
       $scope.model = dummyModel;
-      $scope.layout = dummyLayout;
-
-      var g = new dagre.Digraph();
-      g.addNode("kspacey",    { label: "Kevin Spacey",  width: 144, height: 100 });
-      g.addNode("swilliams",  { label: "Saul Williams", width: 160, height: 100 });
-      g.addNode("bpitt",      { label: "Brad Pitt",     width: 108, height: 100 });
-      g.addNode("hford",      { label: "Harrison Ford", width: 168, height: 100 });
-      g.addNode("lwilson",    { label: "Luke Wilson",   width: 144, height: 100 });
-      g.addNode("kbacon",     { label: "Kevin Bacon",   width: 121, height: 100 });
-      g.addEdge(null, "kspacey",   "swilliams");
-      g.addEdge(null, "swilliams", "kbacon");
-      g.addEdge(null, "bpitt",     "kbacon");
-      g.addEdge(null, "hford",     "lwilson");
-      g.addEdge(null, "lwilson",   "kbacon");
-      console.log( g );
-      var layout = dagre.layout().run(g);
-      console.log( layout );
    }
-
-   GraphWidget.$inject = [ '$scope' ];
-
-   module.controller( 'GraphWidget', GraphWidget );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   autoLayoutService.define( module );
    graphDirective.define( module );
    edgeDirective.define( module );
    vertexDirective.define( module );
    linkDirective.define( module );
    portDirective.define( module );
+
+   GraphWidget.$inject = [ '$scope', 'nbeAutoLayout' ];
+
+   module.controller( 'GraphWidget', GraphWidget );
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

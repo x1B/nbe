@@ -63,8 +63,8 @@ function ( $, ng, async, edgeHtml ) {
                if ( $( ui.helper ).hasClass( 'edge' ) ) {
                   // stopped dragging this edge
                   var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
-                  edgeLayout.left = ui.position.left / $scope.canvas.width;
-                  edgeLayout.top = ui.position.top / $scope.canvas.height;
+                  edgeLayout.left = ui.position.left;
+                  edgeLayout.top = ui.position.top;
                   linksToRepaint = [];
                }
                else {

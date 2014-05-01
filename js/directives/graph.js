@@ -1,11 +1,12 @@
 define( [
    'jquery',
+   'underscore',
    'angular',
    '../utilities/async',
    '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, ng, async, operationsModule, graphHtml ) {
+function ( $, _, ng, async, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,7 @@ function ( $, ng, async, operationsModule, graphHtml ) {
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout ) {
+   function createGraphDirective( $timeout, $window, nbeAutoLayout ) {
 
       return {
          template: graphHtml,
@@ -58,8 +59,6 @@ function ( $, ng, async, operationsModule, graphHtml ) {
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
 
-         initGraph( $scope );
-
          // Controller API:
          this.vertexLinkControllers = vertexLinkControllers;
          this.edgeLinkControllers = edgeLinkControllers;
@@ -68,9 +67,19 @@ function ( $, ng, async, operationsModule, graphHtml ) {
          this.selectEdge = selectEdge;
          this.selectVertex = selectVertex;
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+         $scope.calculateLayout = function() {
+            async.runEventually( function() {
+               var autoLayout = nbeAutoLayout.calculate( $scope, jqGraph );
+               if ( autoLayout ) {
+                  layout = $scope.layout = autoLayout;
+               }
+               return !!autoLayout;
+            }, $window, $scope, 1500 );
+         };
 
          var ops = this.operations = operationsModule.create( $scope );
+
+         initGraph( $scope );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -92,6 +101,9 @@ function ( $, ng, async, operationsModule, graphHtml ) {
          function initGraph( $scope ) {
             model = $scope.model;
             layout = $scope.layout;
+            if ( !layout ) {
+               $scope.calculateLayout();
+            }
             view = $scope.view = {};
             selection = $scope.selection = { kind: null, id: null };
 
@@ -195,7 +207,7 @@ function ( $, ng, async, operationsModule, graphHtml ) {
                      makeDeleteEdgeOp( edgeId )();
                      disconnectToOp.undo();
                      disconnectFromOp.undo();
-                  }
+                  };
                }
                return connectPortToPortOp;
             }
@@ -289,11 +301,11 @@ function ( $, ng, async, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function isInput( port ) {
-               return port && port.direction === 'in'
+               return port && port.direction === 'in';
             }
 
             function isOutput( port ) {
-               return port && port.direction !== 'in'
+               return port && port.direction !== 'in';
             }
 
             function insert( ref, linkId, link ) {
@@ -315,8 +327,8 @@ function ( $, ng, async, operationsModule, graphHtml ) {
                type: type,
                label: type.toLowerCase() + ' ' + id
             };
-            var fromLayout =  layout.vertices[ fromRef.nodeId ];
-            var toLayout =  layout.vertices[ toRef.nodeId ];
+            var fromLayout = layout.vertices[ fromRef.nodeId ];
+            var toLayout = layout.vertices[ toRef.nodeId ];
             var centerX = ( parseFloat( fromLayout.left ) + parseFloat( toLayout.left ) ) / 2;
             var centerY = ( parseFloat( fromLayout.top ) + parseFloat( toLayout.top ) ) / 2;
             layout.edges[ id ] = { left: centerX, top: centerY };
@@ -342,7 +354,7 @@ function ( $, ng, async, operationsModule, graphHtml ) {
             if( linksByVertex[ vertexId ] === undefined ) {
                return [ ];
             }
-            return _.map( linksByVertex[ vertexId ], function( link, linkId ) {
+            return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
                return linkControllers[ linkId ];
             } );
          }
@@ -353,7 +365,7 @@ function ( $, ng, async, operationsModule, graphHtml ) {
             if ( linksByEdge[ edgeId ] === undefined ) {
                return [ ];
             }
-            return _.map( linksByEdge[ edgeId ], function( link, linkId ) {
+            return Object.keys( linksByEdge[ edgeId ] ).map( function( linkId ) {
                return linkControllers[ linkId ];
             } );
          }
@@ -390,7 +402,7 @@ function ( $, ng, async, operationsModule, graphHtml ) {
             return function nextId() {
                ++maxIndex;
                return prefix + maxIndex;
-            }
+            };
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,16 +486,16 @@ function ( $, ng, async, operationsModule, graphHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', createGraphDirective ] );
+         module.directive( DIRECTIVE_NAME, [ '$timeout', '$window', 'nbeAutoLayout', createGraphDirective ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction === 'in'; } );
-            }
+            };
          } );
          module.filter( 'nbeOutputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction !== 'in'; } );
-            }
+            };
          } );
       }
    };

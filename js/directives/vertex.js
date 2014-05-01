@@ -64,12 +64,11 @@ function( $, ng, layout, async, vertexHtml ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            // noinspection JSUnusedLocalSymbols
             function handleVertexDragStop( event, ui ) {
                linksToRepaint = [];
                var layout = $scope.layout.vertices[ id ];
-               layout.left = ui.position.left / $scope.canvas.width;
-               layout.top = ui.position.top / $scope.canvas.height;
+               layout.left = ui.position.left;
+               layout.top = ui.position.top;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +81,7 @@ function( $, ng, layout, async, vertexHtml ) {
 
             $scope.handleVertexClick = function() {
                graphController.selectVertex( id );
-            }
+            };
          }
       };
    }
@@ -93,7 +92,7 @@ function( $, ng, layout, async, vertexHtml ) {
       define: function( module ) {
          module.directive( 'nbeVertex', [ '$timeout', createVertexDirective ] );
       }
-   }
+   };
 
 
 } );

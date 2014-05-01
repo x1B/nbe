@@ -1,4 +1,5 @@
 define( [], function() {
+   'use strict';
 
    // Length of a horizontal link stub that helps visualizing where a link is attached
    var STUB_LENGTH = 20;
@@ -11,7 +12,7 @@ define( [], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn, fromBox, toBox, noArrow ) {
+   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn ) {
       var fromX = round( fromLeft ),
           fromY = round( fromTop ),
           toX = round( toLeft ),
@@ -172,7 +173,7 @@ define( [], function() {
 
          // Arc and go to bottom/top:
          arc90( -1, yDir, sweep );
-         if ( yDir == 1 ) {
+         if ( yDir === 1 ) {
             vertical( max( box0.bottom, y+curvePadding ) );
          }
          else {
