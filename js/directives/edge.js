@@ -62,10 +62,12 @@ function ( $, ng, async, edgeHtml ) {
             function handleDrop( event, ui ) {
                if ( $( ui.helper ).hasClass( 'edge' ) ) {
                   // stopped dragging this edge
-                  var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
-                  edgeLayout.left = ui.position.left;
-                  edgeLayout.top = ui.position.top;
-                  linksToRepaint = [];
+                  $scope.$apply( function() {
+                     var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
+                     edgeLayout.left = ui.position.left;
+                     edgeLayout.top = ui.position.top;
+                     linksToRepaint = [];
+                  } );
                }
                else {
                   // dropped a port onto this edge

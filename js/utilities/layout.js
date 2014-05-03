@@ -15,7 +15,8 @@ define( [], function () {
    return {
       boundingBox: boundingBox,
       PORT_DRAG_OFFSET: 8,
-      EDGE_DRAG_OFFSET: 15
+      EDGE_DRAG_OFFSET: 15,
+      GRAPH_PADDING: 40
    };
 
 } );

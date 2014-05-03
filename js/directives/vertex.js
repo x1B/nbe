@@ -65,10 +65,12 @@ function( $, ng, layout, async, vertexHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDragStop( event, ui ) {
-               linksToRepaint = [];
-               var layout = $scope.layout.vertices[ id ];
-               layout.left = ui.position.left;
-               layout.top = ui.position.top;
+               $scope.$apply( function() {
+                  linksToRepaint = [];
+                  var layout = $scope.layout.vertices[ id ];
+                  layout.left = ui.position.left;
+                  layout.top = ui.position.top;
+               } );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
