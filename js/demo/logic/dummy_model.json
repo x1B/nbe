@@ -1,0 +1,72 @@
+{
+   "vertices": {
+      "v0": {
+         "label": "(+) Signal 1",
+         "ports": [
+            { "id": "s1", "label": "(+) 1", "type": "WIRE", "edgeId": "e0" }
+         ]
+      },
+      "v1": {
+         "label": "(-) Signal 2",
+         "ports": [
+            { "id": "s1", "label": "(+) 1", "type": "WIRE", "edgeId": "e1" }
+         ]
+      },
+      "v2": {
+         "label": "AND",
+         "ports": [
+            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "e0" },
+            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "e1" },
+            { "id": "xor", "label": "and(x1, x2)", "type": "WIRE", "edgeId": "e2" },
+            { "id": "probe", "label": "out", "type": "DEBUG" }
+         ]
+      },
+      "v3": {
+         "label": "OR",
+         "ports": [
+            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "e0" },
+            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "e1" },
+            { "id": "xor", "label": "or(x1, x2)", "type": "WIRE", "edgeId": "e3" },
+            { "id": "probe", "label": "out", "type": "DEBUG" }
+         ]
+      },
+      "v4": {
+         "label": "XOR",
+         "ports": [
+            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "e3" },
+            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "e2" },
+            { "id": "xor", "label": "xor(x1, x2)", "type": "WIRE", "edgeId": "e4" },
+            { "id": "probe", "label": "out", "type": "DEBUG" }
+         ]
+      },
+      "v5": {
+         "label": "Display",
+         "ports": [
+            { "id": "x", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "e4" },
+            { "id": "probe", "label": "debug", "direction": "in", "type": "DEBUG" }
+         ]
+      }
+   },
+   "edges": {
+      "e0": {
+         "label": "wire 0",
+         "type": "WIRE"
+      },
+      "e1": {
+         "label": "wire 1",
+         "type": "WIRE"
+      },
+      "e2": {
+         "label": "wire 2",
+         "type": "WIRE"
+      },
+      "e3": {
+         "label": "wire 3",
+         "type": "WIRE"
+      },
+      "e4": {
+         "label": "wire 4",
+         "type": "WIRE"
+      }
+   }
+}

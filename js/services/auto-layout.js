@@ -4,12 +4,13 @@
  */
 define( [
    'dagre',
-   'jquery'
+   'jquery',
+   '../utilities/layout'
 ],
-function ( dagre, $ ) {
+function ( dagre, $, layout ) {
    'use strict';
 
-   var PADDING = 20;
+   var PADDING = layout.GRAPH_PADDING;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

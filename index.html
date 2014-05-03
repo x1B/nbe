@@ -3,16 +3,38 @@
   <head>
     <title>NBE Demo</title>
     <meta charset="UTF-8">
-    <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="css/demo/nbe_laxar.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="css/demo/nbe_logic.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="css/demo/demo.css" media="screen, projection" rel="stylesheet" type="text/css">
   </head>
   <body>
-  <div data-ng-controller="GraphWidget" data-ng-cloak>
-     <div data-nbe-graph="model"
+
+  <h2>Logic Circuit Demo</h2>
+  <div style="overflow: auto; position: relative; width: 1000px; height: 400px;"
+       data-ng-controller="LogicDemoController"
+       data-ng-cloak
+       class="graph-container">
+     <div class="logic-app"
+          data-nbe-graph="model"
           data-nbe-graph-layout="layout"
           data-nbe-graph-controller="nbeController">
         <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
      </div>
   </div>
+
+  <h2>Reactive App Mockup Demo</h2>
+  <div style="overflow: auto; position: relative; width: 1000px; height: 400px;"
+       data-ng-controller="LaxarDemoController"
+       data-ng-cloak
+       class="graph-container">
+     <div class="laxar-app"
+          data-nbe-graph="model"
+          data-nbe-graph-layout="layout"
+          data-nbe-graph-controller="nbeController">
+        <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+     </div>
+  </div>
+
   <script type="text/javascript" data-main="js/start.js" src="bower_components/requirejs/require.js"></script>
   <script type="text/javascript" src="require_config.js"></script>
 
