@@ -71,7 +71,9 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          this.selectEdge = selectEdge;
          this.selectVertex = selectVertex;
 
+         // Manage layout and rendering:
          this.calculateLayout = calculateLayout;
+         this.adjustCanvasSize = adjustCanvasSize;
 
          var ops = this.operations = operationsModule.create( $scope );
 
@@ -79,12 +81,26 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function repaint() {
-            $scope.canvas = {
-               width: jqGraph.width(),
-               height: jqGraph.height()
-            };
+         /**
+          * In each dimension, pick max( offset container size, content size ) and use it as the canvas size.
+          */
+         function adjustCanvasSize() {
+            var offsetContainer = jqGraph.offsetParent();
+            var graphOffset = jqGraph.offset();
+            var padding = layoutModule.GRAPH_PADDING;
+            var scollbarSpace = 20;
+            var width = offsetContainer.width() - scollbarSpace;
+            var height = offsetContainer.height() - scollbarSpace;
+            $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
+               var jqVertex = $( domNode );
+               var pos = jqVertex.offset();
+               width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );
+               height = Math.max( height, pos.top - graphOffset.top + jqVertex.height() + padding );
+            } );
+            jqGraph.width( width ).height( height );
+         }
 
+         function repaint() {
             ng.forEach( linkControllers, function( controller ) {
                controller.repaint();
             } );
@@ -98,7 +114,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
             model = $scope.model;
             layout = $scope.layout;
             if ( !layout ) {
-               $scope.calculateLayout();
+               self.calculateLayout();
             }
             view = $scope.view = {};
             selection = $scope.selection = { kind: null, id: null };
@@ -121,6 +137,10 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
             $( document ).on( 'keydown', handleKeys );
             repaint();
+
+            $scope.$watch( 'layout', function() {
+               async.ensure( adjustCanvasSize, $timeout, 50 )();
+            }, true );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,7 +379,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function vertexLinkControllers( vertexId ) {
-            if( linksByVertex[ vertexId ] === undefined ) {
+            if ( linksByVertex[ vertexId ] === undefined ) {
                return [ ];
             }
             return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
@@ -433,6 +453,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
                if ( autoLayout ) {
                   layout = $scope.layout = autoLayout;
                   $timeout( repaint );
+                  $timeout( adjustCanvasSize );
                }
                return !!autoLayout;
             }, $window, $scope, 1500 );
@@ -501,7 +522,6 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
       }
 
    }
-
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

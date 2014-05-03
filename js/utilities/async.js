@@ -1,5 +1,6 @@
 // :TODO: This should be restructured into an AngularJS service.
 define( [ 'underscore' ], function ( underscore ) {
+   'use strict';
 
    function repeatAfter( f, $timeout, delay ) {
       delay = delay || 50;
@@ -11,8 +12,8 @@ define( [ 'underscore' ], function ( underscore ) {
          if ( handle ) {
             $timeout.cancel( handle );
          }
-         handle = $timeout( function() { f.apply( self, args ) }, delay );
-      }
+         handle = $timeout( function() { f.apply( self, args ); }, delay );
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,6 @@ define( [ 'underscore' ], function ( underscore ) {
       ensure: ensure,
       repeatAfter: repeatAfter,
       runEventually: runEventually
-   }
+   };
 
 } );

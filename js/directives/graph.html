@@ -1,30 +1,28 @@
-<section class="graph">
+<div class="graph">
 
    <div class="tools"><div ng-transclude></div></div>
 
-   <div data-ng-repeat="(vertexId, vertex) in model.vertices"
-        data-nbe-vertex="{{ vertexId }}">
+   <div class="graph-contents">
+
+      <div data-ng-repeat="(vertexId, vertex) in model.vertices"
+           data-nbe-vertex="{{ vertexId }}">
+      </div>
+
+      <div class="port GHOST" style="display: none;"><i></i></div>
+
+      <div data-ng-repeat="(edgeId, edge) in model.edges"
+           data-nbe-edge="{{ edgeId }}"></div>
+
+      <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
+         <path data-ng-repeat="(id, link) in view.links"
+               data-nbe-link
+               stroke-linejoin="round"
+               class="{{ ( selection.id == link.source.nodeId || selection.id == link.dest.nodeId ) && 'selected' || '' }} link {{ link.type }}"
+               d="M0 0 L0 0"></path>
+
+         <path class="link GHOST"></path>
+      </svg>
+
    </div>
 
-   <!-- :TODO:
-   <div class="node vertex GHOST">
-      <div class="header">New {{ ghost.vertex.label }}</div>
-   </div>
-   -->
-
-   <div class="port GHOST" style="display: none;"><i></i></div>
-
-   <div data-ng-repeat="(edgeId, edge) in model.edges"
-        data-nbe-edge="{{ edgeId }}"></div>
-
-   <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
-      <path data-ng-repeat="(id, link) in view.links"
-            data-nbe-link
-            stroke-linejoin="round"
-            class="{{ ( selection.id == link.source.nodeId || selection.id == link.dest.nodeId ) && 'selected' || '' }} link {{ link.type }}"
-            d="M0 0 L0 0"></path>
-
-      <path class="link GHOST"></path>
-   </svg>
-
-</section>
+</div>

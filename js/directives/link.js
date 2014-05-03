@@ -71,7 +71,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
                   else {
                      var edgePos = jqNode.offset();
                      coords[ 0 ] = edgePos.left - graphOffset.left + edgeOffset;
-                     coords[ 1 ] = edgePos.top - graphOffset.left + edgeOffset;
+                     coords[ 1 ] = edgePos.top - graphOffset.top + edgeOffset;
                   }
                }
 
@@ -106,7 +106,6 @@ function ( $, ng, async, layout, svgLinkPath ) {
                      return false;
                   }
                }
-
 
                var dest = $scope.link.dest;
                if ( dest.port ) {

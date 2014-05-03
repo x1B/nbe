@@ -1,0 +1,228 @@
+/**
+ * Use this to declare user-defined edge types.
+ */
+/* line 44, ../../sass/_nbe.scss */
+body {
+  background: #444444;
+}
+
+/* line 48, ../../sass/_nbe.scss */
+[data-ng-cloak] {
+  display: none !important;
+}
+
+/* line 52, ../../sass/_nbe.scss */
+.graph {
+  background: #333333;
+  border-radius: 10px;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  font-size: 12px;
+  color: #e0e0e0;
+}
+/* line 54, ../../sass/_nbe.scss */
+.graph .graph-contents {
+  background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+  width: 100%;
+  height: 100%;
+}
+/* line 71, ../../sass/_nbe.scss */
+.graph svg {
+  width: 100%;
+  height: 100%;
+}
+/* line 86, ../../sass/_nbe.scss */
+.graph * {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+/* line 94, ../../sass/_nbe.scss */
+.graph .port i {
+  width: 11px;
+  height: 11px;
+  background: #c3669c;
+  border: solid #444444 1px;
+  border-radius: 6px;
+  margin: 3px 5px -3px 5px;
+  display: inline-block;
+  position: relative;
+}
+/* line 104, ../../sass/_nbe.scss */
+.graph .port i:hover {
+  opacity: 0.5;
+}
+/* line 109, ../../sass/_nbe.scss */
+.graph .node {
+  position: absolute;
+  border: solid #c8c8c8 1.5px;
+}
+/* line 113, ../../sass/_nbe.scss */
+.graph .node.vertex {
+  box-shadow: 4px 4px 6px #202020;
+  border-radius: 10px;
+  background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
+}
+/* line 120, ../../sass/_nbe.scss */
+.graph .node.vertex .header {
+  border-radius: 10px 10px 0px 0px;
+  height: 18px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 2px 5px 1px 5px;
+  font-size: 12px;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  text-shadow: 1px 1px 0.5px #444444;
+}
+/* line 131, ../../sass/_nbe.scss */
+.graph .node.vertex .port-group {
+  background: rgba(0, 0, 0, 0.05);
+  border-top: solid #c8c8c8 1px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-align-items: flex-start;
+}
+/* line 143, ../../sass/_nbe.scss */
+.graph .node.vertex .ports {
+  -webkit-flex: 0 1 auto;
+  display: -webkit-flex;
+  -webkit-flex-flow: column;
+  -webkit-justify-content: stretch;
+}
+/* line 152, ../../sass/_nbe.scss */
+.graph .node.vertex .ports.in {
+  border-right: 1px solid #a0a0a0;
+  -webkit-align-items: flex-start;
+}
+/* line 155, ../../sass/_nbe.scss */
+.graph .node.vertex .ports.in .port {
+  text-align: left;
+  padding-right: 9px;
+}
+/* line 158, ../../sass/_nbe.scss */
+.graph .node.vertex .ports.out {
+  -webkit-align-items: flex-end;
+}
+/* line 160, ../../sass/_nbe.scss */
+.graph .node.vertex .ports.out .port {
+  text-align: right;
+  padding-left: 9px;
+}
+/* line 164, ../../sass/_nbe.scss */
+.graph .node.vertex .port {
+  -webkit-flex: 0 1 auto;
+  line-height: 16px;
+  padding-top: 0;
+  color: #202020;
+  font-size: 11px;
+  font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
+  text-shadow: 0 0 2px #f9f9f9;
+  white-space: nowrap;
+}
+/* line 178, ../../sass/_nbe.scss */
+.graph .node.edge {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
+  border-radius: 30px;
+  box-shadow: 4px 4px 4px #202020;
+}
+/* line 185, ../../sass/_nbe.scss */
+.graph .node.edge label {
+  display: block;
+  position: relative;
+  width: 100px;
+  left: -35px;
+  text-align: center;
+  text-shadow: 4px 4px 4px #202020;
+  top: 32px;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  font-size: 12px;
+}
+/* line 199, ../../sass/_nbe.scss */
+.graph .node.selected {
+  box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
+}
+/* line 204, ../../sass/_nbe.scss */
+.graph .GHOST {
+  position: absolute;
+}
+/* line 209, ../../sass/_nbe.scss */
+.graph .links .link {
+  position: absolute;
+  fill: transparent;
+}
+/* line 213, ../../sass/_nbe.scss */
+.graph .links .link {
+  stroke-width: 2;
+}
+/* line 218, ../../sass/_nbe.scss */
+.graph .tools {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* line 223, ../../sass/_nbe.scss */
+.graph .tools button {
+  opacity: 0.5;
+}
+/* line 225, ../../sass/_nbe.scss */
+.graph .tools button:hover {
+  opacity: 1;
+}
+
+/* line 10, ../../sass/_nbe.scss */
+.graph.logic-app .port.WIRE > i {
+  background: #c3669c;
+}
+/* line 15, ../../sass/_nbe.scss */
+.graph.logic-app .node.edge.WIRE {
+  background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
+}
+/* line 21, ../../sass/_nbe.scss */
+.graph.logic-app .link.WIRE {
+  stroke: #c3669c;
+}
+/* line 23, ../../sass/_nbe.scss */
+.graph.logic-app .link.WIRE.selected {
+  stroke: #e0afcb;
+}
+/* line 31, ../../sass/_nbe.scss */
+.graph.logic-app.highlight-WIRE .port:not(.WIRE) > i,
+.graph.logic-app.highlight-WIRE .node.edge:not(.WIRE) {
+  background: #646464;
+}
+/* line 34, ../../sass/_nbe.scss */
+.graph.logic-app.highlight-WIRE .link:not(.WIRE) {
+  stroke: #646464;
+}
+
+/* line 10, ../../sass/_nbe.scss */
+.graph.logic-app .port.DEBUG > i {
+  background: #f5c680;
+}
+/* line 15, ../../sass/_nbe.scss */
+.graph.logic-app .node.edge.DEBUG {
+  background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
+}
+/* line 21, ../../sass/_nbe.scss */
+.graph.logic-app .link.DEBUG {
+  stroke: #f5c680;
+}
+/* line 23, ../../sass/_nbe.scss */
+.graph.logic-app .link.DEBUG.selected {
+  stroke: #fcf0df;
+}
+/* line 31, ../../sass/_nbe.scss */
+.graph.logic-app.highlight-DEBUG .port:not(.DEBUG) > i,
+.graph.logic-app.highlight-DEBUG .node.edge:not(.DEBUG) {
+  background: #646464;
+}
+/* line 34, ../../sass/_nbe.scss */
+.graph.logic-app.highlight-DEBUG .link:not(.DEBUG) {
+  stroke: #646464;
+}

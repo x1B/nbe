@@ -1,0 +1,50 @@
+// Physical colors:
+$gray0: #202020!default;
+$gray1: #333333!default;
+$gray2: #444444!default;
+$gray3: #646464!default;
+$gray4: #a0a0a0!default;
+$gray5: #c8c8c8!default;
+$gray6: #e0e0e0!default;
+$gray7: #f9f9f9!default;
+
+$paletteA: #c3669c!default;
+$paletteB: #c2e578!default;
+$paletteC: #626ca8!default;
+$paletteD: #f5c680!default;
+
+
+// Logical colors:
+$bgColor: $gray2!default;
+$graphBgColor: $gray1!default;
+$gridColor: $bgColor!default;
+
+$typeColor1: $paletteA!default;
+$typeColor2: $paletteB!default;
+$typeColor3: $paletteC!default;
+$typeColor4: $paletteD!default;
+$vertexBgColor: $paletteD!default;
+
+$fgColorDark: $gray0!default;
+$vertexBorderColor: $gray4!default;
+
+$unHighlightColor: $gray3!default;
+
+$nodeBorderColor: $gray5!default;
+$nodeShadowColor: $gray0!default;
+
+$textColor: $gray6!default;
+$portTextColor: $gray0!default;
+
+
+// Sizes:
+$nodeTitleHeight: 18px!default;
+$portAnchorSize: 11px!default;
+$portHeight: 16px!default;
+$edgeNodeSize: 30px!default;
+
+// Font styles and sizes:
+$fontFamilyLabel: "Futura", "Helvetica Neue", "Verdana", sans-serif!default;
+$fontSizeLabel: 12px!default;
+$fontFamilyPort: "Gill Sans", "Helvetica Neue", "Arial", sans-serif!default;
+$fontSizePort: 11px!default;
