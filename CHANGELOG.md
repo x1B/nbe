@@ -2,6 +2,12 @@
 
 ## Last Changes
 
+- [#21](https://github.com/x1B/nbe/issues/21):
+  Fixed direction-dependent highlighting of ports on drag.
+  Also added missing changelog entry for #20.
+- [#20](https://github.com/x1B/nbe/issues/20):
+  Allowed graph inside scroll-container to grow as needed.
+  Allowed multiple graphs on the same page, to be used by different AngularJS modules.
 - [#18](https://github.com/x1B/nbe/issues/18): Allowed to provide a button for automatic layout.
 - [#9](https://github.com/x1B/nbe/issues/9): Fixed placement of edges upon creation.
 - [#16](https://github.com/x1B/nbe/issues/16): Made it simpler to disconnect ports from edges: just click on the port.

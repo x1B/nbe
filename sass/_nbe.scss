@@ -51,6 +51,13 @@ body {
 
 .graph {
 
+   background: $graphBgColor;
+   border-radius: 10px;
+
+   font-family: $fontFamilyLabel;
+   font-size: $fontSizeLabel;
+   color: $textColor;
+
    .graph-contents {
       background:
       linear-gradient(
@@ -72,16 +79,6 @@ body {
       width: 100%;
       height: 100%;
    }
-
-   .links {
-   }
-
-   background: $graphBgColor;
-   border-radius: 10px;
-
-   font-family: $fontFamilyLabel;
-   font-size: $fontSizeLabel;
-   color: $textColor;
 
    * {
       user-select: none;
@@ -105,6 +102,19 @@ body {
          opacity: 0.5;
       }
    }
+
+   &.highlight-in {
+      .ports.out .port i {
+         background: $unHighlightColor;
+      }
+   }
+
+   &.highlight-out {
+      .ports.in .port i {
+         background: $unHighlightColor;
+      }
+   }
+
 
    .node {
       position: absolute;
