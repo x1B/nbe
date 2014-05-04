@@ -31,7 +31,8 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          scope: {
             nbeController: '=nbeGraphController',
             model: '=nbeGraph',
-            layout: '=nbeGraphLayout'
+            layout: '=nbeGraphLayout',
+            types: '=nbeGraphTypes'
          },
          transclude: true,
          controller: GraphController
@@ -46,6 +47,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
          /** @type {{ edges: {}, vertices: {}<String, {ports: []}> }} */
          var model;
          var layout;
+         var types;
          var view;
          var selection;
 
@@ -112,6 +114,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
          function initGraph( $scope ) {
             model = $scope.model;
+            types = $scope.types || {};
             layout = $scope.layout;
             if ( !layout ) {
                self.calculateLayout();
@@ -192,18 +195,51 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
                return makeConnectPortToPortOp( fromRef, toRef );
             }
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
             function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
-               if ( vertexRef.port.type !== model.edges[ toEdgeId ].type ) {
+               var type = vertexRef.port.type;
+               if ( type !== model.edges[ toEdgeId ].type ) {
                   return operationsModule.noOp;
                }
+
+               var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
                   createLink( vertexRef, edgeRef );
                }
                connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
-               return connectPortToEdgeOp;
+
+               return operationsModule.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /** If mandated by the edge type, delete one link to this edge (allowing to form a new link). */
+            function makeEnforceCardinalityOp( edgeId, type, portDirection ) {
+               var restrictDests = portDirection === 'in';
+               var limit = types[ type ] && types[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
+               if ( limit === undefined ) {
+                  return operationsModule.noOp;
+               }
+
+               var disconnectOps = [];
+               var counter = 0;
+               var links = linksByEdge[ edgeId ];
+               Object.keys( links ).forEach( function( linkId ) {
+                  var link = links[ linkId ];
+                  if ( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
+                     ++counter;
+                     if ( counter >= limit ) {
+                        disconnectOps.push( makeDisconnectOp( link[ restrictDests ? 'dest' : 'source' ] ) );
+                     }
+                  }
+               } );
+               return operationsModule.compose( disconnectOps );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function makeConnectPortToPortOp( fromRef, toRef ) {
                if ( fromRef.port.type !== toRef.port.type ||
@@ -211,21 +247,13 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
                   return operationsModule.noOp;
                }
 
-               var disconnectFromOp = makeDisconnectOp( fromRef );
-               var disconnectToOp = makeDisconnectOp( toRef );
                function connectPortToPortOp() {
-                  disconnectFromOp();
-                  disconnectToOp();
                   var edgeId = createEdge( fromRef, toRef );
                   fromRef.port.edgeId = edgeId;
                   toRef.port.edgeId = edgeId;
-                  connectPortToPortOp.undo = function() {
-                     makeDeleteEdgeOp( edgeId )();
-                     disconnectToOp.undo();
-                     disconnectFromOp.undo();
-                  };
+                  connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                }
-               return connectPortToPortOp;
+               return operationsModule.compose( [ makeDisconnectOp( fromRef ), makeDisconnectOp( toRef ), connectPortToPortOp ] );
             }
          }
 

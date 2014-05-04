@@ -16,7 +16,7 @@ function (
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function LogicDemoController( $scope ) {
-      $scope.model = dummyModel;
+      $scope.circuit = dummyModel;
       $scope.layout = dummyLayout;
    }
 

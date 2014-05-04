@@ -18,6 +18,14 @@ function (
    function LaxarDemoController( $scope ) {
       $scope.model = dummyModel;
       $scope.layout = dummyLayout;
+      $scope.types = {
+         RESOURCE: {
+            maxSources: 1
+         },
+         CONTAINER: {
+            maxSources: 1
+         }
+      };
    }
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////

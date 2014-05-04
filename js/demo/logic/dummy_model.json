@@ -2,12 +2,14 @@
    "vertices": {
       "s1": {
          "label": "Signal 1",
+         "value": true,
          "ports": [
             { "id": "s", "label": "sig 1", "type": "WIRE", "edgeId": "e0" }
          ]
       },
       "s2": {
          "label": "Signal 2",
+         "value": false,
          "ports": [
             { "id": "s", "label": "sig 2", "type": "WIRE", "edgeId": "e1" }
          ]
