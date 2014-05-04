@@ -2,6 +2,7 @@
 
 ## Last Changes
 
+- [#11](https://github.com/x1B/nbe/issues/11): Allowed to restrict edge cardinality by type and port direction (source ports, dest ports).
 - [#21](https://github.com/x1B/nbe/issues/21):
   Fixed direction-dependent highlighting of ports on drag.
   Also added missing changelog entry for #20.

@@ -23,7 +23,7 @@ function ( dagre, $, layout ) {
          }
 
          var dagreGraph = createDagreGraph( jqVertices, jqEdges, scope.model );
-         var dagreResult = dagre.layout().nodeSep( 40 ).rankSep( 140 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
+         var dagreResult = dagre.layout().nodeSep( 40 ).rankSep( 75 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
          return layoutFromDagreResult( dagreResult );
       }
 
