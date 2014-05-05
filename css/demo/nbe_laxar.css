@@ -1,290 +1,158 @@
 /**
  * Use this to declare user-defined edge types.
  */
-/* line 44, ../../sass/_nbe.scss */
-body {
-  background: #444444;
-}
-
-/* line 48, ../../sass/_nbe.scss */
-[data-ng-cloak] {
-  display: none !important;
-}
-
-/* line 52, ../../sass/_nbe.scss */
-.graph {
-  background: #333333;
-  border-radius: 10px;
-  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
-  font-size: 12px;
-  color: #e0e0e0;
-}
-/* line 61, ../../sass/_nbe.scss */
-.graph .graph-contents {
-  background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
-  background-size: 50px 50px;
-  width: 100%;
-  height: 100%;
-}
-/* line 78, ../../sass/_nbe.scss */
-.graph svg {
-  width: 100%;
-  height: 100%;
-}
-/* line 83, ../../sass/_nbe.scss */
-.graph * {
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  cursor: default;
-}
-/* line 91, ../../sass/_nbe.scss */
-.graph .port i {
-  width: 11px;
-  height: 11px;
-  background: #c3669c;
-  border: solid #444444 1px;
-  border-radius: 6px;
-  margin: 3px 5px -3px 5px;
-  display: inline-block;
-  position: relative;
-}
-/* line 101, ../../sass/_nbe.scss */
-.graph .port i:hover {
-  opacity: 0.5;
-}
-/* line 107, ../../sass/_nbe.scss */
-.graph.highlight-in .ports.out .port i {
-  background: #646464;
-}
-/* line 113, ../../sass/_nbe.scss */
-.graph.highlight-out .ports.in .port i {
-  background: #646464;
-}
-/* line 119, ../../sass/_nbe.scss */
-.graph .node {
-  position: absolute;
-  border: solid #c8c8c8 1.5px;
-}
-/* line 123, ../../sass/_nbe.scss */
-.graph .node.vertex {
-  box-shadow: 4px 4px 6px #202020;
-  border-radius: 10px;
-  background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
-}
-/* line 130, ../../sass/_nbe.scss */
-.graph .node.vertex .header {
-  border-radius: 10px 10px 0px 0px;
-  height: 18px;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.15);
-  padding: 2px 5px 1px 5px;
-  font-size: 12px;
-  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
-  text-shadow: 1px 1px 0.5px #444444;
-}
-/* line 141, ../../sass/_nbe.scss */
-.graph .node.vertex .port-group {
-  background: rgba(0, 0, 0, 0.05);
-  border-top: solid #c8c8c8 1px;
-  display: -webkit-flex;
-  -webkit-flex-direction: row;
-  -webkit-align-items: flex-start;
-}
-/* line 153, ../../sass/_nbe.scss */
-.graph .node.vertex .ports {
-  -webkit-flex: 0 1 auto;
-  display: -webkit-flex;
-  -webkit-flex-flow: column;
-  -webkit-justify-content: stretch;
-}
-/* line 162, ../../sass/_nbe.scss */
-.graph .node.vertex .ports.in {
-  border-right: 1px solid #a0a0a0;
-  -webkit-align-items: flex-start;
-}
-/* line 165, ../../sass/_nbe.scss */
-.graph .node.vertex .ports.in .port {
-  text-align: left;
-  padding-right: 9px;
-}
-/* line 168, ../../sass/_nbe.scss */
-.graph .node.vertex .ports.out {
-  -webkit-align-items: flex-end;
-}
-/* line 170, ../../sass/_nbe.scss */
-.graph .node.vertex .ports.out .port {
-  text-align: right;
-  padding-left: 9px;
-}
-/* line 174, ../../sass/_nbe.scss */
-.graph .node.vertex .port {
-  -webkit-flex: 0 1 auto;
-  line-height: 16px;
-  padding-top: 0;
-  color: #202020;
-  font-size: 11px;
-  font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
-  text-shadow: 0 0 2px #f9f9f9;
-  white-space: nowrap;
-}
-/* line 188, ../../sass/_nbe.scss */
-.graph .node.edge {
-  width: 30px;
-  height: 30px;
-  background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
-  border-radius: 30px;
-  box-shadow: 4px 4px 4px #202020;
-}
-/* line 195, ../../sass/_nbe.scss */
-.graph .node.edge label {
-  display: block;
-  position: relative;
-  width: 100px;
-  left: -35px;
-  text-align: center;
-  text-shadow: 4px 4px 4px #202020;
-  top: 32px;
-  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
-  font-size: 12px;
-}
-/* line 209, ../../sass/_nbe.scss */
-.graph .node.selected {
-  box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
-}
-/* line 214, ../../sass/_nbe.scss */
-.graph .GHOST {
-  position: absolute;
-}
-/* line 219, ../../sass/_nbe.scss */
-.graph .links .link {
-  position: absolute;
-  fill: transparent;
-}
-/* line 223, ../../sass/_nbe.scss */
-.graph .links .link {
-  stroke-width: 2;
-}
-/* line 228, ../../sass/_nbe.scss */
-.graph .tools {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-/* line 233, ../../sass/_nbe.scss */
-.graph .tools button {
-  opacity: 0.5;
-}
-/* line 235, ../../sass/_nbe.scss */
-.graph .tools button:hover {
-  opacity: 1;
-}
-
-/* line 10, ../../sass/_nbe.scss */
+/* line 64, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .port.FLAG > i {
   background: #c3669c;
 }
-/* line 15, ../../sass/_nbe.scss */
+/* line 69, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .node.edge.FLAG {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
-/* line 21, ../../sass/_nbe.scss */
+/* line 75, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.FLAG {
   stroke: #c3669c;
 }
-/* line 23, ../../sass/_nbe.scss */
+/* line 77, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.FLAG.selected {
   stroke: #e0afcb;
 }
-/* line 31, ../../sass/_nbe.scss */
+/* line 85, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-FLAG .port:not(.FLAG) > i,
 .graph.laxar-app.highlight-FLAG .node.edge:not(.FLAG) {
   background: #646464;
 }
-/* line 34, ../../sass/_nbe.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-FLAG .link:not(.FLAG) {
   stroke: #646464;
 }
+/* line 95, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-FLAG .link.FLAG {
+  display: none;
+}
+/* line 98, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-FLAG .port.FLAG {
+  display: none;
+}
+/* line 101, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-FLAG .edge.FLAG {
+  display: none;
+}
 
-/* line 10, ../../sass/_nbe.scss */
+/* line 64, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .port.ACTION > i {
   background: #c2e578;
 }
-/* line 15, ../../sass/_nbe.scss */
+/* line 69, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .node.edge.ACTION {
   background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
-/* line 21, ../../sass/_nbe.scss */
+/* line 75, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.ACTION {
   stroke: #c2e578;
 }
-/* line 23, ../../sass/_nbe.scss */
+/* line 77, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.ACTION.selected {
   stroke: #e9f5ce;
 }
-/* line 31, ../../sass/_nbe.scss */
+/* line 85, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-ACTION .port:not(.ACTION) > i,
 .graph.laxar-app.highlight-ACTION .node.edge:not(.ACTION) {
   background: #646464;
 }
-/* line 34, ../../sass/_nbe.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-ACTION .link:not(.ACTION) {
   stroke: #646464;
 }
+/* line 95, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-ACTION .link.ACTION {
+  display: none;
+}
+/* line 98, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-ACTION .port.ACTION {
+  display: none;
+}
+/* line 101, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-ACTION .edge.ACTION {
+  display: none;
+}
 
-/* line 10, ../../sass/_nbe.scss */
+/* line 64, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .port.RESOURCE > i {
   background: #626ca8;
 }
-/* line 15, ../../sass/_nbe.scss */
+/* line 69, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .node.edge.RESOURCE {
   background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
-/* line 21, ../../sass/_nbe.scss */
+/* line 75, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.RESOURCE {
   stroke: #626ca8;
 }
-/* line 23, ../../sass/_nbe.scss */
+/* line 77, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.RESOURCE.selected {
   stroke: #a4a9cc;
 }
-/* line 31, ../../sass/_nbe.scss */
+/* line 85, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-RESOURCE .port:not(.RESOURCE) > i,
 .graph.laxar-app.highlight-RESOURCE .node.edge:not(.RESOURCE) {
   background: #646464;
 }
-/* line 34, ../../sass/_nbe.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-RESOURCE .link:not(.RESOURCE) {
   stroke: #646464;
 }
+/* line 95, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-RESOURCE .link.RESOURCE {
+  display: none;
+}
+/* line 98, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-RESOURCE .port.RESOURCE {
+  display: none;
+}
+/* line 101, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-RESOURCE .edge.RESOURCE {
+  display: none;
+}
 
-/* line 10, ../../sass/_nbe.scss */
+/* line 64, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .port.CONTAINER > i {
   background: #f5c680;
 }
-/* line 15, ../../sass/_nbe.scss */
+/* line 69, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .node.edge.CONTAINER {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 21, ../../sass/_nbe.scss */
+/* line 75, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.CONTAINER {
   stroke: #f5c680;
 }
-/* line 23, ../../sass/_nbe.scss */
+/* line 77, ../../sass/_nbe_variables.scss */
 .graph.laxar-app .link.CONTAINER.selected {
   stroke: #fcf0df;
 }
-/* line 31, ../../sass/_nbe.scss */
+/* line 85, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-CONTAINER .port:not(.CONTAINER) > i,
 .graph.laxar-app.highlight-CONTAINER .node.edge:not(.CONTAINER) {
   background: #646464;
 }
-/* line 34, ../../sass/_nbe.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.laxar-app.highlight-CONTAINER .link:not(.CONTAINER) {
   stroke: #646464;
+}
+/* line 95, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-CONTAINER .link.CONTAINER {
+  display: none;
+}
+/* line 98, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-CONTAINER .port.CONTAINER {
+  display: none;
+}
+/* line 101, ../../sass/_nbe_variables.scss */
+.graph.laxar-app.hide-CONTAINER .edge.CONTAINER {
+  display: none;
 }
