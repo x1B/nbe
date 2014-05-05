@@ -20,10 +20,22 @@ function (
       $scope.layout = dummyLayout;
       $scope.types = {
          RESOURCE: {
-            maxSources: 1
+            maxSources: 1,
+            hidden: false,
+            label: 'Resources'
          },
          CONTAINER: {
-            maxSources: 1
+            maxSources: 1,
+            hidden: false,
+            label: 'Nesting'
+         },
+         FLAG: {
+            label: 'Flags',
+            hidden: false
+         },
+         ACTION: {
+            label: 'Actions',
+            hidden: false
          }
       };
    }

@@ -34,6 +34,11 @@
           data-nbe-graph-layout="layout"
           data-nbe-graph-controller="nbeController">
         <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+        <label data-ng-repeat="(typeName, type) in types">
+           <input type="checkbox"
+                  data-ng-model="type.hidden"
+                  data-ng-checked="!type.hidden"
+                  data-ng-true-value="" data-ng-false-value="true" />{{ type.label }}</label>
      </div>
   </div>
 

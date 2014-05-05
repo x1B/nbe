@@ -79,6 +79,15 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
          var ops = this.operations = operationsModule.create( $scope );
 
+         $scope.$watch( 'types', function( newTypes ) {
+            Object.keys( newTypes ).forEach( function( type ) {
+               var hideType = !!( newTypes[ type ] && newTypes[ type ].hidden );
+               jqGraph.toggleClass( 'hide-' + type, hideType );
+            } );
+            repaint();
+            adjustCanvasSize();
+         }, true );
+
          initGraph( $scope );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,7 +486,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
          function calculateLayout() {
             async.runEventually( function() {
-               var autoLayout = nbeAutoLayout.calculate( $scope, jqGraph );
+               var autoLayout = nbeAutoLayout.calculate( $scope.model, $scope.types, jqGraph );
                if ( autoLayout ) {
                   layout = $scope.layout = autoLayout;
                   $timeout( repaint );
