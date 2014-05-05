@@ -3,6 +3,7 @@
       "v0": {
          "label": "Command Button",
          "ports": [
+            { "id": "anchor", "label": "anchor", "type": "CONTAINER", "edgeId": "e4", "direction": "in"  },
             { "id": "i0", "label": "delete.enableOn", "type": "FLAG", "direction": "in" },
             { "id": "i1", "label": "buttons[ 0 ].enableOn", "type": "ACTION", "direction": "in"  },
             { "id": "o0", "label": "Resource (M)", "type": "RESOURCE" },
@@ -12,6 +13,7 @@
       "v1": {
          "label": "Weird Stuff",
          "ports": [
+            { "id": "anchor", "label": "anchor", "type": "CONTAINER", "edgeId": "e4", "direction": "in"  },
             { "id": "i0", "label": "Some Resource (S)", "type": "RESOURCE", "direction": "in"  },
             { "id": "i1", "label": "Another Resource (S)", "type": "RESOURCE", "direction": "in"  },
             { "id": "i2", "label": "Play Music On", "type": "FLAG", "direction": "in"  },
@@ -21,17 +23,17 @@
          ]
       },
       "v2": {
-         "label": "Standalone Stuff",
+         "label": "Container",
          "ports": [
-            { "id": "i0", "label": "The Resource (S)", "type": "RESOURCE", "direction": "in"  },
-            { "id": "i1", "label": "Shuffle Action", "type": "ACTION", "direction": "in"  },
-            { "id": "o0", "label": "Another Resource (M)", "type": "RESOURCE" },
-            { "id": "o1", "label": "Refresh Action", "type": "ACTION" }
+            { "id": "o1", "label": "Header", "type": "CONTAINER", "edgeId": "e3" },
+            { "id": "o2", "label": "Content", "type": "CONTAINER", "edgeId": "e4" },
+            { "id": "o3", "label": "Footer", "type": "CONTAINER" }
          ]
       },
       "v3": {
          "label": "A Big One",
          "ports": [
+            { "id": "anchor", "label": "anchor", "type": "CONTAINER", "edgeId": "e3", "direction": "in"  },
             { "id": "i0", "label": "First Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
             { "id": "i1", "label": "Second Resource (S)", "type": "RESOURCE", "direction": "in"  },
             { "id": "i2", "label": "Take a Second", "type": "FLAG", "edgeId": "e2", "direction": "in" },
@@ -44,6 +46,7 @@
       "v4": {
          "label": "More Stuff",
          "ports": [
+            { "id": "anchor", "label": "anchor", "type": "CONTAINER", "edgeId": "e4", "direction": "in"  },
             { "id": "i0", "label": "The Resource (S)", "type": "RESOURCE", "edgeId": "e0", "direction": "in"  },
             { "id": "i1", "label": "Shuffle Action", "type": "ACTION", "direction": "in"  },
             { "id": "o0", "label": "Another Resource (M)", "type": "RESOURCE" },
@@ -63,6 +66,14 @@
       "e2": {
          "label": "myFlag",
          "type": "FLAG"
+      },
+      "e3": {
+         "label": "",
+         "type": "CONTAINER"
+      },
+      "e4": {
+         "label": "",
+         "type": "CONTAINER"
       }
    }
 }
