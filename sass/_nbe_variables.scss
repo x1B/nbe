@@ -43,8 +43,65 @@ $portAnchorSize: 11px!default;
 $portHeight: 16px!default;
 $edgeNodeSize: 30px!default;
 
+$graphBorderRadius: 10px!default;
+$vertexBorderRadius: 5px!default;
+
+
 // Font styles and sizes:
 $fontFamilyLabel: "Futura", "Helvetica Neue", "Verdana", sans-serif!default;
 $fontSizeLabel: 12px!default;
 $fontFamilyPort: "Gill Sans", "Helvetica Neue", "Arial", sans-serif!default;
 $fontSizePort: 11px!default;
+
+
+/**
+ * Use this to declare user-defined edge types.
+ */
+@mixin edgeType( $themeName, $name, $color ) {
+
+   .graph.#{$themeName} {
+      // Colored vertex node ports:
+      .port.#{$name} > i {
+         background: $color;
+      }
+
+      // Colored edge nodes:
+      .node.edge.#{$name} {
+         background: -moz-linear-gradient(left top, $color 0%, darken($color, 20%) 100%);
+         background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $color), color-stop(100%, darken($color, 30%)));
+      }
+
+      // Colored links (svg):
+      .link.#{$name} {
+         stroke: $color;
+         &.selected {
+            stroke: lighten( $color, 20 );
+         }
+      }
+
+      // When highlightin this edge type (e.g. on drag drop), grey out edges of other types:
+      &.highlight-#{$name} {
+         .port:not(.#{$name}) > i,
+         .node.edge:not(.#{$name}) {
+            background: $unHighlightColor;
+         }
+         .link:not(.#{$name}) {
+            stroke: $unHighlightColor;
+         }
+      }
+
+
+      &.hide-#{$name} {
+         .link.#{$name} {
+            display: none;
+         }
+         .port.#{$name} {
+            display: none;
+         }
+         .edge.#{$name} {
+            display: none;
+         }
+      }
+   }
+
+}

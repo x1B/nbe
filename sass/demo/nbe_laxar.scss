@@ -1,4 +1,4 @@
-@import '../nbe';
+@import '../nbe_variables';
 
 @include edgeType( 'laxar-app', 'FLAG', $typeColor1 );
 @include edgeType( 'laxar-app', 'ACTION', $typeColor2 );

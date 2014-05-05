@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+- [#12](https://github.com/x1B/nbe/issues/12):
+  Allowed to filter visible edges (and ports) by type.
+  Only visible edges are included in automatic layout.
 - [#11](https://github.com/x1B/nbe/issues/11): Allowed to restrict edge cardinality by type and port direction (source ports, dest ports).
 - [#21](https://github.com/x1B/nbe/issues/21):
   Fixed direction-dependent highlighting of ports on drag.

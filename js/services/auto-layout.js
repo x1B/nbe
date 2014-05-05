@@ -15,15 +15,14 @@ function ( dagre, $, layout ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function AutoLayout() {
-      function calculate( scope, jqGraph ) {
+      function calculate( model, types, jqGraph ) {
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.edge', jqGraph[ 0 ] );
          if ( !jqVertices.length || !jqEdges.length ) {
             return false;
          }
-
-         var dagreGraph = createDagreGraph( jqVertices, jqEdges, scope.model );
-         var dagreResult = dagre.layout().nodeSep( 40 ).rankSep( 75 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
+         var dagreGraph = createDagreGraph( jqVertices, jqEdges, model, types );
+         var dagreResult = dagre.layout().nodeSep( 60 ).rankSep( 90 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
          return layoutFromDagreResult( dagreResult );
       }
 
@@ -51,7 +50,7 @@ function ( dagre, $, layout ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createDagreGraph( jqVertices, jqEdges, model ) {
+   function createDagreGraph( jqVertices, jqEdges, model, types ) {
       var dagreGraph = new dagre.Digraph();
 
       jqVertices.each( function( i, domVertex ) {
@@ -78,7 +77,10 @@ function ( dagre, $, layout ) {
             }
             var dagreEdgeId = 'E:' + port.edgeId;
             if( port.direction === 'in' ) {
-               dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+               // ignore incoming edges of hidden type.
+               if ( !types[ port.type ].hidden ) {
+                  dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+               }
             }
             else {
                dagreGraph.addEdge( null, dagreVertexId, dagreEdgeId );
