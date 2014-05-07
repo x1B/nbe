@@ -6,8 +6,9 @@ define( [
    './directives/port',
    './directives/vertex',
    './services/auto-layout',
+   './services/async'
 ],
-function ( ng, edge, graph, link, port, vertex, autoLayout ) {
+function ( ng, edge, graph, link, port, vertex, async, autoLayout ) {
    'use strict';
 
    var nbe = ng.module( 'nbe', [] );
@@ -17,6 +18,7 @@ function ( ng, edge, graph, link, port, vertex, autoLayout ) {
    link.define( nbe );
    port.define( nbe );
    vertex.define( nbe );
+   async.define( nbe );
    autoLayout.define( nbe );
 
    return nbe;
