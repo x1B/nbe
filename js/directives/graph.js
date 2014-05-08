@@ -2,11 +2,10 @@ define( [
    'jquery',
    'underscore',
    'angular',
-   '../utilities/layout',
    '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
+function ( $, _, ng, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +20,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout, async, nbeAutoLayout ) {
+   function createGraphDirective( $timeout, nbeLayoutSettings, nbeAsync, nbeAutoLayout ) {
 
       return {
          template: graphHtml,
@@ -97,7 +96,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
          function adjustCanvasSize() {
             var offsetContainer = jqGraph.offsetParent();
             var graphOffset = jqGraph.offset();
-            var padding = layoutModule.GRAPH_PADDING;
+            var padding = nbeLayoutSettings.graphPadding;
             var scollbarSpace = 20;
             var width = offsetContainer.width() - scollbarSpace;
             var height = offsetContainer.height() - scollbarSpace;
@@ -116,7 +115,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
             } );
          }
 
-         $( window ).on( 'resize', async.ensure( repaint, 15 ) );
+         $( window ).on( 'resize', nbeAsync.ensure( repaint, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -150,7 +149,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
             repaint();
 
             $scope.$watch( 'layout', function() {
-               async.ensure( adjustCanvasSize, 50 )();
+               nbeAsync.ensure( adjustCanvasSize, 50 )();
             }, true );
          }
 
@@ -393,8 +392,8 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
             }
 
             var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
-            layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutModule.EDGE_DRAG_OFFSET,
-                                   top: edgeCenter[ 1 ] - layoutModule.EDGE_DRAG_OFFSET };
+            layout.edges[ id ] = { left: edgeCenter[ 0 ] - nbeLayoutSettings.edgeDragOffset,
+                                   top: edgeCenter[ 1 ] - nbeLayoutSettings.edgeDragOffset };
 
             createLink( fromRef, edgeRef );
             createLink( edgeRef, toRef );
@@ -484,7 +483,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function calculateLayout() {
-            async.runEventually( function() {
+            nbeAsync.runEventually( function() {
                var autoLayout = nbeAutoLayout.calculate( $scope.model, $scope.types, jqGraph );
                if ( autoLayout ) {
                   layout = $scope.layout = autoLayout;
@@ -563,7 +562,7 @@ function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeAsync', 'nbeAutoLayout', createGraphDirective ] );
+         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', createGraphDirective ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction === 'in'; } );

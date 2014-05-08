@@ -1,25 +1,25 @@
 define( [
    'jquery',
    'angular',
-   '../utilities/layout',
    '../utilities/pathing',
    'text!./port.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, layout, pathing, portHtml ) {
+function ( $, ng, pathing, portHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    var DIRECTIVE_NAME = 'nbePort';
-
-   var ATTR_VERTEX_ID = 'vertexId',
-       ATTR_PORT_GROUP = 'nbePortGroup';
+   var ATTR_VERTEX_ID = 'vertexId';
+   var ATTR_PORT_GROUP = 'nbePortGroup';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createPortDirective() {
+   function createPortDirective( nbeLayoutSettings ) {
+
+      var dragOffset = nbeLayoutSettings.portDragOffset;
 
       return {
          restrict: 'A',
@@ -53,7 +53,7 @@ function ( $, ng, layout, pathing, portHtml ) {
                accept: 'i',
                hoverClass: 'drop-hover',
                drop: handlePortDrop
-            } ).on( 'doubleclick', handlePortClick );
+            } ).on( 'click', handlePortClick );
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 
@@ -90,8 +90,8 @@ function ( $, ng, layout, pathing, portHtml ) {
                var p = jqHandle.offset();
                graphOffset = jqGraph.offset();
 
-               fromLeft = p.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
-               fromTop = p.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
+               fromLeft = p.left - graphOffset.left + dragOffset;
+               fromTop = p.top - graphOffset.top + dragOffset;
                $scope.nbeVertex.calculateBox( fromBox );
 
                ui.helper.addClass( $scope.port.type ).show();
@@ -103,8 +103,8 @@ function ( $, ng, layout, pathing, portHtml ) {
             // noinspection JSUnusedLocalSymbols
             function handlePortDrag( _, ui ) {
                var pos = ui.offset;
-               var toLeft = pos.left - graphOffset.left + layout.PORT_DRAG_OFFSET;
-               var toTop = pos.top - graphOffset.top + layout.PORT_DRAG_OFFSET;
+               var toLeft = pos.left - graphOffset.left + dragOffset;
+               var toTop = pos.top - graphOffset.top + dragOffset;
                jqLinkGhost.attr(
                   'd',
                   pathing.cubic( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true )

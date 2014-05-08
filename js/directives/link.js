@@ -17,7 +17,7 @@ define( [
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, layout, svgLinkPath ) {
+function ( $, ng, layoutModule, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createLinkDirective( nbeAsync ) {
+   function createLinkDirective( nbeLayoutSettings, nbeAsync ) {
 
       return {
          restrict: 'A',
@@ -56,9 +56,9 @@ function ( $, ng, layout, svgLinkPath ) {
                var to = [ 0, 0 ];
                var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
-               var portOffset = layout.PORT_DRAG_OFFSET,
-                   edgeOffset = layout.EDGE_DRAG_OFFSET,
-                   boundingBox = layout.boundingBox;
+               var portOffset = nbeLayoutSettings.portDragOffset,
+                   edgeOffset = nbeLayoutSettings.edgeDragOffset,
+                   boundingBox = layoutModule.boundingBox;
 
                function calculateLinkEnd( jqNode, jqHandle, coords ) {
                   var graphOffset = jqGraph.offset();
@@ -152,7 +152,7 @@ function ( $, ng, layout, svgLinkPath ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ 'nbeAsync', createLinkDirective ] );
+         module.directive( DIRECTIVE_NAME, [ 'nbeLayoutSettings', 'nbeAsync', createLinkDirective ] );
       }
    };
 
