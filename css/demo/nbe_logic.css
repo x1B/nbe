@@ -1,80 +1,166 @@
 /**
  * Use this to declare user-defined edge types.
  */
-/* line 64, ../../sass/_nbe_variables.scss */
+/* line 89, ../../sass/_nbe_variables.scss */
 .graph.logic-app .port.WIRE > i {
   background: #c3669c;
 }
-/* line 69, ../../sass/_nbe_variables.scss */
+/* line 94, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.WIRE {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
-/* line 75, ../../sass/_nbe_variables.scss */
+/* line 100, ../../sass/_nbe_variables.scss */
+.graph.logic-app .node.edge.WIRE.edge-ping {
+  animation-name: edge-ping-logic-app-WIRE;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  -webkit-animation-name: edge-ping-logic-app-WIRE;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+}
+/* line 110, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.WIRE {
   stroke: #c3669c;
 }
-/* line 77, ../../sass/_nbe_variables.scss */
+/* line 112, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.WIRE.selected {
   stroke: #e0afcb;
 }
-/* line 85, ../../sass/_nbe_variables.scss */
+/* line 120, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-WIRE .port:not(.WIRE) > i,
 .graph.logic-app.highlight-WIRE .node.edge:not(.WIRE) {
   background: #646464;
 }
-/* line 88, ../../sass/_nbe_variables.scss */
+/* line 123, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-WIRE .link:not(.WIRE) {
   stroke: #646464;
 }
-/* line 95, ../../sass/_nbe_variables.scss */
+/* line 130, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .link.WIRE {
   display: none;
 }
-/* line 98, ../../sass/_nbe_variables.scss */
+/* line 133, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .port.WIRE {
   display: none;
 }
-/* line 101, ../../sass/_nbe_variables.scss */
+/* line 136, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .edge.WIRE {
   display: none;
 }
 
-/* line 64, ../../sass/_nbe_variables.scss */
+@keyframes edge-ping-logic-app-WIRE {
+  /* line 69, ../../sass/_nbe_variables.scss */
+  from {
+    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+  }
+
+  /* line 70, ../../sass/_nbe_variables.scss */
+  20% {
+    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+  }
+
+  /* line 71, ../../sass/_nbe_variables.scss */
+  to {
+    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+  }
+}
+
+@-webkit-keyframes edge-ping-logic-app-WIRE {
+  /* line 75, ../../sass/_nbe_variables.scss */
+  from {
+    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+  }
+
+  /* line 76, ../../sass/_nbe_variables.scss */
+  20% {
+    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+  }
+
+  /* line 77, ../../sass/_nbe_variables.scss */
+  to {
+    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+  }
+}
+
+/* line 89, ../../sass/_nbe_variables.scss */
 .graph.logic-app .port.DEBUG > i {
   background: #f5c680;
 }
-/* line 69, ../../sass/_nbe_variables.scss */
+/* line 94, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.DEBUG {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 75, ../../sass/_nbe_variables.scss */
+/* line 100, ../../sass/_nbe_variables.scss */
+.graph.logic-app .node.edge.DEBUG.edge-ping {
+  animation-name: edge-ping-logic-app-DEBUG;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  -webkit-animation-name: edge-ping-logic-app-DEBUG;
+  -webkit-animation-duration: 0.4s;
+  -webkit-animation-iteration-count: 1;
+}
+/* line 110, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.DEBUG {
   stroke: #f5c680;
 }
-/* line 77, ../../sass/_nbe_variables.scss */
+/* line 112, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.DEBUG.selected {
   stroke: #fcf0df;
 }
-/* line 85, ../../sass/_nbe_variables.scss */
+/* line 120, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-DEBUG .port:not(.DEBUG) > i,
 .graph.logic-app.highlight-DEBUG .node.edge:not(.DEBUG) {
   background: #646464;
 }
-/* line 88, ../../sass/_nbe_variables.scss */
+/* line 123, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-DEBUG .link:not(.DEBUG) {
   stroke: #646464;
 }
-/* line 95, ../../sass/_nbe_variables.scss */
+/* line 130, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-DEBUG .link.DEBUG {
   display: none;
 }
-/* line 98, ../../sass/_nbe_variables.scss */
+/* line 133, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-DEBUG .port.DEBUG {
   display: none;
 }
-/* line 101, ../../sass/_nbe_variables.scss */
+/* line 136, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-DEBUG .edge.DEBUG {
   display: none;
+}
+
+@keyframes edge-ping-logic-app-DEBUG {
+  /* line 69, ../../sass/_nbe_variables.scss */
+  from {
+    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+  }
+
+  /* line 70, ../../sass/_nbe_variables.scss */
+  20% {
+    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+  }
+
+  /* line 71, ../../sass/_nbe_variables.scss */
+  to {
+    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+  }
+}
+
+@-webkit-keyframes edge-ping-logic-app-DEBUG {
+  /* line 75, ../../sass/_nbe_variables.scss */
+  from {
+    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+  }
+
+  /* line 76, ../../sass/_nbe_variables.scss */
+  20% {
+    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+  }
+
+  /* line 77, ../../sass/_nbe_variables.scss */
+  to {
+    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+  }
 }

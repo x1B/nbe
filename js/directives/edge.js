@@ -69,6 +69,12 @@ function ( $, ng, edgeHtml ) {
                   } );
                }
                else {
+                  $element.addClass( 'edge-ping' );
+                  var cleanup = function() {
+                     $element.off( 'animationend', cleanup );
+                     $element.removeClass( 'edge-ping' );
+                  };
+                  $element.on( 'animationend', cleanup );
                   // dropped a port onto this edge
                   $scope.nbeController.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
                }
