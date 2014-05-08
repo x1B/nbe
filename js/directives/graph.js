@@ -2,12 +2,11 @@ define( [
    'jquery',
    'underscore',
    'angular',
-   '../utilities/async',
    '../utilities/layout',
    '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
+function ( $, _, ng, layoutModule, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout, $window, nbeAutoLayout ) {
+   function createGraphDirective( $timeout, async, nbeAutoLayout ) {
 
       return {
          template: graphHtml,
@@ -117,7 +116,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
             } );
          }
 
-         $( window ).on( 'resize', async.ensure( repaint, $timeout, 15 ) );
+         $( window ).on( 'resize', async.ensure( repaint, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -151,7 +150,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
             repaint();
 
             $scope.$watch( 'layout', function() {
-               async.ensure( adjustCanvasSize, $timeout, 50 )();
+               async.ensure( adjustCanvasSize, 50 )();
             }, true );
          }
 
@@ -493,7 +492,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
                   $timeout( adjustCanvasSize );
                }
                return !!autoLayout;
-            }, $window, $scope, 1500 );
+            }, $scope, 1500 );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -564,7 +563,7 @@ function ( $, _, ng, async, layoutModule, operationsModule, graphHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', '$window', 'nbeAutoLayout', createGraphDirective ] );
+         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeAsync', 'nbeAutoLayout', createGraphDirective ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction === 'in'; } );

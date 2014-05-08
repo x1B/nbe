@@ -8,6 +8,10 @@ define( [
 function ( underscore ) {
    'use strict';
 
+   /** Fixup delay after a ui-event-based operation */
+   var FIXUP_DELAY_MS = 20;
+   /** Debounce delay to throttle expensive operations e.g. during drag/drop */
+   var DEBOUNCE_DELAY_MS = 5;
 
    function Async( $window, $timeout ) {
 
@@ -17,8 +21,8 @@ function ( underscore ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function repeatAfter( f, delay ) {
-         delay = delay || 50;
+      function repeatAfter( f, delayMs ) {
+         delayMs = delayMs || FIXUP_DELAY_MS;
          var handle;
          return function() {
             var args = arguments;
@@ -27,14 +31,14 @@ function ( underscore ) {
             if ( handle ) {
                $timeout.cancel( handle );
             }
-            handle = $timeout( function() { f.apply( self, args ); }, delay );
+            handle = $timeout( function() { f.apply( self, args ); }, delayMs );
          };
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function ensure( f, t ) {
-         return repeatAfter( underscore.debounce( f, t || 3 ), t || 10 );
+      function ensure( f, delayMs ) {
+         return repeatAfter( underscore.debounce( f, delayMs || DEBOUNCE_DELAY_MS ), delayMs || FIXUP_DELAY_MS );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +58,7 @@ function ( underscore ) {
          function retry() {
             var success = tryRun();
             if ( !success ) {
-               initTimeout = $window.setTimeout( retry, intervalMs || 10 );
+               initTimeout = $window.setTimeout( retry, intervalMs || FIXUP_DELAY_MS );
             }
             else if ( scope ) {
                scope.$digest();
@@ -73,7 +77,7 @@ function ( underscore ) {
 
    return {
       define: function( module ) {
-         module.service( 'nbeAsync', [ $window, $timeout, Async ] );
+         module.service( 'nbeAsync', [ '$window', '$timeout', Async ] );
       }
    };
 

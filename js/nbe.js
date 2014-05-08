@@ -13,13 +13,16 @@ function ( ng, edge, graph, link, port, vertex, async, autoLayout ) {
 
    var nbe = ng.module( 'nbe', [] );
 
+   // Services
+   async.define( nbe );
+   autoLayout.define( nbe );
+
+   // Directives
    graph.define( nbe );
    edge.define( nbe );
    link.define( nbe );
    port.define( nbe );
    vertex.define( nbe );
-   async.define( nbe );
-   autoLayout.define( nbe );
 
    return nbe;
 

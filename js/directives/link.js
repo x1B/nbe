@@ -12,13 +12,12 @@
 define( [
    'jquery',
    'angular',
-      '../utilities/async',
    '../utilities/layout',
    '../utilities/pathing',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, async, layout, svgLinkPath ) {
+function ( $, ng, layout, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +26,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createLinkDirective( $window ) {
+   function createLinkDirective( nbeAsync ) {
 
       return {
          restrict: 'A',
@@ -45,7 +44,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Draw links after nodes, so that bounding boxes are available:
-            async.runEventually( init, $window, $scope );
+            nbeAsync.runEventually( init, $scope );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -153,7 +152,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$window', createLinkDirective ] );
+         module.directive( DIRECTIVE_NAME, [ 'nbeAsync', createLinkDirective ] );
       }
    };
 

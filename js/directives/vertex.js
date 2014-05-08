@@ -9,12 +9,11 @@ define( [
    'jquery',
    'angular',
    '../utilities/layout',
-   '../utilities/async',
    'text!./vertex.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function( $, ng, layout, async, vertexHtml ) {
+function( $, ng, layout, vertexHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +22,7 @@ function( $, ng, layout, async, vertexHtml ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createVertexDirective( $timeout ) {
+   function createVertexDirective( nbeAsync ) {
       return {
          restrict: 'A',
          replace: true,
@@ -37,7 +36,7 @@ function( $, ng, layout, async, vertexHtml ) {
                stack: '.graph *',
                containment: 'parent',
                start: handleVertexDragStart,
-               drag: async.ensure( handleVertexDrag, $timeout ),
+               drag: nbeAsync.ensure( handleVertexDrag ),
                stop: handleVertexDragStop
             } );
 
@@ -92,7 +91,7 @@ function( $, ng, layout, async, vertexHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( 'nbeVertex', [ '$timeout', createVertexDirective ] );
+         module.directive( 'nbeVertex', [ 'nbeAsync', createVertexDirective ] );
       }
    };
 
