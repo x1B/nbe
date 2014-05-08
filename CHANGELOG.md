@@ -2,6 +2,10 @@
 
 ## Last Changes
 
+- [#23](https://github.com/x1B/nbe/issues/23):
+  Extracted constant values into injectable settings.
+  Replaced async utility with async service.
+  Added async service.
 - [#12](https://github.com/x1B/nbe/issues/12):
   Allowed to filter visible edges (and ports) by type.
   Only visible edges are included in automatic layout.
