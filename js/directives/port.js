@@ -53,7 +53,7 @@ function ( $, ng, pathing, portHtml ) {
                accept: 'i',
                hoverClass: 'drop-hover',
                drop: handlePortDrop
-            } ).on( 'click', handlePortClick );
+            } ).on( 'dblclick', handlePortClick );
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 

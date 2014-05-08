@@ -1,7 +1,7 @@
 # Changelog
 
 ## Last Changes
-
+- [#24](https://github.com/x1B/nbe/issues/24): Disconnect ports using doubleclick instead of click.
 - [#23](https://github.com/x1B/nbe/issues/23):
   Extracted constant values into injectable settings.
   Replaced async utility with async service.
