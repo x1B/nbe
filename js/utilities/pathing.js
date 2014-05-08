@@ -68,12 +68,11 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function initializeParameters() {
-         var params = {};
+         var params = { stubLength: stubLength, curvePadding: curvePadding };
 
          var yRatio = 1;
          if( toBox ) {
             var boxDeltaY = abs( toTop > fromTop ? fromBox.bottom - toBox.top : toBox.bottom - fromBox.top );
-            params.stubLength = stubLength;
             if ( boxDeltaY < 3*stubLength ) {
                yRatio = boxDeltaY / (3 * stubLength);
                params.curvePadding = max( 3, max( 1, round( yRatio*curvePadding ) ) );
@@ -158,6 +157,7 @@ define( [
          var boxN = params.boxN;
          var xN = params.xN;
          var yN = params.yN;
+         var curvePadding = params.curvePadding;
 
          // down: 1, up: -1
          var yDir;
@@ -205,6 +205,7 @@ define( [
       function circumventBoxN() {
          var boxN = params.boxN;
          var yN = params.yN;
+         var curvePadding = params.curvePadding;
 
          // Draw line to nearest corner of boxN:
          var yDir, yEdge, xEdge, sweep;
