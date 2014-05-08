@@ -6,12 +6,11 @@
 define( [
    'jquery',
    'angular',
-   '../utilities/async',
    'text!./edge.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, async, edgeHtml ) {
+function ( $, ng, edgeHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +19,7 @@ function ( $, ng, async, edgeHtml ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createEdgeDirective( $timeout ) {
+   function createEdgeDirective( nbeAsync ) {
       return {
          restrict: 'A',
          replace: true,
@@ -31,7 +30,7 @@ function ( $, ng, async, edgeHtml ) {
                stack: '.graph *',
                containment: 'parent',
                start: handleEdgeDragStart,
-               drag: async.ensure( handleEdgeDrag, $timeout ),
+               drag: nbeAsync.ensure( handleEdgeDrag ),
                stop: handleDrop
             } ).droppable( {
                accept: 'i',
@@ -89,7 +88,7 @@ function ( $, ng, async, edgeHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', createEdgeDirective ] );
+         module.directive( DIRECTIVE_NAME, [ 'nbeAsync', createEdgeDirective ] );
       }
    };
 

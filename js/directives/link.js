@@ -12,13 +12,12 @@
 define( [
    'jquery',
    'angular',
-      '../utilities/async',
    '../utilities/layout',
    '../utilities/pathing',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, async, layout, svgLinkPath ) {
+function ( $, ng, layoutModule, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +26,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function createLinkDirective( $window ) {
+   function createLinkDirective( nbeLayoutSettings, nbeAsync ) {
 
       return {
          restrict: 'A',
@@ -45,7 +44,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Draw links after nodes, so that bounding boxes are available:
-            async.runEventually( init, $window, $scope );
+            nbeAsync.runEventually( init, $scope );
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,9 +56,9 @@ function ( $, ng, async, layout, svgLinkPath ) {
                var to = [ 0, 0 ];
                var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
-               var portOffset = layout.PORT_DRAG_OFFSET,
-                   edgeOffset = layout.EDGE_DRAG_OFFSET,
-                   boundingBox = layout.boundingBox;
+               var portOffset = nbeLayoutSettings.portDragOffset,
+                   edgeOffset = nbeLayoutSettings.edgeDragOffset,
+                   boundingBox = layoutModule.boundingBox;
 
                function calculateLinkEnd( jqNode, jqHandle, coords ) {
                   var graphOffset = jqGraph.offset();
@@ -153,7 +152,7 @@ function ( $, ng, async, layout, svgLinkPath ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$window', createLinkDirective ] );
+         module.directive( DIRECTIVE_NAME, [ 'nbeLayoutSettings', 'nbeAsync', createLinkDirective ] );
       }
    };
 

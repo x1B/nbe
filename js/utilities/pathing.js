@@ -1,10 +1,12 @@
-define( [], function() {
+define( [
+   '../constants/settings'
+], function( settings ) {
    'use strict';
 
    // Length of a horizontal link stub that helps visualizing where a link is attached
-   var STUB_LENGTH = 20;
-   var ARROW_HEAD_LENGTH = 3;
-   var CURVE_PADDING = 8;
+   var stubLength = settings.pathing.stubLength;
+   var arrowHeadLength = settings.pathing.arrowHeadLength;
+   var curvePadding = settings.pathing.curvePadding;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,8 +21,8 @@ define( [], function() {
           toY = round( toTop );
 
       var path = [ 'M', fromX, ',', fromY ];
-      path.push( 'H', fromX + fromStubSgn * STUB_LENGTH );
-      path.push( 'L', toX + toStubSgn * STUB_LENGTH, ',', toY );
+      path.push( 'H', fromX + fromStubSgn * stubLength );
+      path.push( 'L', toX + toStubSgn * stubLength, ',', toY );
       path.push( 'H', toX );
 
       return path.join('');
@@ -32,37 +34,32 @@ define( [], function() {
     * Try to circumvent boxes which are in the way
     */
    function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn, fromBox, toBox, noArrow ) {
-      // Parameters:
-      var curvePadding = CURVE_PADDING;
-      var stubLength = STUB_LENGTH;
-      var arrowHeadLength = ARROW_HEAD_LENGTH;
 
-      var reverse, x0, y0, xN, yN, stub0, stubN, box0, boxN;
-      initializeParameters();
+      var params = initializeParameters();
 
       // Current path and position:
-      var x = x0, y = y0;
+      var x = params.x0, y = params.y0;
       var path = [];
       var useBezierY = false;
       path.push( 'M', x, ',', y );
 
-      if ( reverse ) {
+      if ( params.reverse ) {
          arrowHead();
       }
 
-      horizontal( x + stub0 * stubLength );
-      if ( stub0 < 0 ) {
-         circumventBox0( box0, boxN, stubN );
+      horizontal( x + params.stub0 * stubLength );
+      if ( params.stub0 < 0 ) {
+         circumventBox0();
       }
-      if ( stubN > 0 && boxN ) {
-         circumventBoxN( boxN );
+      if ( params.stubN > 0 && params.boxN ) {
+         circumventBoxN();
       }
       else {
-         cubic( xN + stubN * stubLength, yN );
+         cubic( params.xN + params.stubN * params.stubLength, params.yN );
       }
-      horizontal( xN );
+      horizontal( params.xN );
 
-      if ( !reverse ) {
+      if ( !params.reverse ) {
          arrowHead();
       }
 
@@ -71,39 +68,42 @@ define( [], function() {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function initializeParameters() {
+         var params = {};
+
          var yRatio = 1;
          if( toBox ) {
             var boxDeltaY = abs( toTop > fromTop ? fromBox.bottom - toBox.top : toBox.bottom - fromBox.top );
-            stubLength = STUB_LENGTH;
-            if ( boxDeltaY < 3*STUB_LENGTH ) {
-               yRatio = boxDeltaY / (3 * STUB_LENGTH);
-               curvePadding = max( 3, max( 1, round( yRatio*CURVE_PADDING ) ) );
-               stubLength += CURVE_PADDING - curvePadding;
+            params.stubLength = stubLength;
+            if ( boxDeltaY < 3*stubLength ) {
+               yRatio = boxDeltaY / (3 * stubLength);
+               params.curvePadding = max( 3, max( 1, round( yRatio*curvePadding ) ) );
+               params.stubLength += curvePadding - curvePadding;
             }
          }
 
          var deltaX = abs( fromLeft - toLeft );
-         if ( deltaX < 3*STUB_LENGTH && yRatio < 1 ) {
-            var xRatio = deltaX/(3*STUB_LENGTH);
-            stubLength = max( 3, round( xRatio*STUB_LENGTH ) );
-            curvePadding = max( 1, round( xRatio*CURVE_PADDING ) );
+         if ( deltaX < 3*stubLength && yRatio < 1 ) {
+            var xRatio = deltaX/(3*stubLength);
+            params.stubLength = max( 3, round( xRatio*stubLength ) );
+            params.curvePadding = max( 1, round( xRatio*curvePadding ) );
          }
 
          // Simplify by always drawing a path from left to right:
-         reverse = fromLeft + fromStubSgn*stubLength > toLeft + toStubSgn*stubLength;
-         if ( reverse  ) {
-            x0 = round( toLeft);   xN = round( fromLeft );
-            y0 = round( toTop );   yN = round( fromTop );
-            stub0 = toStubSgn;     stubN = fromStubSgn;
-            box0 = toBox;          boxN = fromBox;
+         params.reverse = fromLeft + fromStubSgn*stubLength > toLeft + toStubSgn*stubLength;
+         if ( params.reverse  ) {
+            params.x0 = round( toLeft );   params.xN = round( fromLeft );
+            params.y0 = round( toTop );   params.yN = round( fromTop );
+            params.stub0 = toStubSgn;     params.stubN = fromStubSgn;
+            params.box0 = toBox;          params.boxN = fromBox;
          }
          else {
-            x0 = round( fromLeft); xN = round( toLeft );
-            y0 = round( fromTop ); yN = round( toTop );
-            stub0 = fromStubSgn;   stubN = toStubSgn;
-            box0 = fromBox;        boxN = toBox;
+            params.x0 = round( fromLeft); params.xN = round( toLeft );
+            params.y0 = round( fromTop ); params.yN = round( toTop );
+            params.stub0 = fromStubSgn;   params.stubN = toStubSgn;
+            params.box0 = fromBox;        params.boxN = toBox;
          }
 
+         return params;
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,6 +154,11 @@ define( [], function() {
       }
 
       function circumventBox0() {
+         var box0 = params.box0;
+         var boxN = params.boxN;
+         var xN = params.xN;
+         var yN = params.yN;
+
          // down: 1, up: -1
          var yDir;
          if ( (!boxN && yN > y) || (boxN && boxN.top > box0.bottom) ) {
@@ -198,6 +203,9 @@ define( [], function() {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function circumventBoxN() {
+         var boxN = params.boxN;
+         var yN = params.yN;
+
          // Draw line to nearest corner of boxN:
          var yDir, yEdge, xEdge, sweep;
          if ( abs(boxN.top - y) + (y < yN ? -1 : 0) < abs(y - boxN.bottom) ) {

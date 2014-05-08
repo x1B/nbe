@@ -1,6 +1,13 @@
 define( [], function () {
    'use strict';
 
+   /**
+    * Calculate a bounding box of graph-relative coordinates for a given dom node.
+    * @param jqNode
+    *   A vertex node ob, wrapped in a jQuery.
+    * @param jqGraph
+    * @param box
+    */
    function boundingBox( jqNode, jqGraph, box ) {
       var v = jqNode.offset();
       var graphOffset = jqGraph.offset();
@@ -13,10 +20,7 @@ define( [], function () {
    }
 
    return {
-      boundingBox: boundingBox,
-      PORT_DRAG_OFFSET: 8,
-      EDGE_DRAG_OFFSET: 15,
-      GRAPH_PADDING: 40
+      boundingBox: boundingBox
    };
 
 } );
