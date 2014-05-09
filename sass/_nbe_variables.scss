@@ -55,13 +55,13 @@ $fontSizePort: 11px!default;
 
 @mixin edgePing( $themeName, $name, $color ) {
 
-   $fromMiddle: 0px 0px 5px 5px $graphBgColor;
-   $acrossMiddle:  0px 0px 12px 10px $graphBgColor;
-   $toMiddle:  0px 0px 24px 10px $graphBgColor;
+   $fromMiddle:   0px 0px  5px  3px $graphBgColor;
+   $acrossMiddle: 0px 0px 12px  3px $graphBgColor;
+   $toMiddle:     0px 0px 18px  3px $graphBgColor;
 
-   $fromRing: 0px 0px 0px transparent;
-   $acrossRing:  0px 0px 15px 10px $color;
-   $toRing: 0px 0px 30px 10px transparent;
+   $fromRing:     0px 0px  0px  0px transparent;
+   $acrossRing:   0px 0px 16px  3px $color;
+   $toRing:       0px 0px 24px  3px transparent;
 
    $regularShadow: 4px 4px 4px $gray0;
 
@@ -97,7 +97,7 @@ $fontSizePort: 11px!default;
       }
 
 
-      .node.edge.#{$name}.edge-ping {
+      .node.edge.#{$name}.ping {
          animation-name: edge-ping-#{$themeName}-#{$name};
          animation-duration: 0.3s;
          animation-iteration-count: 1;

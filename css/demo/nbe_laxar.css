@@ -11,7 +11,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.laxar-app .node.edge.FLAG.edge-ping {
+.graph.laxar-app .node.edge.FLAG.ping {
   animation-name: edge-ping-laxar-app-FLAG;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -52,34 +52,34 @@
 @keyframes edge-ping-laxar-app-FLAG {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-FLAG {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
@@ -93,7 +93,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.laxar-app .node.edge.ACTION.edge-ping {
+.graph.laxar-app .node.edge.ACTION.ping {
   animation-name: edge-ping-laxar-app-ACTION;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -134,34 +134,34 @@
 @keyframes edge-ping-laxar-app-ACTION {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c2e578, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c2e578, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-ACTION {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c2e578, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c2e578, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
@@ -175,7 +175,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.laxar-app .node.edge.RESOURCE.edge-ping {
+.graph.laxar-app .node.edge.RESOURCE.ping {
   animation-name: edge-ping-laxar-app-RESOURCE;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -216,34 +216,34 @@
 @keyframes edge-ping-laxar-app-RESOURCE {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #626ca8, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #626ca8, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-RESOURCE {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #626ca8, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #626ca8, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
@@ -257,7 +257,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.laxar-app .node.edge.CONTAINER.edge-ping {
+.graph.laxar-app .node.edge.CONTAINER.ping {
   animation-name: edge-ping-laxar-app-CONTAINER;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -298,33 +298,33 @@
 @keyframes edge-ping-laxar-app-CONTAINER {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-CONTAINER {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }

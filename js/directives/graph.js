@@ -2,10 +2,11 @@ define( [
    'jquery',
    'underscore',
    'angular',
+   '../utilities/visual',
    '../utilities/operations',
    'text!./graph.html'
 ],
-function ( $, _, ng, operationsModule, graphHtml ) {
+function ( $, _, ng, visual, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +259,9 @@ function ( $, _, ng, operationsModule, graphHtml ) {
                   var edgeId = createEdge( fromRef, toRef );
                   fromRef.port.edgeId = edgeId;
                   toRef.port.edgeId = edgeId;
+                  $timeout( function() {
+                     visual.pingAnimation( $( '[data-nbe-edge="' + edgeId + '"]' ) );
+                  } );
                   connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                }
                return operationsModule.compose( [ makeDisconnectOp( fromRef ), makeDisconnectOp( toRef ), connectPortToPortOp ] );

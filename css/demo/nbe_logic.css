@@ -11,7 +11,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.logic-app .node.edge.WIRE.edge-ping {
+.graph.logic-app .node.edge.WIRE.ping {
   animation-name: edge-ping-logic-app-WIRE;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -52,34 +52,34 @@
 @keyframes edge-ping-logic-app-WIRE {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-logic-app-WIRE {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #c3669c, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
@@ -93,7 +93,7 @@
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.logic-app .node.edge.DEBUG.edge-ping {
+.graph.logic-app .node.edge.DEBUG.ping {
   animation-name: edge-ping-logic-app-DEBUG;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -134,33 +134,33 @@
 @keyframes edge-ping-logic-app-DEBUG {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 70, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   /* line 71, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-logic-app-DEBUG {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
-    box-shadow: 0px 0px 5px 5px #333333, 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
   /* line 76, ../../sass/_nbe_variables.scss */
   20% {
-    box-shadow: 0px 0px 12px 10px #333333, 0px 0px 15px 10px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   /* line 77, ../../sass/_nbe_variables.scss */
   to {
-    box-shadow: 0px 0px 24px 10px #333333, 0px 0px 30px 10px transparent, 4px 4px 4px #202020;
+    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
