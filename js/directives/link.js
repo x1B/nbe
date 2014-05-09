@@ -12,7 +12,7 @@
 define( [
    'jquery',
    'angular',
-   '../utilities/layout',
+   '../utilities/visual',
    '../utilities/pathing',
    'jquery_ui/draggable',
    'jquery_ui/droppable'

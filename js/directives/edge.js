@@ -6,11 +6,12 @@
 define( [
    'jquery',
    'angular',
+   '../utilities/visual',
    'text!./edge.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function ( $, ng, edgeHtml ) {
+function ( $, ng, visual, edgeHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,7 @@ function ( $, ng, edgeHtml ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function createEdgeDirective( nbeAsync ) {
+
       return {
          restrict: 'A',
          replace: true,
@@ -71,6 +73,7 @@ function ( $, ng, edgeHtml ) {
                else {
                   // dropped a port onto this edge
                   $scope.nbeController.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
+                  visual.pingAnimation( $element );
                }
             }
 
@@ -82,6 +85,8 @@ function ( $, ng, edgeHtml ) {
 
          }
       };
+
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

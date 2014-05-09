@@ -8,12 +8,12 @@
 define( [
    'jquery',
    'angular',
-   '../utilities/layout',
+   '../utilities/visual',
    'text!./vertex.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
 ],
-function( $, ng, layout, vertexHtml ) {
+function( $, ng, visual, vertexHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ function( $, ng, layout, vertexHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function calculateBox( box ) {
-               layout.boundingBox( jqVertex, jqGraph, box );
+               visual.boundingBox( jqVertex, jqGraph, box );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -53,6 +53,31 @@ $fontSizeLabel: 12px!default;
 $fontFamilyPort: "Gill Sans", "Helvetica Neue", "Arial", sans-serif!default;
 $fontSizePort: 11px!default;
 
+@mixin edgePing( $themeName, $name, $color ) {
+
+   $fromMiddle:   0px 0px  5px  3px $graphBgColor;
+   $acrossMiddle: 0px 0px 12px  3px $graphBgColor;
+   $toMiddle:     0px 0px 18px  3px $graphBgColor;
+
+   $fromRing:     0px 0px  0px  0px transparent;
+   $acrossRing:   0px 0px 16px  3px $color;
+   $toRing:       0px 0px 24px  3px transparent;
+
+   $regularShadow: 4px 4px 4px $gray0;
+
+   @keyframes edge-ping-#{$themeName}-#{$name} {
+      from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
+      20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
+      to { box-shadow: $toMiddle, $toRing, $regularShadow; }
+   }
+
+   @-webkit-keyframes edge-ping-#{$themeName}-#{$name} {
+      from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
+      20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
+      to { box-shadow: $toMiddle, $toRing, $regularShadow; }
+   }
+}
+
 
 /**
  * Use this to declare user-defined edge types.
@@ -69,6 +94,16 @@ $fontSizePort: 11px!default;
       .node.edge.#{$name} {
          background: -moz-linear-gradient(left top, $color 0%, darken($color, 20%) 100%);
          background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $color), color-stop(100%, darken($color, 30%)));
+      }
+
+
+      .node.edge.#{$name}.ping {
+         animation-name: edge-ping-#{$themeName}-#{$name};
+         animation-duration: 0.3s;
+         animation-iteration-count: 1;
+         -webkit-animation-name: edge-ping-#{$themeName}-#{$name};
+         -webkit-animation-duration: 0.4s;
+         -webkit-animation-iteration-count: 1;
       }
 
       // Colored links (svg):
@@ -103,5 +138,7 @@ $fontSizePort: 11px!default;
          }
       }
    }
+
+   @include edgePing( $themeName, $name, $color );
 
 }
