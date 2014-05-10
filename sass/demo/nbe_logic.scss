@@ -1,5 +1,5 @@
 @import '../nbe_variables';
 
 @include edgeType( 'logic-app', 'WIRE', $typeColor1 );
-@include edgeType( 'logic-app', 'DEBUG', $typeColor4 );
+@include edgeType( 'logic-app', 'CHANNEL', $typeColor4 );
 
