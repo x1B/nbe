@@ -17,6 +17,7 @@ define( [], function () {
       box.left = left;
       box.right = left + jqNode.width();
       box.bottom = top + jqNode.height();
+      return box;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

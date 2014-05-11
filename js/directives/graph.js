@@ -565,6 +565,47 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             } );
          } )();
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         jqGraph.on( 'mousedown', function( event ) {
+            var jqSelection = $( '.selection', $element );
+            var selection = jqSelection[ 0 ];
+            var referenceX = event.pageX;
+            var referenceY = event.pageY;
+            var fromX = event.offsetX;
+            var fromY = event.offsetY;
+            updateSelection( event );
+            jqSelection.show();
+            $( document ).on( 'mousemove', updateSelection ).on( 'mouseup', finishSelection );
+
+            function updateSelection( event ) {
+               var dx = event.pageX - referenceX;
+               var dy = event.pageY - referenceY;
+               selection.style.width = Math.abs( dx ) + 'px';
+               selection.style.height = Math.abs( dy ) + 'px';
+               selection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
+               selection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
+            }
+
+            function finishSelection() {
+               $( document ).off( 'mousemove', updateSelection ).off( 'mouseup', finishSelection );
+               var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
+               jqSelection.hide();
+               var box = {};
+               $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
+                  var jqNode = $( domNode );
+                  visual.boundingBox( jqNode, jqGraph, box );
+                  jqNode.toggleClass( 'selected', doesIntersect( box, selectionBox ) );
+               } );
+            }
+
+            function doesIntersect( box, selectionBox ) {
+               return !(
+                  selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
+                  selectionBox.right < box.left || selectionBox.left > box.right
+               );
+            }
+         } );
       }
 
    }

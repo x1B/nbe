@@ -46,6 +46,16 @@ body {
       cursor: default;
    }
 
+   .selection {
+      border: 1px dashed rgb(244, 244, 192);
+      background: rgba(244, 244, 192, 0.1);
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 100px;
+      height: 100px;
+   }
+
    .port {
       i {
          width: $portAnchorSize;
