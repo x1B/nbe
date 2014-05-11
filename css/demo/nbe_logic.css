@@ -84,54 +84,54 @@
 }
 
 /* line 89, ../../sass/_nbe_variables.scss */
-.graph.logic-app .port.DEBUG > i {
+.graph.logic-app .port.CHANNEL > i {
   background: #f5c680;
 }
 /* line 94, ../../sass/_nbe_variables.scss */
-.graph.logic-app .node.edge.DEBUG {
+.graph.logic-app .node.edge.CHANNEL {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 /* line 100, ../../sass/_nbe_variables.scss */
-.graph.logic-app .node.edge.DEBUG.ping {
-  animation-name: edge-ping-logic-app-DEBUG;
+.graph.logic-app .node.edge.CHANNEL.ping {
+  animation-name: edge-ping-logic-app-CHANNEL;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
-  -webkit-animation-name: edge-ping-logic-app-DEBUG;
+  -webkit-animation-name: edge-ping-logic-app-CHANNEL;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
 /* line 110, ../../sass/_nbe_variables.scss */
-.graph.logic-app .link.DEBUG {
+.graph.logic-app .link.CHANNEL {
   stroke: #f5c680;
 }
 /* line 112, ../../sass/_nbe_variables.scss */
-.graph.logic-app .link.DEBUG.selected {
+.graph.logic-app .link.CHANNEL.selected {
   stroke: #fcf0df;
 }
 /* line 120, ../../sass/_nbe_variables.scss */
-.graph.logic-app.highlight-DEBUG .port:not(.DEBUG) > i,
-.graph.logic-app.highlight-DEBUG .node.edge:not(.DEBUG) {
+.graph.logic-app.highlight-CHANNEL .port:not(.CHANNEL) > i,
+.graph.logic-app.highlight-CHANNEL .node.edge:not(.CHANNEL) {
   background: #646464;
 }
 /* line 123, ../../sass/_nbe_variables.scss */
-.graph.logic-app.highlight-DEBUG .link:not(.DEBUG) {
+.graph.logic-app.highlight-CHANNEL .link:not(.CHANNEL) {
   stroke: #646464;
 }
 /* line 130, ../../sass/_nbe_variables.scss */
-.graph.logic-app.hide-DEBUG .link.DEBUG {
+.graph.logic-app.hide-CHANNEL .link.CHANNEL {
   display: none;
 }
 /* line 133, ../../sass/_nbe_variables.scss */
-.graph.logic-app.hide-DEBUG .port.DEBUG {
+.graph.logic-app.hide-CHANNEL .port.CHANNEL {
   display: none;
 }
 /* line 136, ../../sass/_nbe_variables.scss */
-.graph.logic-app.hide-DEBUG .edge.DEBUG {
+.graph.logic-app.hide-CHANNEL .edge.CHANNEL {
   display: none;
 }
 
-@keyframes edge-ping-logic-app-DEBUG {
+@keyframes edge-ping-logic-app-CHANNEL {
   /* line 69, ../../sass/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -148,7 +148,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-logic-app-DEBUG {
+@-webkit-keyframes edge-ping-logic-app-CHANNEL {
   /* line 75, ../../sass/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -163,4 +163,25 @@
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
+}
+
+/* line 7, ../../sass/demo/nbe_logic.scss */
+.logic-app .log {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  padding: 10px;
+  width: 200px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+/* line 17, ../../sass/demo/nbe_logic.scss */
+.logic-app .log h4 {
+  margin: 8px;
+}
+/* line 20, ../../sass/demo/nbe_logic.scss */
+.logic-app .log ul {
+  margin: 0;
+  font-size: 11px;
 }

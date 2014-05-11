@@ -4,20 +4,20 @@
 /* line 3, ../../sass/_nbe.scss */
 body {
   background: #444444;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  color: #e0e0e0;
 }
 
-/* line 7, ../../sass/_nbe.scss */
+/* line 9, ../../sass/_nbe.scss */
 [data-ng-cloak] {
   display: none !important;
 }
 
-/* line 11, ../../sass/_nbe.scss */
+/* line 13, ../../sass/_nbe.scss */
 .graph {
   background: #333333;
   border-radius: 10px;
-  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   font-size: 12px;
-  color: #e0e0e0;
 }
 /* line 20, ../../sass/_nbe.scss */
 .graph .graph-contents {

@@ -21,7 +21,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout, nbeLayoutSettings, nbeAsync, nbeAutoLayout ) {
+   function createGraphDirective( $timeout, layoutSettings, async, autoLayout, idGenerator ) {
 
       return {
          template: graphHtml,
@@ -78,6 +78,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
          var ops = this.operations = operationsModule.create( $scope );
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          $scope.$watch( 'types', function( newTypes ) {
             Object.keys( newTypes ).forEach( function( type ) {
                var hideType = !!( newTypes[ type ] && newTypes[ type ].hidden );
@@ -87,7 +89,18 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             adjustCanvasSize();
          }, true );
 
+         $scope.$watch( 'model.vertices', function( newVertices ) {
+            if ( newVertices ) {
+               ng.forEach( model.vertices, function( v, vId ) {
+                  if ( !linksByVertex[ vId ] ) {
+                     linksByVertex[ vId ] = { };
+                  }
+               } );
+            }
+         }, true );
+
          initGraph( $scope );
+         $( window ).on( 'resize', async.ensure( repaint, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -97,7 +110,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          function adjustCanvasSize() {
             var offsetContainer = jqGraph.offsetParent();
             var graphOffset = jqGraph.offset();
-            var padding = nbeLayoutSettings.graphPadding;
+            var padding = layoutSettings.graphPadding;
             var scollbarSpace = 20;
             var width = offsetContainer.width() - scollbarSpace;
             var height = offsetContainer.height() - scollbarSpace;
@@ -110,13 +123,13 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             jqGraph.width( width ).height( height );
          }
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          function repaint() {
             ng.forEach( linkControllers, function( controller ) {
                controller.repaint();
             } );
          }
-
-         $( window ).on( 'resize', nbeAsync.ensure( repaint, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,14 +148,23 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             self.linkControllers = linkControllers = { };
 
             links = $scope.view.links = {};
-            generateEdgeId = idGenerator( '#', model.edges );
-            generateLinkId = idGenerator( 'lnk', links );
+
+            generateEdgeId = idGenerator.create(
+               Object.keys( types ).map( function( _ ) { return _.toLocaleLowerCase() + ' '; } ),
+               model.edges
+            );
+            generateLinkId = idGenerator.create( [ 'lnk' ], {} );
 
             ng.forEach( model.vertices, function( vertex, vertexId ) {
                vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vertexId, port: port };
-                  createLink( vertexRef, edgeRef );
+                  if ( !linksByVertex[ vertexId ] ) {
+                     linksByVertex[ vertexId ] = {};
+                  }
+                  if ( !linksByVertex[ vertexId ][ port.id ] ) {
+                     createLink( vertexRef, edgeRef );
+                  }
                } );
             } );
 
@@ -150,7 +172,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             repaint();
 
             $scope.$watch( 'layout', function() {
-               nbeAsync.ensure( adjustCanvasSize, 50 )();
+               async.ensure( adjustCanvasSize, 50 )();
             }, true );
          }
 
@@ -337,7 +359,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function createLink( refA, refB ) {
-
             var reverse = isInput( refA.port ) || isOutput( refB.port );
             var fromRef = reverse ? refB : refA;
             var toRef = reverse ? refA : refB;
@@ -375,12 +396,13 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function createEdge( fromRef, toRef ) {
-            var id = generateEdgeId();
-            var edgeRef = { nodeId: id };
             var type = fromRef.port.type;
+            var prefix = type.toLocaleLowerCase() + ' ';
+            var id = generateEdgeId( prefix );
+            var edgeRef = { nodeId: id };
             model.edges[ id ] = {
                type: type,
-               label: type.toLowerCase() + ' ' + id
+               label: id
             };
 
             function centerCoords( vertexId ) {
@@ -396,8 +418,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             }
 
             var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
-            layout.edges[ id ] = { left: edgeCenter[ 0 ] - nbeLayoutSettings.edgeDragOffset,
-                                   top: edgeCenter[ 1 ] - nbeLayoutSettings.edgeDragOffset };
+            layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
+                                   top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
 
             createLink( fromRef, edgeRef );
             createLink( edgeRef, toRef );
@@ -459,21 +481,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function idGenerator( prefix, currentMap ) {
-            var prefixLength = prefix ? prefix.length : 0;
-            var maxIndex = Object.keys( currentMap )
-               .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
-               .map( function( k ) { return parseInt( k.substring( prefixLength ), 10 ); } )
-               .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
-
-            return function nextId() {
-               ++maxIndex;
-               return prefix + maxIndex;
-            };
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
          function selectEdge( edgeId ) {
             selection.id = edgeId;
             selection.kind = 'EDGE';
@@ -487,14 +494,14 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function calculateLayout() {
-            nbeAsync.runEventually( function() {
-               var autoLayout = nbeAutoLayout.calculate( $scope.model, $scope.types, jqGraph );
-               if ( autoLayout ) {
-                  layout = $scope.layout = autoLayout;
+            async.runEventually( function() {
+               var result = autoLayout.calculate( $scope.model, $scope.types, jqGraph );
+               if ( result ) {
+                  layout = $scope.layout = result;
                   $timeout( repaint );
                   $timeout( adjustCanvasSize );
                }
-               return !!autoLayout;
+               return !!result;
             }, $scope, 1500 );
          }
 
@@ -566,7 +573,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', createGraphDirective ] );
+         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator', createGraphDirective ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction === 'in'; } );

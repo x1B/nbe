@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+- [#28](https://github.com/x1B/nbe/issues/28): Implemented circuit simulator demo.
 - [#26](https://github.com/x1B/nbe/issues/26): Added a short ping animation which is triggered when a link is formed.
 - [#25](https://github.com/x1B/nbe/issues/25): Fix link pathing during port drag/drop.
 - [#24](https://github.com/x1B/nbe/issues/24): Disconnect ports using doubleclick instead of click.

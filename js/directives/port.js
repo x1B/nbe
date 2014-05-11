@@ -53,13 +53,13 @@ function ( $, ng, pathing, portHtml ) {
                accept: 'i',
                hoverClass: 'drop-hover',
                drop: handlePortDrop
-            } ).on( 'dblclick', handlePortClick );
+            } ).on( 'dblclick', handlePortDoubleClick );
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handlePortClick() {
+            function handlePortDoubleClick() {
                if ( $scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: $scope[ ATTR_VERTEX_ID ],

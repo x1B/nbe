@@ -2,14 +2,15 @@ define( [
    'angular',
    './constants/settings',
    './services/async',
-   './services/auto-layout',
+   './services/auto_layout',
+   './services/id_generator',
    './directives/edge',
    './directives/graph',
    './directives/link',
    './directives/port',
    './directives/vertex'
 ],
-function ( ng, settings, async, autoLayout, edge, graph, link, port, vertex ) {
+function ( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port, vertex ) {
    'use strict';
 
    var nbe = ng.module( 'nbe', [] );
@@ -22,8 +23,9 @@ function ( ng, settings, async, autoLayout, edge, graph, link, port, vertex ) {
    // Services
    async.define( nbe );
    autoLayout.define( nbe );
+   idGenerator.define( nbe );
 
-   // Directives
+      // Directives
    graph.define( nbe );
    edge.define( nbe );
    link.define( nbe );
