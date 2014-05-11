@@ -1,12 +1,14 @@
 define( [
    'jquery',
    'angular',
+   'json!./templates.json',
    'json!./dummy_model.json',
    'json!./dummy_layout.json'
 ],
 function (
    $,
    ng,
+   templates,
    dummyModel,
    dummyLayout ) {
    'use strict';
@@ -15,7 +17,7 @@ function (
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function LogicDemoController( $scope ) {
+   function LogicDemoController( $scope, nbeIdGenerator ) {
       $scope.circuit = dummyModel;
       $scope.layout = dummyLayout;
       $scope.messages = [];
@@ -39,11 +41,19 @@ function (
             sim.run( $scope.circuit );
          } );
       };
+
+      var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.circuit.vertices );
+      $scope.addGate = function( gateType ) {
+         var id = gateIdGenerator();
+         var gate = ng.copy( templates.model[ gateType  ] );
+         $scope.circuit.vertices[ id ] = gate;
+         $scope.layout.vertices[ id ] = ng.copy( templates.layout );
+      };
    }
 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   LogicDemoController.$inject = [ '$scope', 'nbeAutoLayout' ];
+   LogicDemoController.$inject = [ '$scope', 'nbeIdGenerator' ];
 
    module.controller( 'LogicDemoController', LogicDemoController );
 
@@ -179,7 +189,7 @@ function (
             if ( wire && debugChannel ) {
                wire.onChange( function() {
                   sim.schedule( settings.probeDelay )( function() {
-                     debugChannel.send( '@' + sim.now() + ': wire ' + wire.id + '=' + wire.get() );
+                     debugChannel.send( '@' + sim.now() + ': ' + wire.id + ' becomes ' + wire.get() );
                   } );
                } );
             }

@@ -3,83 +3,83 @@
       "s1": {
          "label": "FALSE",
          "ports": [
-            { "id": "s", "label": "sig 1", "type": "WIRE", "edgeId": "w0" }
+            { "id": "s", "label": "sig 1", "type": "WIRE", "edgeId": "wire 0" }
          ]
       },
       "s2": {
          "label": "TRUE",
          "ports": [
-            { "id": "s", "label": "sig 2", "type": "WIRE", "edgeId": "w1" }
+            { "id": "s", "label": "sig 2", "type": "WIRE", "edgeId": "wire 1" }
          ]
       },
       "v2": {
          "label": "AND",
          "ports": [
-            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "w0" },
-            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "w1" },
-            { "id": "xor", "label": "x1 ∧ x2", "type": "WIRE", "edgeId": "w2" }
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 0" },
+            { "id": "y", "label": "y", "type": "WIRE", "direction": "in", "edgeId": "wire 1" },
+            { "id": "xor", "label": "x∧y", "type": "WIRE", "edgeId": "wire 2" }
          ]
       },
       "v3": {
          "label": "OR",
          "ports": [
-            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "w0" },
-            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "w1" },
-            { "id": "xor", "label": "x1 ∨ x2", "type": "WIRE", "edgeId": "w3" }
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 0" },
+            { "id": "y", "label": "y", "type": "WIRE", "direction": "in", "edgeId": "wire 1" },
+            { "id": "z", "label": "x∨y", "type": "WIRE", "edgeId": "wire 3" }
          ]
       },
       "v4": {
          "label": "XOR",
          "ports": [
-            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "w3" },
-            { "id": "x1", "label": "x1", "type": "WIRE", "direction": "in", "edgeId": "w2" },
-            { "id": "xor", "label": "x1 ⊻ x2", "type": "WIRE", "edgeId": "w4" }
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 3" },
+            { "id": "y", "label": "y", "type": "WIRE", "direction": "in", "edgeId": "wire 2" },
+            { "id": "z", "label": "x⊻y", "type": "WIRE", "edgeId": "wire 4" }
          ]
       },
       "v5": {
          "label": "PROBE",
          "ports": [
-            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "w4" },
-            { "id": "changes", "label": "changes", "type": "CHANNEL", "edgeId": "c0" }
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 4" },
+            { "id": "log", "label": "log", "type": "CHANNEL", "edgeId": "channel 0" }
          ]
       },
       "v6": {
          "label": "PROBE",
          "ports": [
-            { "id": "x0", "label": "x0", "type": "WIRE", "direction": "in", "edgeId": "w3" },
-            { "id": "changes", "label": "changes", "type": "CHANNEL", "edgeId": "c0" }
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 3" },
+            { "id": "log", "label": "log", "type": "CHANNEL", "edgeId": "channel 0" }
          ]
       },
       "v7": {
          "label": "LOG",
          "ports": [
-            { "id": "messages", "label": "messages", "type": "CHANNEL", "direction": "in", "edgeId": "c0" }
+            { "id": "messages", "label": "messages", "type": "CHANNEL", "direction": "in", "edgeId": "channel 0" }
          ]
       }
    },
    "edges": {
-      "w0": {
-         "label": "w0",
+      "wire 0": {
+         "label": "wire 0",
          "type": "WIRE"
       },
-      "w1": {
-         "label": "w1",
+      "wire 1": {
+         "label": "wire 1",
          "type": "WIRE"
       },
-      "w2": {
-         "label": "w2",
+      "wire 2": {
+         "label": "wire 2",
          "type": "WIRE"
       },
-      "w3": {
-         "label": "w3",
+      "wire 3": {
+         "label": "wire 3",
          "type": "WIRE"
       },
-      "w4": {
-         "label": "w4",
+      "wire 4": {
+         "label": "wire 4",
          "type": "WIRE"
       },
-      "c0": {
-         "label": "c0",
+      "channel 0": {
+         "label": "channel 0",
          "type": "CHANNEL"
       }
    }

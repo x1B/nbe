@@ -164,3 +164,24 @@
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
+
+/* line 7, ../../sass/demo/nbe_logic.scss */
+.logic-app .log {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  padding: 10px;
+  width: 200px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+/* line 17, ../../sass/demo/nbe_logic.scss */
+.logic-app .log h4 {
+  margin: 8px;
+}
+/* line 20, ../../sass/demo/nbe_logic.scss */
+.logic-app .log ul {
+  margin: 0;
+  font-size: 11px;
+}

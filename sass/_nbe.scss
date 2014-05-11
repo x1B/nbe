@@ -2,6 +2,8 @@
 
 body {
    background: $bgColor;
+   font-family: $fontFamilyLabel;
+   color: $textColor;
 }
 
 [data-ng-cloak] {
@@ -13,9 +15,7 @@ body {
    background: $graphBgColor;
    border-radius: $graphBorderRadius;
 
-   font-family: $fontFamilyLabel;
    font-size: $fontSizeLabel;
-   color: $textColor;
 
    .graph-contents {
       background:
