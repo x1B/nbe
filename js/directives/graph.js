@@ -89,40 +89,30 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             if ( newVertices == null ) {
                return;
             }
-            ng.forEach( linksByVertex, function( _, vId ) {
-               if ( !model.vertices[ vId ] ) {
-                  delete linksByVertex[ vId ];
-               }
-            } );
-            ng.forEach( model.vertices, function( vertex, vId ) {
+            ng.forEach( newVertices, function( vertex, vId ) {
                if ( !linksByVertex[ vId ] ) {
                   linksByVertex[ vId ] = { };
                }
                vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vId, port: port };
-                  if ( !linksByVertex[ vId ][ port.id ] ) {
+                  if ( !linkByPort( vId, port ) ) {
                      createLink( vertexRef, edgeRef );
                   }
                } );
             } );
-         } );
+         }, true );
 
          $scope.$watch( 'model.edges', function( newVertices ) {
             if ( newVertices == null ) {
                return;
             }
-            ng.forEach( linksByEdge, function( _, eId ) {
-               if ( !model.edges[ eId ] ) {
-                  delete linksByEdge[ eId ];
-               }
-            } );
             ng.forEach( model.edges, function( _, eId ) {
                if ( !linksByEdge[ eId ] ) {
                   linksByEdge[ eId ] = { };
                }
             } );
-         } );
+         }, true );
 
          initGraph( $scope );
 
@@ -566,30 +556,35 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             function handleDelete() {
                var operations = [];
-               ng.forEach( view.selection.vertices, function( selected, vId ) {
-                  if( selected ) {
-                     operations.push( makeDeleteVertexOp( vId ) );
-                  }
-               } );
                ng.forEach( view.selection.edges, function( selected, eId ) {
                   if( selected ) {
                      operations.push( makeDeleteEdgeOp( eId ) );
                   }
                } );
+               ng.forEach( view.selection.vertices, function( selected, vId ) {
+                  if( selected ) {
+                     operations.push( makeDeleteVertexOp( vId ) );
+                  }
+               } );
+               clear();
                ops.perform( operationsModule.compose( operations ) );
-               console.log( model );
+               $scope.$digest();
+            }
+
+            function clear() {
+               view.selection = { vertices: {}, edges: {} };
             }
 
             function selectEdge( edgeId, extend ) {
                if ( !extend ) {
-                  view.selection = { vertices: {}, edges: {} };
+                  clear();
                }
                view.selection.edges[ edgeId ] = true;
             }
 
             function selectVertex( vertexId, extend ) {
                if ( !extend ) {
-                  view.selection = { vertices: {}, edges: {} };
+                  clear();
                }
                view.selection.vertices[ vertexId ] = true;
             }
@@ -646,14 +641,15 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   return !(
                      selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
                      selectionBox.right < box.left || selectionBox.left > box.right
-                     );
+                  );
                }
             } );
 
             return {
                selectVertex: selectVertex,
                selectEdge: selectEdge,
-               handleDelete: handleDelete
+               handleDelete: handleDelete,
+               clear: clear
             };
 
          } )();
