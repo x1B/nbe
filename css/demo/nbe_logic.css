@@ -1,16 +1,16 @@
 /**
  * Use this to declare user-defined edge types.
  */
-/* line 89, ../../sass/_nbe_variables.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.logic-app .port.WIRE > i {
   background: #c3669c;
 }
-/* line 94, ../../sass/_nbe_variables.scss */
+/* line 93, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.WIRE {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
-/* line 100, ../../sass/_nbe_variables.scss */
+/* line 99, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.WIRE.ping {
   animation-name: edge-ping-logic-app-WIRE;
   animation-duration: 0.3s;
@@ -19,32 +19,32 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 110, ../../sass/_nbe_variables.scss */
+/* line 109, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.WIRE {
   stroke: #c3669c;
 }
-/* line 112, ../../sass/_nbe_variables.scss */
+/* line 111, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.WIRE.selected {
   stroke: #e0afcb;
 }
-/* line 120, ../../sass/_nbe_variables.scss */
+/* line 119, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-WIRE .port:not(.WIRE) > i,
 .graph.logic-app.highlight-WIRE .node.edge:not(.WIRE) {
   background: #646464;
 }
-/* line 123, ../../sass/_nbe_variables.scss */
+/* line 122, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-WIRE .link:not(.WIRE) {
   stroke: #646464;
 }
-/* line 130, ../../sass/_nbe_variables.scss */
+/* line 129, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .link.WIRE {
   display: none;
 }
-/* line 133, ../../sass/_nbe_variables.scss */
+/* line 132, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .port.WIRE {
   display: none;
 }
-/* line 136, ../../sass/_nbe_variables.scss */
+/* line 135, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-WIRE .edge.WIRE {
   display: none;
 }
@@ -83,16 +83,16 @@
   }
 }
 
-/* line 89, ../../sass/_nbe_variables.scss */
+/* line 88, ../../sass/_nbe_variables.scss */
 .graph.logic-app .port.CHANNEL > i {
   background: #f5c680;
 }
-/* line 94, ../../sass/_nbe_variables.scss */
+/* line 93, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.CHANNEL {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 100, ../../sass/_nbe_variables.scss */
+/* line 99, ../../sass/_nbe_variables.scss */
 .graph.logic-app .node.edge.CHANNEL.ping {
   animation-name: edge-ping-logic-app-CHANNEL;
   animation-duration: 0.3s;
@@ -101,32 +101,32 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 110, ../../sass/_nbe_variables.scss */
+/* line 109, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.CHANNEL {
   stroke: #f5c680;
 }
-/* line 112, ../../sass/_nbe_variables.scss */
+/* line 111, ../../sass/_nbe_variables.scss */
 .graph.logic-app .link.CHANNEL.selected {
   stroke: #fcf0df;
 }
-/* line 120, ../../sass/_nbe_variables.scss */
+/* line 119, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-CHANNEL .port:not(.CHANNEL) > i,
 .graph.logic-app.highlight-CHANNEL .node.edge:not(.CHANNEL) {
   background: #646464;
 }
-/* line 123, ../../sass/_nbe_variables.scss */
+/* line 122, ../../sass/_nbe_variables.scss */
 .graph.logic-app.highlight-CHANNEL .link:not(.CHANNEL) {
   stroke: #646464;
 }
-/* line 130, ../../sass/_nbe_variables.scss */
+/* line 129, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-CHANNEL .link.CHANNEL {
   display: none;
 }
-/* line 133, ../../sass/_nbe_variables.scss */
+/* line 132, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-CHANNEL .port.CHANNEL {
   display: none;
 }
-/* line 136, ../../sass/_nbe_variables.scss */
+/* line 135, ../../sass/_nbe_variables.scss */
 .graph.logic-app.hide-CHANNEL .edge.CHANNEL {
   display: none;
 }

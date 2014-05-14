@@ -19,7 +19,7 @@
          <path data-ng-repeat="(id, link) in view.links"
                data-nbe-link
                stroke-linejoin="round"
-               class="{{ selection.links[ id ] && 'selected' || '' }} link {{ link.type }}"
+               class="link {{ link.type }}"
                d="M0 0 L0 0"></path>
 
          <path class="link GHOST"></path>

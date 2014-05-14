@@ -40,6 +40,9 @@ function ( $, ng, layoutModule, svgLinkPath ) {
 
             // API to be called when attached edges or vertices have been moved:
             var repaint = this.repaint = pathUpdater();
+            this.toggleSelect = function toggleSelect( state ) {
+               $element.toggleClass( 'selected', state );
+            };
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 

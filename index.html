@@ -38,7 +38,6 @@
      </div>
   </div>
 
-  <!--
   <h2>Reactive App Mockup Demo</h2>
   <div style="overflow: auto; position: relative; width: 1200px; height: 500px;"
        data-ng-controller="LaxarDemoController"
@@ -54,10 +53,12 @@
            <input type="checkbox"
                   data-ng-model="type.hidden"
                   data-ng-checked="!type.hidden"
-                  data-ng-true-value="" data-ng-false-value="true" />{{ type.label }}</label>
+                  data-ng-true-value=""
+                  data-ng-false-value="true" />
+           {{ type.label }} ({{ type.maxSources || 'n' }}:{{ type.maxDestinations || 'm'}})
+        </label>
      </div>
   </div>
-  -->
 
   <script type="text/javascript" src="bower_components/requirejs/require.js"
           data-main="js/start.js"></script>

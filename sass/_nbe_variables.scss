@@ -41,7 +41,7 @@ $portTextColor: $gray0!default;
 $nodeTitleHeight: 18px!default;
 $portAnchorSize: 11px!default;
 $portHeight: 16px!default;
-$edgeNodeSize: 30px!default;
+$edgeNodeSize: 20px!default;
 
 $graphBorderRadius: 10px!default;
 $vertexBorderRadius: 5px!default;
@@ -78,7 +78,6 @@ $fontSizePort: 11px!default;
    }
 }
 
-
 /**
  * Use this to declare user-defined edge types.
  */
@@ -96,7 +95,7 @@ $fontSizePort: 11px!default;
          background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $color), color-stop(100%, darken($color, 30%)));
       }
 
-
+      // Creation animation
       .node.edge.#{$name}.ping {
          animation-name: edge-ping-#{$themeName}-#{$name};
          animation-duration: 0.3s;

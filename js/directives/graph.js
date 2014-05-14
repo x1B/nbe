@@ -84,11 +84,17 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             adjustCanvasSize();
          }, true );
 
-         $scope.$watch( 'model.vertices', function( newVertices ) {
+         $scope.$watch( 'model.vertices', function( newVertices, previousVertices ) {
             if ( newVertices == null ) {
                return;
             }
             ng.forEach( newVertices, function( vertex, vId ) {
+               if( !previousVertices[ vId ] ) {
+                  $timeout( function() {
+                     var jqNew =$( '[data-nbe-vertex="' + vId + '"]' );
+                     visual.pingAnimation( jqNew );
+                  } );
+               }
                vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vId, port: port };
@@ -98,6 +104,22 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                } );
             } );
          }, true );
+
+         $scope.$watch( 'model.edges', function( newEdges, previousEdges ) {
+            if ( newEdges == null ) {
+               return;
+            }
+            ng.forEach( newEdges, function( vertex, vId ) {
+               if( !previousEdges[ vId ] ) {
+                  $timeout( function() {
+                     var jqNew = $( '[data-nbe-edge="' + vId + '"]' );
+                     visual.pingAnimation( jqNew );
+                  } );
+               }
+            } );
+         }, true );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          initGraph( $scope );
 
@@ -297,7 +319,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   }
                   var edgeRef = { nodeId: edgeId };
                   ref.port.edgeId = edgeId;
-                  self.create( ref, edgeRef );
+                  self.links.create( ref, edgeRef );
                };
             }
 
@@ -500,6 +522,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                create: createLink,
                destroy: destroyLink,
                byPort: byPort,
+               byVertex: function( vertexId ) {
+                  return linksByVertex[ vertexId ];
+               },
                byEdge: function( edgeId ) {
                   return linksByEdge[ edgeId ];
                },
@@ -511,7 +536,10 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                registerController: function( linkId, linkController ) {
                   linkControllers[ linkId ] = linkController;
                },
-               controllers: controllers
+               controllers: controllers,
+               controllersById: function() {
+                  return linkControllers;
+               }
             };
 
          }
@@ -588,15 +616,11 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             function handleDelete() {
                var operations = [];
-               ng.forEach( view.selection.edges, function( selected, eId ) {
-                  if( selected ) {
-                     operations.push( makeDeleteEdgeOp( eId ) );
-                  }
+               Object.keys( view.selection.edges ).forEach( function( eId ) {
+                  operations.push( makeDeleteEdgeOp( eId ) );
                } );
-               ng.forEach( view.selection.vertices, function( selected, vId ) {
-                  if( selected ) {
-                     operations.push( makeDeleteVertexOp( vId ) );
-                  }
+               Object.keys( view.selection.vertices ).forEach( function( vId ) {
+                  operations.push( makeDeleteVertexOp( vId ) );
                } );
                clear();
                ops.perform( operationsModule.compose( operations ) );
@@ -608,7 +632,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             function isEmpty() {
                return !Object.keys( view.selection.vertices ).length || !Object.keys( view.selection.edges ).length;
             }
-
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -637,7 +660,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             /////////////////////////////////////////////////////////////////////////////////////////////////////
 
             function start( event ) {
-
                if( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
                   return;
                }
@@ -662,17 +684,26 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
                   var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
                   [ 'vertex', 'edge' ].forEach( function( nodeType ) {
-                     var viewModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
+                     var selectionModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
                      var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
                      var tmpBox = {};
                      $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
                         var jqNode = $( domNode );
                         visual.boundingBox( jqNode, jqGraph, tmpBox );
                         var selected = doesIntersect( tmpBox, selectionBox );
-                        viewModel[ domNode.dataset[ identity ] ] = selected;
+                        var id = domNode.dataset[ identity ];
+                        if ( selected ) {
+                           selectionModel[ id ] = true;
+                        }
+                        else {
+                           delete selectionModel[ id ];
+                        }
                         jqNode.toggleClass( 'selected', selected );
                      } );
                   } );
+
+                  updateLinks();
+
                }
 
                function finish() {
@@ -694,7 +725,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             function setAnchor( domNode ) {
                var pos = $( domNode ).position();
-               var followers = $( '.selected:not(.ui-draggable-dragging)', jqGraph[ 0 ] );
+               var followers = $( '.selected:not(.ui-draggable-dragging):not(.link)', jqGraph[ 0 ] );
                anchor = {
                   domNode: domNode,
                   left: pos.left,
@@ -733,6 +764,31 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   nodeLayout.top = parseInt( domNode.style.top, 10 );
                } );
                anchor = null;
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function updateLinks() {
+               var linkState = { };
+               Object.keys( model.edges ).forEach( function( edgeId ) {
+                  var edgeState = view.selection.edges[ edgeId ];
+                  Object.keys( self.links.byEdge( edgeId ) ).forEach( function( linkId ) {
+                     linkState[ linkId ] = edgeState || linkState[ linkId ];
+                  } );
+               } );
+
+               Object.keys( model.vertices ).forEach( function( vertexId ) {
+                  var vertexState = view.selection.vertices[ vertexId ];
+                  Object.keys( self.links.byVertex( vertexId ) ).forEach( function( linkId ) {
+                     linkState[ linkId ] = vertexState || linkState[ linkId ];
+                  } );
+               } );
+
+               var linkControllers = self.links.controllersById();
+               Object.keys( linkControllers ).forEach( function( linkId ) {
+                  linkControllers[ linkId ].toggleSelect( linkState[ linkId ] || false );
+               } );
+               view.selection.links = linkState;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
