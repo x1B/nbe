@@ -13,6 +13,7 @@ define( [], function () {
       var graphOffset = jqGraph.offset();
       var top = v.top - graphOffset.top;
       var left = v.left - graphOffset.left;
+      box = box || {};
       box.top = top;
       box.left = left;
       box.right = left + jqNode.width();

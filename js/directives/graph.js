@@ -50,21 +50,20 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          var view;
 
          /** Transient members, re-initialized when the model is replaced. */
-         var linksByEdge;
-         var linksByVertex;
-         var linkControllers;
+
          var generateLinkId;
          var generateEdgeId;
 
          // var self = $scope.nbeTools = $scope.nbeController = this;
          var self = $scope.nbeController = this;
+         self.dragDrop = dragDropController();
+         self.selection = selectionController();
+         self.links = linksController();
 
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
 
          // Controller API:
-         this.vertexLinkControllers = vertexLinkControllers;
-         this.edgeLinkControllers = edgeLinkControllers;
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
 
@@ -90,27 +89,13 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                return;
             }
             ng.forEach( newVertices, function( vertex, vId ) {
-               if ( !linksByVertex[ vId ] ) {
-                  linksByVertex[ vId ] = { };
-               }
                vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vId, port: port };
-                  if ( !linkByPort( vId, port ) ) {
-                     createLink( vertexRef, edgeRef );
+                  if ( !self.links.byPort( vId, port ) ) {
+                     self.links.create( vertexRef, edgeRef );
                   }
                } );
-            } );
-         }, true );
-
-         $scope.$watch( 'model.edges', function( newVertices ) {
-            if ( newVertices == null ) {
-               return;
-            }
-            ng.forEach( model.edges, function( _, eId ) {
-               if ( !linksByEdge[ eId ] ) {
-                  linksByEdge[ eId ] = { };
-               }
             } );
          }, true );
 
@@ -140,9 +125,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function repaint() {
-            ng.forEach( linkControllers, function( controller ) {
-               controller.repaint();
-            } );
+            self.links.repaint();
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,9 +145,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                links: {}
             };
 
-            linksByEdge = { };
-            linksByVertex = { };
-            self.linkControllers = linkControllers = { };
+            // DELETEME // linksByEdge = { };
+            // DELETEME // linksByVertex = { };
+            // DELETEME // self.linkControllers = linkControllers = { };
 
             generateEdgeId = idGenerator.create(
                Object.keys( types ).map( function( _ ) { return _.toLocaleLowerCase() + ' '; } ),
@@ -172,9 +155,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             );
             generateLinkId = idGenerator.create( [ 'lnk' ], {} );
 
+            jqGraph[ 0 ].addEventListener( 'mousedown', self.selection.start );
             $document.on( 'keydown', handleKeys );
             repaint();
-
             $scope.$watch( 'layout', async.ensure( adjustCanvasSize, 50 ), true );
          }
 
@@ -234,7 +217,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                var edgeRef = { nodeId: toEdgeId };
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
-                  createLink( vertexRef, edgeRef );
+                  self.links.create( vertexRef, edgeRef );
                }
                connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
 
@@ -253,7 +236,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
                var disconnectOps = [];
                var counter = 0;
-               var links = linksByEdge[ edgeId ];
+               var links = self.links.byEdge( edgeId );
                Object.keys( links ).forEach( function( linkId ) {
                   var link = links[ linkId ];
                   if ( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
@@ -298,12 +281,12 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   return;
                }
                var edgeId = ref.port.edgeId;
-               var link = linkByPort( ref.nodeId, ref.port );
-
-               destroyLink( link );
+               var link = self.links.byPort( ref.nodeId, ref.port );
+               self.links.destroy( link );
                delete ref.port.edgeId;
+
                var removedEdge;
-               if ( !Object.keys( linksByEdge[ edgeId ] ).length ) {
+               if ( !Object.keys( self.links.byEdge( edgeId ) ).length ) {
                   removedEdge = model.edges[ edgeId ];
                   delete model.edges[ edgeId ];
                }
@@ -314,7 +297,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   }
                   var edgeRef = { nodeId: edgeId };
                   ref.port.edgeId = edgeId;
-                  createLink( ref, edgeRef );
+                  self.create( ref, edgeRef );
                };
             }
 
@@ -355,43 +338,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function createLink( refA, refB ) {
-            var reverse = isInput( refA.port ) || isOutput( refB.port );
-            var fromRef = reverse ? refB : refA;
-            var toRef = reverse ? refA : refB;
-
-            var link = {
-               id: generateLinkId(),
-               type: ( fromRef.port || toRef.port ).type,
-               source: fromRef,
-               dest: toRef
-            };
-
-            insert( fromRef, link.id, link );
-            insert( toRef, link.id, link );
-            view.links[ link.id ] = link;
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////
-
-            function isInput( port ) {
-               return port && port.direction === 'in';
-            }
-
-            function isOutput( port ) {
-               return port && port.direction !== 'in';
-            }
-
-            function insert( ref, linkId, link ) {
-               var map = ref.port ? linksByVertex : linksByEdge;
-               if ( !map[ ref.nodeId ] ) {
-                  map[ ref.nodeId ] = { };
-               }
-               map[ ref.nodeId ][ linkId ] = link;
-            }
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
          function createEdge( fromRef, toRef ) {
             var type = fromRef.port.type;
             var prefix = type.toLocaleLowerCase() + ' ';
@@ -418,62 +364,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
                                    top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
 
-            createLink( fromRef, edgeRef );
-            createLink( edgeRef, toRef );
+            self.links.create( fromRef, edgeRef );
+            self.links.create( edgeRef, toRef );
             return id;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function destroyLink( link ) {
-            function remove( map, nodeId, linkId ) {
-               delete map[ nodeId ][ linkId ];
-            }
-            remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
-            remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
-            delete view.links[ link.id ];
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function vertexLinkControllers( vertexId ) {
-            if ( linksByVertex[ vertexId ] === undefined ) {
-               return [ ];
-            }
-            return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
-               return linkControllers[ linkId ];
-            } );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function edgeLinkControllers( edgeId ) {
-            if ( linksByEdge[ edgeId ] === undefined ) {
-               return [ ];
-            }
-            return Object.keys( linksByEdge[ edgeId ] ).map( function( linkId ) {
-               return linkControllers[ linkId ];
-            } );
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function linkByPort( vertexId, port ) {
-            var portId = port.id;
-            var links = linksByVertex[ vertexId ];
-            var keys = Object.keys( links );
-
-            for ( var i = keys.length; i --> 0; ) {
-               var linkId = keys[ i ];
-               var link = links[ linkId ];
-               if ( link.source.port && link.source.port.id === portId ) {
-                  return link;
-               }
-               if ( link.dest.port && link.dest.port.id === portId ) {
-                  return link;
-               }
-            }
-            return null;
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -491,8 +384,143 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         self.dragDrop = ( function() {
+         /** Manages the view model for links. */
+         function linksController() {
+
+            var linksByEdge = {};
+            var linksByVertex = {};
+            var linkControllers = {};
+
+            function createLink( refA, refB ) {
+               var reverse = isInput( refA.port ) || isOutput( refB.port );
+               var fromRef = reverse ? refB : refA;
+               var toRef = reverse ? refA : refB;
+
+               var link = {
+                  id: generateLinkId(),
+                  type: ( fromRef.port || toRef.port ).type,
+                  source: fromRef,
+                  dest: toRef
+               };
+
+               insert( fromRef, link.id, link );
+               insert( toRef, link.id, link );
+               view.links[ link.id ] = link;
+
+               //////////////////////////////////////////////////////////////////////////////////////////////////
+
+               function isInput( port ) {
+                  return port && port.direction === 'in';
+               }
+
+               function isOutput( port ) {
+                  return port && port.direction !== 'in';
+               }
+
+               function insert( ref, linkId, link ) {
+                  var map = ref.port ? linksByVertex : linksByEdge;
+                  if ( !map[ ref.nodeId ] ) {
+                     map[ ref.nodeId ] = { };
+                  }
+                  map[ ref.nodeId ][ linkId ] = link;
+               }
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function destroyLink( link ) {
+               function remove( map, nodeId, linkId ) {
+                  delete map[ nodeId ][ linkId ];
+               }
+               remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
+               remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
+               delete view.links[ link.id ];
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function controllers( vertexIds, edgeIds ) {
+               var result = [];
+               ( vertexIds || [] ).forEach( function( vertexId ) {
+                  vertexLinkControllers( vertexId ).forEach( function( ctr ) { result.push( ctr ); } );
+               } );
+               ( edgeIds || [] ).forEach( function( edgeId ) {
+                  edgeLinkControllers( edgeId ).forEach( function( ctr ) { result.push( ctr ); } );
+               } );
+               return result;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function vertexLinkControllers( vertexId ) {
+               if ( linksByVertex[ vertexId ] === undefined ) {
+                  return [ ];
+               }
+               return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
+                  return linkControllers[ linkId ];
+               } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function edgeLinkControllers( edgeId ) {
+               if ( linksByEdge[ edgeId ] === undefined ) {
+                  return [ ];
+               }
+               return Object.keys( linksByEdge[ edgeId ] ).map( function( linkId ) {
+                  return linkControllers[ linkId ];
+               } );
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function byPort( vertexId, port ) {
+               var portId = port.id;
+               if( !linksByVertex[ vertexId ] ) {
+                  linksByVertex[ vertexId ] = {};
+               }
+               var links = linksByVertex[ vertexId ];
+               var keys = Object.keys( links );
+               for ( var i = keys.length; i --> 0; ) {
+                  var linkId = keys[ i ];
+                  var link = links[ linkId ];
+                  if ( link.source.port && link.source.port.id === portId ) {
+                     return link;
+                  }
+                  if ( link.dest.port && link.dest.port.id === portId ) {
+                     return link;
+                  }
+               }
+               return null;
+            }
+
+            return {
+               create: createLink,
+               destroy: destroyLink,
+               byPort: byPort,
+               byEdge: function( edgeId ) {
+                  return linksByEdge[ edgeId ];
+               },
+               repaint: function() {
+                  ng.forEach( linkControllers, function( controller ) {
+                     controller.repaint();
+                  } );
+               },
+               registerController: function( linkId, linkController ) {
+                  linkControllers[ linkId ] = linkController;
+               },
+               controllers: controllers
+            };
+
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /** Manages drag/drop of ports to create links or even new edges. */
+         function dragDropController() {
 
             /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
             var dropRef;
@@ -548,11 +576,15 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   }
                }
             } );
-         } )();
+         }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         self.selection = ( function() {
+         /** Manages the view model for selection of nodes. */
+         function selectionController() {
+
+            var anchor;
 
             function handleDelete() {
                var operations = [];
@@ -571,9 +603,20 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                $scope.$digest();
             }
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function isEmpty() {
+               return !Object.keys( view.selection.vertices ).length || !Object.keys( view.selection.edges ).length;
+            }
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
             function clear() {
                view.selection = { vertices: {}, edges: {} };
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function selectEdge( edgeId, extend ) {
                if ( !extend ) {
@@ -581,6 +624,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
                view.selection.edges[ edgeId ] = true;
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function selectVertex( vertexId, extend ) {
                if ( !extend ) {
@@ -591,7 +636,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            jqGraph[ 0 ].addEventListener( 'mousedown', function( event ) {
+            function start( event ) {
 
                if( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
                   return;
@@ -605,7 +650,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                var fromY = event.offsetY || event.layerY;
                updateSelection( event );
                jqSelection.show();
-               $document.on( 'mousemove', updateSelection ).on( 'mouseup', finishSelection );
+               $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
 
                function updateSelection( event ) {
                   var dx = event.pageX - referenceX;
@@ -620,7 +665,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                      var viewModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
                      var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
                      var tmpBox = {};
-                     $( '.' + nodeType, jqGraph[ 0 ] ).each( function( i, domNode ) {
+                     $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
                         var jqNode = $( domNode );
                         visual.boundingBox( jqNode, jqGraph, tmpBox );
                         var selected = doesIntersect( tmpBox, selectionBox );
@@ -630,9 +675,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   } );
                }
 
-               function finishSelection() {
+               function finish() {
                   $scope.$apply( function() {
-                     $document.off( 'mousemove', updateSelection ).off( 'mouseup', finishSelection );
+                     $document.off( 'mousemove', updateSelection ).off( 'mouseup', finish );
                      jqSelection.hide();
                   } );
                }
@@ -643,16 +688,68 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                      selectionBox.right < box.left || selectionBox.left > box.right
                   );
                }
-            } );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function setAnchor( domNode ) {
+               var pos = $( domNode ).position();
+               var followers = $( '.selected:not(.ui-draggable-dragging)', jqGraph[ 0 ] );
+               anchor = {
+                  domNode: domNode,
+                  left: pos.left,
+                  top: pos.top,
+                  followers: followers
+               };
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function followAnchor() {
+               if( !anchor ) {
+                  return;
+               }
+               var newPos = $( anchor.domNode ).position();
+               var dx = newPos.left - anchor.left;
+               var dy = newPos.top - anchor.top;
+               anchor.followers.each( function( _, domNode ) {
+                  var nodeLayout = domNode.dataset.nbeVertex ?
+                     $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
+                     $scope.layout.edges[ domNode.dataset.nbeEdge ];
+                  domNode.style.left = nodeLayout.left + dx + 'px';
+                  domNode.style.top = nodeLayout.top + dy + 'px';
+               } );
+               self.links.repaint();
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function clearAnchor() {
+               anchor.followers.each( function( _, domNode ) {
+                  var nodeLayout = domNode.dataset.nbeVertex ?
+                     $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
+                     $scope.layout.edges[ domNode.dataset.nbeEdge ];
+                  nodeLayout.left = parseInt( domNode.style.left, 10 );
+                  nodeLayout.top = parseInt( domNode.style.top, 10 );
+               } );
+               anchor = null;
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             return {
+               isEmpty: isEmpty,
                selectVertex: selectVertex,
                selectEdge: selectEdge,
+               setAnchor: setAnchor,
+               followAnchor: followAnchor,
+               clearAnchor: clearAnchor,
+               start: start,
                handleDelete: handleDelete,
                clear: clear
             };
 
-         } )();
+         }
 
       }
 

@@ -53,7 +53,10 @@ function( $, ng, visual, vertexHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDragStart() {
-               linksToRepaint = graphController.vertexLinkControllers( id );
+               linksToRepaint = graphController.links.controllers( [ id ] );
+               if( jqVertex.hasClass( 'selected' ) ) {
+                  graphController.selection.setAnchor( $element[ 0 ] );
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +66,9 @@ function( $, ng, visual, vertexHtml ) {
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
+               if( jqVertex.hasClass( 'selected' ) ) {
+                  graphController.selection.followAnchor();
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +80,9 @@ function( $, ng, visual, vertexHtml ) {
                   layout.left = ui.position.left;
                   layout.top = ui.position.top;
                } );
+               if( jqVertex.hasClass( 'selected' ) ) {
+                  graphController.selection.clearAnchor();
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
