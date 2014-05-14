@@ -21,7 +21,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout, layoutSettings, async, autoLayout, idGenerator ) {
+   function createGraphDirective( $timeout, $document, layoutSettings, async, autoLayout, idGenerator ) {
 
       return {
          template: graphHtml,
@@ -48,10 +48,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          var layout;
          var types;
          var view;
-         var selection;
 
          /** Transient members, re-initialized when the model is replaced. */
-         var links;
          var linksByEdge;
          var linksByVertex;
          var linkControllers;
@@ -69,8 +67,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          this.edgeLinkControllers = edgeLinkControllers;
          this.makeConnectOp = makeConnectOp;
          this.makeDisconnectOp = makeDisconnectOp;
-         this.selectEdge = selectEdge;
-         this.selectVertex = selectVertex;
 
          // Manage layout and rendering:
          this.calculateLayout = calculateLayout;
@@ -90,17 +86,45 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          }, true );
 
          $scope.$watch( 'model.vertices', function( newVertices ) {
-            if ( newVertices ) {
-               ng.forEach( model.vertices, function( v, vId ) {
-                  if ( !linksByVertex[ vId ] ) {
-                     linksByVertex[ vId ] = { };
+            if ( newVertices == null ) {
+               return;
+            }
+            ng.forEach( linksByVertex, function( _, vId ) {
+               if ( !model.vertices[ vId ] ) {
+                  delete linksByVertex[ vId ];
+               }
+            } );
+            ng.forEach( model.vertices, function( vertex, vId ) {
+               if ( !linksByVertex[ vId ] ) {
+                  linksByVertex[ vId ] = { };
+               }
+               vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
+                  var edgeRef = { nodeId: port.edgeId, port: null };
+                  var vertexRef = { nodeId: vId, port: port };
+                  if ( !linksByVertex[ vId ][ port.id ] ) {
+                     createLink( vertexRef, edgeRef );
                   }
                } );
+            } );
+         } );
+
+         $scope.$watch( 'model.edges', function( newVertices ) {
+            if ( newVertices == null ) {
+               return;
             }
-         }, true );
+            ng.forEach( linksByEdge, function( _, eId ) {
+               if ( !model.edges[ eId ] ) {
+                  delete linksByEdge[ eId ];
+               }
+            } );
+            ng.forEach( model.edges, function( _, eId ) {
+               if ( !linksByEdge[ eId ] ) {
+                  linksByEdge[ eId ] = { };
+               }
+            } );
+         } );
 
          initGraph( $scope );
-         $( window ).on( 'resize', async.ensure( repaint, 15 ) );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -140,14 +164,17 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             if ( !layout ) {
                self.calculateLayout();
             }
-            view = $scope.view = {};
-            selection = $scope.selection = { kind: null, id: null };
+            view = $scope.view = {
+               selection: {
+                  vertices: {},
+                  edges: {}
+               },
+               links: {}
+            };
 
             linksByEdge = { };
             linksByVertex = { };
             self.linkControllers = linkControllers = { };
-
-            links = $scope.view.links = {};
 
             generateEdgeId = idGenerator.create(
                Object.keys( types ).map( function( _ ) { return _.toLocaleLowerCase() + ' '; } ),
@@ -155,25 +182,10 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             );
             generateLinkId = idGenerator.create( [ 'lnk' ], {} );
 
-            ng.forEach( model.vertices, function( vertex, vertexId ) {
-               vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
-                  var edgeRef = { nodeId: port.edgeId, port: null };
-                  var vertexRef = { nodeId: vertexId, port: port };
-                  if ( !linksByVertex[ vertexId ] ) {
-                     linksByVertex[ vertexId ] = {};
-                  }
-                  if ( !linksByVertex[ vertexId ][ port.id ] ) {
-                     createLink( vertexRef, edgeRef );
-                  }
-               } );
-            } );
-
-            $( document ).on( 'keydown', handleKeys );
+            $document.on( 'keydown', handleKeys );
             repaint();
 
-            $scope.$watch( 'layout', function() {
-               async.ensure( adjustCanvasSize, 50 )();
-            }, true );
+            $scope.$watch( 'layout', async.ensure( adjustCanvasSize, 50 ), true );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,12 +194,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;
 
             if ( event.keyCode === KEY_CODE_DELETE ) {
-               if ( $scope.selection.kind === 'EDGE' ) {
-                  ops.perform( makeDeleteEdgeOp( $scope.selection.id ) );
-               }
-               else if ( $scope.selection.kind === 'VERTEX' ) {
-                  ops.perform( makeDeleteVertexOp( $scope.selection.id ) );
-               }
+               self.selection.handleDelete();
             }
             else if ( event.keyCode === KEY_CODE_ESCAPE ) {
                if ( self.dragDrop.transaction() ) {
@@ -372,7 +379,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             insert( fromRef, link.id, link );
             insert( toRef, link.id, link );
-            links[ link.id ] = link;
+            view.links[ link.id ] = link;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -434,7 +441,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             }
             remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
             remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
-            delete links[ link.id ];
+            delete view.links[ link.id ];
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,18 +484,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
             }
             return null;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function selectEdge( edgeId ) {
-            selection.id = edgeId;
-            selection.kind = 'EDGE';
-         }
-
-         function selectVertex( vertexId ) {
-            selection.id = vertexId;
-            selection.kind = 'VERTEX';
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,45 +562,102 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         jqGraph.on( 'mousedown', function( event ) {
-            var jqSelection = $( '.selection', $element );
-            var selection = jqSelection[ 0 ];
-            var referenceX = event.pageX;
-            var referenceY = event.pageY;
-            var fromX = event.offsetX;
-            var fromY = event.offsetY;
-            updateSelection( event );
-            jqSelection.show();
-            $( document ).on( 'mousemove', updateSelection ).on( 'mouseup', finishSelection );
+         self.selection = ( function() {
 
-            function updateSelection( event ) {
-               var dx = event.pageX - referenceX;
-               var dy = event.pageY - referenceY;
-               selection.style.width = Math.abs( dx ) + 'px';
-               selection.style.height = Math.abs( dy ) + 'px';
-               selection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
-               selection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
-            }
-
-            function finishSelection() {
-               $( document ).off( 'mousemove', updateSelection ).off( 'mouseup', finishSelection );
-               var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
-               jqSelection.hide();
-               var box = {};
-               $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
-                  var jqNode = $( domNode );
-                  visual.boundingBox( jqNode, jqGraph, box );
-                  jqNode.toggleClass( 'selected', doesIntersect( box, selectionBox ) );
+            function handleDelete() {
+               var operations = [];
+               ng.forEach( view.selection.vertices, function( selected, vId ) {
+                  if( selected ) {
+                     operations.push( makeDeleteVertexOp( vId ) );
+                  }
                } );
+               ng.forEach( view.selection.edges, function( selected, eId ) {
+                  if( selected ) {
+                     operations.push( makeDeleteEdgeOp( eId ) );
+                  }
+               } );
+               ops.perform( operationsModule.compose( operations ) );
+               console.log( model );
             }
 
-            function doesIntersect( box, selectionBox ) {
-               return !(
-                  selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
-                  selectionBox.right < box.left || selectionBox.left > box.right
-               );
+            function selectEdge( edgeId, extend ) {
+               if ( !extend ) {
+                  view.selection = { vertices: {}, edges: {} };
+               }
+               view.selection.edges[ edgeId ] = true;
             }
-         } );
+
+            function selectVertex( vertexId, extend ) {
+               if ( !extend ) {
+                  view.selection = { vertices: {}, edges: {} };
+               }
+               view.selection.vertices[ vertexId ] = true;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            jqGraph[ 0 ].addEventListener( 'mousedown', function( event ) {
+
+               if( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
+                  return;
+               }
+
+               var jqSelection = $( '.selection', $element );
+               var selection = jqSelection[ 0 ];
+               var referenceX = event.pageX;
+               var referenceY = event.pageY;
+               var fromX = event.offsetX || event.layerX;
+               var fromY = event.offsetY || event.layerY;
+               updateSelection( event );
+               jqSelection.show();
+               $document.on( 'mousemove', updateSelection ).on( 'mouseup', finishSelection );
+
+               function updateSelection( event ) {
+                  var dx = event.pageX - referenceX;
+                  var dy = event.pageY - referenceY;
+                  selection.style.width = Math.abs( dx ) + 'px';
+                  selection.style.height = Math.abs( dy ) + 'px';
+                  selection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
+                  selection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
+
+                  var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
+                  [ 'vertex', 'edge' ].forEach( function( nodeType ) {
+                     var viewModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
+                     var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
+                     var tmpBox = {};
+                     $( '.' + nodeType, jqGraph[ 0 ] ).each( function( i, domNode ) {
+                        var jqNode = $( domNode );
+                        visual.boundingBox( jqNode, jqGraph, tmpBox );
+                        var selected = doesIntersect( tmpBox, selectionBox );
+                        viewModel[ domNode.dataset[ identity ] ] = selected;
+                        jqNode.toggleClass( 'selected', selected );
+                     } );
+                  } );
+               }
+
+               function finishSelection() {
+                  $scope.$apply( function() {
+                     $document.off( 'mousemove', updateSelection ).off( 'mouseup', finishSelection );
+                     jqSelection.hide();
+                  } );
+               }
+
+               function doesIntersect( box, selectionBox ) {
+                  return !(
+                     selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
+                     selectionBox.right < box.left || selectionBox.left > box.right
+                     );
+               }
+            } );
+
+            return {
+               selectVertex: selectVertex,
+               selectEdge: selectEdge,
+               handleDelete: handleDelete
+            };
+
+         } )();
+
       }
 
    }
@@ -614,7 +666,10 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ '$timeout', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator', createGraphDirective ] );
+         module.directive( DIRECTIVE_NAME, [
+            '$timeout', '$document', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator',
+            createGraphDirective
+         ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) { return _.direction === 'in'; } );

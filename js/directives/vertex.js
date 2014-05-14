@@ -40,6 +40,9 @@ function( $, ng, visual, vertexHtml ) {
                stop: handleVertexDragStop
             } );
 
+            // Make sure that a drag/drop is not interpreted as a click (so that the selection survives it).
+            var cancelClick = false;
+
             // When dragging from a port, it gets access to the bounding box for path rendering:
             var jqGraph = jqVertex.parent();
             this.calculateBox = calculateBox;
@@ -56,6 +59,7 @@ function( $, ng, visual, vertexHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDrag() {
+               cancelClick = true;
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
@@ -80,8 +84,12 @@ function( $, ng, visual, vertexHtml ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            $scope.handleVertexClick = function() {
-               graphController.selectVertex( id );
+            $scope.handleVertexClick = function( event ) {
+               if( cancelClick ) {
+                  cancelClick = false;
+                  return;
+               }
+               graphController.selection.selectVertex( id, event.shiftKey );
             };
          }
       };

@@ -43,6 +43,9 @@ function ( $, ng, visual, edgeHtml ) {
             var linksToRepaint = [];
             $scope.nbeEdge = this;
 
+            // Make sure that a drag/drop is not interpreted as a click (so that the selection survives it).
+            var cancelClick = false;
+
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart() {
@@ -52,6 +55,7 @@ function ( $, ng, visual, edgeHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDrag() {
+               cancelClick = true;
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
@@ -79,8 +83,12 @@ function ( $, ng, visual, edgeHtml ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            $scope.handleEdgeClick = function() {
-               $scope.nbeController.selectEdge( $scope.edgeId );
+            $scope.handleEdgeClick = function( $event ) {
+               if( cancelClick ) {
+                  cancelClick = false;
+                  return;
+               }
+               $scope.nbeController.selection.selectEdge( $scope.edgeId, $event.shiftKey );
             };
 
          }
