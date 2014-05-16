@@ -194,6 +194,7 @@ body {
          height: $edgeNodeSize;
          background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
          border-radius: $edgeNodeSize;
+         margin-top: -10px;
          box-shadow: 4px 4px 4px $gray0;
 
          label {

@@ -21,8 +21,8 @@ define( [
           toY = round( toTop );
 
       var path = [ 'M', fromX, ',', fromY ];
-      path.push( 'H', fromX + fromStubSgn * stubLength );
-      path.push( 'L', toX + toStubSgn * stubLength, ',', toY );
+      path.push( 'H', fromX + fromStubSgn * stubLength/2 );
+      path.push( 'L', toX + toStubSgn * stubLength/2, ',', toY );
       path.push( 'H', toX );
 
       return path.join('');
@@ -34,6 +34,10 @@ define( [
     * Try to circumvent boxes which are in the way
     */
    function svgCubicBezierLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn, fromBox, toBox, noArrow ) {
+
+      if ( Math.abs( fromLeft - toLeft ) < 40 &&  Math.abs( fromTop - toTop ) < 50 ) {
+         return svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn );
+      }
 
       var params = initializeParameters();
 

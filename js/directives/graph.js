@@ -91,7 +91,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             ng.forEach( newVertices, function( vertex, vId ) {
                if( !previousVertices[ vId ] ) {
                   $timeout( function() {
-                     var jqNew =$( '[data-nbe-vertex="' + vId + '"]' );
+                     var jqNew = $( '[data-nbe-vertex="' + vId + '"]' );
                      visual.pingAnimation( jqNew );
                   } );
                }
@@ -166,10 +166,6 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                },
                links: {}
             };
-
-            // DELETEME // linksByEdge = { };
-            // DELETEME // linksByVertex = { };
-            // DELETEME // self.linkControllers = linkControllers = { };
 
             generateEdgeId = idGenerator.create(
                Object.keys( types ).map( function( _ ) { return _.toLocaleLowerCase() + ' '; } ),
@@ -395,9 +391,26 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
          function calculateLayout() {
             async.runEventually( function() {
-               var result = autoLayout.calculate( $scope.model, $scope.types, jqGraph );
+               var input = $scope.model;
+               if ( !self.selection.isEmpty() ) {
+                  var sel = $scope.view.selection;
+                  input = { edges: {}, vertices: {} };
+                  Object.keys( sel.edges ).forEach( function( edgeId ) {
+                     input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
+                  } );
+                  Object.keys( sel.vertices ).forEach( function( vertexId ) {
+                     input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
+                  } );
+               }
+
+               var result = autoLayout.calculate( input, $scope.types, jqGraph );
                if ( result ) {
-                  layout = $scope.layout = result;
+                  Object.keys( result.edges ).forEach( function( edgeId ) {
+                     layout.edges[ edgeId ] = result.edges[ edgeId ];
+                  } );
+                  Object.keys( result.vertices ).forEach( function( vertexId ) {
+                     layout.vertices[ vertexId ] = result.vertices[ vertexId ];
+                  } );
                   $timeout( repaint );
                   $timeout( adjustCanvasSize );
                }
@@ -630,7 +643,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function isEmpty() {
-               return !Object.keys( view.selection.vertices ).length || !Object.keys( view.selection.edges ).length;
+               return !Object.keys( view.selection.vertices ).length && !Object.keys( view.selection.edges ).length;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -645,7 +658,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                if ( !extend ) {
                   clear();
                }
-               view.selection.edges[ edgeId ] = true;
+               var selected = view.selection.edges[ edgeId ];
+               view.selection.edges[ edgeId ] = !selected;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -654,7 +668,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                if ( !extend ) {
                   clear();
                }
-               view.selection.vertices[ vertexId ] = true;
+               var selected = view.selection.vertices[ vertexId ];
+               view.selection.vertices[ vertexId ] = !selected;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////
