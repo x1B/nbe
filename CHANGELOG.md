@@ -1,17 +1,22 @@
 # Changelog
 
 ## Last Changes
+- [#29](https://github.com/x1B/nbe/issues/29): Implemented multiple selection.
+  * Select multiple nodes by dragging a rectangle.
+  * Delete the complete selection at once.
+  * Auto-Layout only applies to selected nodes (or all nodes).
+  * Dragging a selected node drags the entire selection.
 - [#28](https://github.com/x1B/nbe/issues/28): Implemented circuit simulator demo.
 - [#26](https://github.com/x1B/nbe/issues/26): Added a short ping animation which is triggered when a link is formed.
 - [#25](https://github.com/x1B/nbe/issues/25): Fix link pathing during port drag/drop.
 - [#24](https://github.com/x1B/nbe/issues/24): Disconnect ports using doubleclick instead of click.
-- [#23](https://github.com/x1B/nbe/issues/23):
-  Extracted constant values into injectable settings.
-  Replaced async utility with async service.
-  Added async service.
-- [#12](https://github.com/x1B/nbe/issues/12):
-  Allowed to filter visible edges (and ports) by type.
-  Only visible edges are included in automatic layout.
+- [#23](https://github.com/x1B/nbe/issues/23): Injected more things.
+  * Extracted constant values into injectable settings.
+  * Replaced async utility with async service.
+  * Added async service.
+- [#12](https://github.com/x1B/nbe/issues/12): Allowed to filter visible edges by type.
+  * Ports of a hidden type are hidden as well.
+  * Only visible edges are included in automatic layout.
 - [#11](https://github.com/x1B/nbe/issues/11): Allowed to restrict edge cardinality by type and port direction (source ports, dest ports).
 - [#21](https://github.com/x1B/nbe/issues/21):
   Fixed direction-dependent highlighting of ports on drag.

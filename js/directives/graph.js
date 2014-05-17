@@ -162,7 +162,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             view = $scope.view = {
                selection: {
                   vertices: {},
-                  edges: {}
+                  edges: {},
+                  links: {}
                },
                links: {}
             };
@@ -649,7 +650,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function clear() {
-               view.selection = { vertices: {}, edges: {} };
+               view.selection = { vertices: {}, edges: {}, links: {} };
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,6 +661,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
                var selected = view.selection.edges[ edgeId ];
                view.selection.edges[ edgeId ] = !selected;
+               updateLinks();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -670,6 +672,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
                var selected = view.selection.vertices[ vertexId ];
                view.selection.vertices[ vertexId ] = !selected;
+               updateLinks();
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -784,26 +787,26 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function updateLinks() {
-               var linkState = { };
+               var linksState = { };
                Object.keys( model.edges ).forEach( function( edgeId ) {
                   var edgeState = view.selection.edges[ edgeId ];
                   Object.keys( self.links.byEdge( edgeId ) ).forEach( function( linkId ) {
-                     linkState[ linkId ] = edgeState || linkState[ linkId ];
+                     linksState[ linkId ] = edgeState || linksState[ linkId ];
                   } );
                } );
 
                Object.keys( model.vertices ).forEach( function( vertexId ) {
                   var vertexState = view.selection.vertices[ vertexId ];
                   Object.keys( self.links.byVertex( vertexId ) ).forEach( function( linkId ) {
-                     linkState[ linkId ] = vertexState || linkState[ linkId ];
+                     linksState[ linkId ] = vertexState || linksState[ linkId ];
                   } );
                } );
 
                var linkControllers = self.links.controllersById();
                Object.keys( linkControllers ).forEach( function( linkId ) {
-                  linkControllers[ linkId ].toggleSelect( linkState[ linkId ] || false );
+                  linkControllers[ linkId ].toggleSelect( linksState[ linkId ] || false );
                } );
-               view.selection.links = linkState;
+               view.selection.links = linksState;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
