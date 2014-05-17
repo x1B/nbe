@@ -53,7 +53,10 @@
            <input type="checkbox"
                   data-ng-model="type.hidden"
                   data-ng-checked="!type.hidden"
-                  data-ng-true-value="" data-ng-false-value="true" />{{ type.label }}</label>
+                  data-ng-true-value=""
+                  data-ng-false-value="true" />
+           {{ type.label }} ({{ type.maxSources || 'n' }}:{{ type.maxDestinations || 'm'}})
+        </label>
      </div>
   </div>
 

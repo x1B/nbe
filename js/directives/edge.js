@@ -40,21 +40,30 @@ function ( $, ng, visual, edgeHtml ) {
                drop: handleDrop
             } );
 
+            var graphController = $scope.nbeController;
             var linksToRepaint = [];
-            $scope.nbeEdge = this;
+            // Make sure that a drag/drop is not interpreted as a click (so that the selection survives it).
+            var cancelClick = false;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart() {
-               linksToRepaint = $scope.nbeController.edgeLinkControllers( $scope.edgeId );
+               linksToRepaint = graphController.links.controllers( [], [ $scope.edgeId ] );
+               if( $element.hasClass( 'selected' ) ) {
+                  graphController.selection.setAnchor( $element[ 0 ] );
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDrag() {
+               cancelClick = true;
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
+               if( $element.hasClass( 'selected' ) ) {
+                  graphController.selection.followAnchor();
+               }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +78,9 @@ function ( $, ng, visual, edgeHtml ) {
                      edgeLayout.top = ui.position.top;
                      linksToRepaint = [];
                   } );
+                  if( $element.hasClass( 'selected' ) ) {
+                     graphController.selection.clearAnchor();
+                  }
                }
                else {
                   // dropped a port onto this edge
@@ -79,8 +91,12 @@ function ( $, ng, visual, edgeHtml ) {
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            $scope.handleEdgeClick = function() {
-               $scope.nbeController.selectEdge( $scope.edgeId );
+            $scope.handleEdgeClick = function( $event ) {
+               if( cancelClick ) {
+                  cancelClick = false;
+                  return;
+               }
+               $scope.nbeController.selection.selectEdge( $scope.edgeId, $event.shiftKey );
             };
 
          }

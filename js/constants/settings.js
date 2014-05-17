@@ -12,7 +12,7 @@ function () {
          /** When dragging a port, how much to set it off left and top. */
          portDragOffset: 8,
          /** When dragging an edge, how much to set it off left and top. */
-         edgeDragOffset: 15,
+         edgeDragOffset: 10,
          /** How much padding to use when applying an automatic graph layout. */
          graphPadding: 40
       },
