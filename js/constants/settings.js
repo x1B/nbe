@@ -2,8 +2,7 @@
  * Dagre-based graph layout service.
  * Edges and vertices are fed to dagre layouter as nodes, and links are fed as edges.
  */
-define( [],
-function () {
+define( [], function() {
    'use strict';
 
    return {

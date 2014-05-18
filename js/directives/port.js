@@ -5,8 +5,7 @@ define( [
    'text!./port.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
-],
-function ( $, ng, pathing, portHtml ) {
+], function( $, ng, pathing, portHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +59,7 @@ function ( $, ng, pathing, portHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDoubleClick() {
-               if ( $scope.port.edgeId ) {
+               if( $scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: $scope[ ATTR_VERTEX_ID ],
                      port: $scope.port
@@ -79,7 +78,7 @@ function ( $, ng, pathing, portHtml ) {
                   $( 'i', $element[ 0 ] ).trigger( 'mouseup' );
                } );
 
-               if ( $scope.port.edgeId ) {
+               if( $scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: $scope[ ATTR_VERTEX_ID ],
                      port: $scope.port
@@ -118,12 +117,14 @@ function ( $, ng, pathing, portHtml ) {
                jqLinkGhost.attr( 'class', basicLinkClass ).hide();
 
                var dd = graphController.dragDrop;
-               if ( !dd.dropRef() ) {
+               if( !dd.dropRef() ) {
                   dd.finish();
                   return;
                }
 
-               var op = graphController.makeConnectOp( { nodeId: vertexId, port: $scope.port }, dd.dropRef() );
+               var op = graphController.makeConnectOp( {
+                  nodeId: vertexId, port: $scope.port
+               }, dd.dropRef() );
                dd.transaction().perform( op );
                dd.finish();
             }

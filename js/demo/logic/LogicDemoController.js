@@ -4,18 +4,12 @@ define( [
    'json!./templates.json',
    'json!./dummy_model.json',
    'json!./dummy_layout.json'
-],
-function (
-   $,
-   ng,
-   templates,
-   dummyModel,
-   dummyLayout ) {
+], function( $, ng, templates, dummyModel, dummyLayout ) {
    'use strict';
 
    var module = ng.module( 'LogicDemoApp', [ 'nbe' ] );
 
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function LogicDemoController( $scope, nbeIdGenerator ) {
       $scope.circuit = dummyModel;
@@ -51,13 +45,13 @@ function (
       };
    }
 
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    LogicDemoController.$inject = [ '$scope', 'nbeIdGenerator' ];
 
    module.controller( 'LogicDemoController', LogicDemoController );
 
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    return module;
 
@@ -82,10 +76,10 @@ function (
          return function( action ) {
             var at = t + ( delay || 0 );
             var i = agenda.length - 1;
-            while ( i >= 0 && agenda[ i ].time >= at ) {
+            while( i >= 0 && agenda[ i ].time >= at ) {
                --i;
             }
-            agenda.splice( i+1, 0, workItem( at, action ) );
+            agenda.splice( i + 1, 0, workItem( at, action ) );
          };
       }
 
@@ -95,7 +89,7 @@ function (
             return t;
          },
          run: function() {
-            while ( agenda.length ) {
+            while( agenda.length ) {
                next();
             }
          }
@@ -108,11 +102,12 @@ function (
 
       var connectionBuilders = {
 
-            /**
-             * Channels are similar to wires:
-             * They connect vertices, and are represented by edges in the digraph model.
-             * However, they are stateless and simply transmit any message sent over them to all connected receivers.
-             */
+         /**
+          * Channels are similar to wires:
+          * They connect vertices, and are represented by edges in the digraph model.
+          * However, they are stateless and simply transmit any message sent over them to all connected
+          * receivers.
+          */
          CHANNEL: function channel( id ) {
             var receivers = [];
             return {
@@ -170,7 +165,7 @@ function (
       var gateBuilders = {
 
          TRUE: function constant( outputWire ) {
-            if ( outputWire ) {
+            if( outputWire ) {
                sim.schedule()( function() {
                   outputWire.set( true );
                } );
@@ -178,7 +173,7 @@ function (
          },
 
          FALSE: function constant( outputWire ) {
-            if ( outputWire ) {
+            if( outputWire ) {
                sim.schedule()( function() {
                   outputWire.set( false );
                } );
@@ -186,7 +181,7 @@ function (
          },
 
          PROBE: function probe( wire, debugChannel ) {
-            if ( wire && debugChannel ) {
+            if( wire && debugChannel ) {
                wire.onChange( function() {
                   sim.schedule( settings.probeDelay )( function() {
                      debugChannel.send( '@' + sim.now() + ': ' + wire.id + ' becomes ' + wire.get() );
@@ -196,7 +191,7 @@ function (
          },
 
          NOT: function inverter( inputWire, outputWire ) {
-            if ( inputWire && outputWire ) {
+            if( inputWire && outputWire ) {
                inputWire.onChange( function() {
                   sim.schedule( settings.inverterDelay )( function() {
                      outputWire.set( !inputWire.get() );
@@ -211,7 +206,8 @@ function (
                   outputWire.set( aWire.get() && bWire.get() );
                } );
             }
-            if ( aWire && bWire && outputWire ) {
+
+            if( aWire && bWire && outputWire ) {
                aWire.onChange( react );
                bWire.onChange( react );
             }
@@ -223,7 +219,8 @@ function (
                   outputWire.set( aWire.get() || bWire.get() );
                } );
             }
-            if ( aWire && bWire && outputWire ) {
+
+            if( aWire && bWire && outputWire ) {
                aWire.onChange( react );
                bWire.onChange( react );
             }
@@ -235,14 +232,15 @@ function (
                   outputWire.set( aWire.get() ? !bWire.get() : bWire.get() );
                } );
             }
-            if ( aWire && bWire && outputWire ) {
+
+            if( aWire && bWire && outputWire ) {
                aWire.onChange( react );
                bWire.onChange( react );
             }
          },
 
          LOG: function display( inputChannel ) {
-            if ( inputChannel ) {
+            if( inputChannel ) {
                inputChannel.onMessage( log );
             }
          }
@@ -271,12 +269,29 @@ function (
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function isWire( port ) { return port.type === 'WIRE'; }
-         function isChannel( port ) { return port.type === 'CHANNEL'; }
-         function isInput( port ) { return port.direction === 'in'; }
-         function isOutput( port ) { return port.direction !== 'in'; }
-         function isConnected( port ) { return !!port.edgeId; }
-         function connectionAt( port ) { return connections[ port.edgeId ]; }
+         function isWire( port ) {
+            return port.type === 'WIRE';
+         }
+
+         function isChannel( port ) {
+            return port.type === 'CHANNEL';
+         }
+
+         function isInput( port ) {
+            return port.direction === 'in';
+         }
+
+         function isOutput( port ) {
+            return port.direction !== 'in';
+         }
+
+         function isConnected( port ) {
+            return !!port.edgeId;
+         }
+
+         function connectionAt( port ) {
+            return connections[ port.edgeId ];
+         }
       }
 
       return {

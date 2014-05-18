@@ -10,8 +10,7 @@ define( [
    'text!./edge.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
-],
-function ( $, ng, visual, edgeHtml ) {
+], function( $, ng, visual, edgeHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +47,7 @@ function ( $, ng, visual, edgeHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart() {
-               linksToRepaint = graphController.links.controllers( [], [ $scope.edgeId ] );
+               linksToRepaint = graphController.links.controllers( [], [$scope.edgeId] );
                if( $element.hasClass( 'selected' ) ) {
                   graphController.selection.setAnchor( $element[ 0 ] );
                }
@@ -70,7 +69,7 @@ function ( $, ng, visual, edgeHtml ) {
 
             // noinspection JSUnusedLocalSymbols
             function handleDrop( event, ui ) {
-               if ( $( ui.helper ).hasClass( 'edge' ) ) {
+               if( $( ui.helper ).hasClass( 'edge' ) ) {
                   // stopped dragging this edge
                   $scope.$apply( function() {
                      var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
@@ -109,7 +108,7 @@ function ( $, ng, visual, edgeHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [ 'nbeAsync', createEdgeDirective ] );
+         module.directive( DIRECTIVE_NAME, ['nbeAsync', createEdgeDirective] );
       }
    };
 

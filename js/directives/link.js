@@ -16,8 +16,7 @@ define( [
    '../utilities/pathing',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
-],
-function ( $, ng, layoutModule, svgLinkPath ) {
+], function( $, ng, layoutModule, svgLinkPath ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,8 +59,8 @@ function ( $, ng, layoutModule, svgLinkPath ) {
                var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
                var portOffset = nbeLayoutSettings.portDragOffset,
-                   edgeOffset = nbeLayoutSettings.edgeDragOffset,
-                   boundingBox = layoutModule.boundingBox;
+                  edgeOffset = nbeLayoutSettings.edgeDragOffset,
+                  boundingBox = layoutModule.boundingBox;
 
                function calculateLinkEnd( jqNode, jqHandle, coords ) {
                   var graphOffset = jqGraph.offset();
@@ -93,35 +92,35 @@ function ( $, ng, layoutModule, svgLinkPath ) {
 
             function init() {
                var source = $scope.link.source;
-               if ( source.port ) {
+               if( source.port ) {
                   var jqSourceInfo = jqVertexPlusHandle( source );
                   jqSourceNode = jqSourceInfo[ 0 ];
                   jqSourceHandle = jqSourceInfo[ 1 ];
-                  if ( !jqSourceHandle.length ) {
+                  if( !jqSourceHandle.length ) {
                      return false;
                   }
                }
                else {
                   jqSourceNode = jqEdge( $scope.link.source );
                   jqSourceHandle = null;
-                  if ( !jqSourceNode.length ) {
+                  if( !jqSourceNode.length ) {
                      return false;
                   }
                }
 
                var dest = $scope.link.dest;
-               if ( dest.port ) {
+               if( dest.port ) {
                   var jqDestInfo = jqVertexPlusHandle( dest );
                   jqDestNode = jqDestInfo[ 0 ];
                   jqDestHandle = jqDestInfo[ 1 ];
-                  if ( !jqDestHandle.length ) {
+                  if( !jqDestHandle.length ) {
                      return false;
                   }
                }
                else {
                   jqDestNode = jqEdge( dest );
                   jqDestHandle = null;
-                  if ( !jqDestNode.length ) {
+                  if( !jqDestNode.length ) {
                      return false;
                   }
                }

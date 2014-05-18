@@ -1,20 +1,24 @@
-define( [], function () {
+define( [], function() {
    'use strict';
 
-   function noOp() { }
+   function noOp() {
+   }
+
    noOp.undo = noOp;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function makeCompositionOp( args ) {
       var n = args.length;
+
       function compositionOp() {
-         for ( var i = 0; i < n; ++i ) {
+         for( var i = 0; i < n; ++i ) {
             args[ i ]();
          }
       }
+
       compositionOp.undo = function() {
-         for ( var i = n; i --> 0; ) {
+         for( var i = n; i-- > 0; ) {
             args[ i ].undo();
          }
       };
@@ -30,7 +34,7 @@ define( [], function () {
          var future = [];
          return {
             perform: function( op ) {
-               if ( op !== noOp ) {
+               if( op !== noOp ) {
                   $scope.$apply( op );
                   past.push( op );
                   future.splice( 0, future.length );
@@ -40,7 +44,7 @@ define( [], function () {
                var tx = [];
                return {
                   perform: function( op ) {
-                     if ( op !== noOp ) {
+                     if( op !== noOp ) {
                         $scope.$apply( op );
                         future.splice( 0, future.length );
                         tx.push( op );
@@ -56,14 +60,14 @@ define( [], function () {
             },
             undo: function() {
                var op = past.pop();
-               if ( op ) {
+               if( op ) {
                   $scope.$apply( op.undo );
                   future.push( op );
                }
             },
             redo: function() {
                var op = future.pop();
-               if ( op ) {
+               if( op ) {
                   $scope.$apply( op );
                   past.push( op );
                }

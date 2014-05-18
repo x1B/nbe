@@ -5,8 +5,7 @@ define( [
    '../utilities/visual',
    '../utilities/operations',
    'text!./graph.html'
-],
-function ( $, _, ng, visual, operationsModule, graphHtml ) {
+], function( $, _, ng, visual, operationsModule, graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +84,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          }, true );
 
          $scope.$watch( 'model.vertices', function( newVertices, previousVertices ) {
-            if ( newVertices == null ) {
+            if( newVertices == null ) {
                return;
             }
             ng.forEach( newVertices, function( vertex, vId ) {
@@ -95,10 +94,12 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                      visual.pingAnimation( jqNew );
                   } );
                }
-               vertex.ports.filter( function( _ ) { return !!_.edgeId; } ).forEach( function( port ) {
+               vertex.ports.filter( function( _ ) {
+                  return !!_.edgeId;
+               } ).forEach( function( port ) {
                   var edgeRef = { nodeId: port.edgeId, port: null };
                   var vertexRef = { nodeId: vId, port: port };
-                  if ( !self.links.byPort( vId, port ) ) {
+                  if( !self.links.byPort( vId, port ) ) {
                      self.links.create( vertexRef, edgeRef );
                   }
                } );
@@ -106,7 +107,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          }, true );
 
          $scope.$watch( 'model.edges', function( newEdges, previousEdges ) {
-            if ( newEdges == null ) {
+            if( newEdges == null ) {
                return;
             }
             ng.forEach( newEdges, function( vertex, vId ) {
@@ -156,7 +157,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             model = $scope.model;
             types = $scope.types || {};
             layout = $scope.layout;
-            if ( !layout ) {
+            if( !layout ) {
                self.calculateLayout();
             }
             view = $scope.view = {
@@ -169,7 +170,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             };
 
             generateEdgeId = idGenerator.create(
-               Object.keys( types ).map( function( _ ) { return _.toLocaleLowerCase() + ' '; } ),
+               Object.keys( types ).map( function( _ ) {
+                  return _.toLocaleLowerCase() + ' ';
+               } ),
                model.edges
             );
             generateLinkId = idGenerator.create( [ 'lnk' ], {} );
@@ -185,24 +188,24 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          function handleKeys( event ) {
             var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;
 
-            if ( event.keyCode === KEY_CODE_DELETE ) {
+            if( event.keyCode === KEY_CODE_DELETE ) {
                self.selection.handleDelete();
             }
-            else if ( event.keyCode === KEY_CODE_ESCAPE ) {
-               if ( self.dragDrop.transaction() ) {
+            else if( event.keyCode === KEY_CODE_ESCAPE ) {
+               if( self.dragDrop.transaction() ) {
                   self.dragDrop.cancel();
                }
             }
-            else if ( event.metaKey || event.ctrlKey ) {
-               if ( event.keyCode === KEY_CODE_Z ) {
-                  if ( event.shiftKey ) {
+            else if( event.metaKey || event.ctrlKey ) {
+               if( event.keyCode === KEY_CODE_Z ) {
+                  if( event.shiftKey ) {
                      ops.redo();
                   }
                   else {
                      ops.undo();
                   }
                }
-               else if ( event.keyCode === KEY_CODE_Y ) {
+               else if( event.keyCode === KEY_CODE_Y ) {
                   ops.redo();
                }
             }
@@ -228,16 +231,18 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
             function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
                var type = vertexRef.port.type;
-               if ( type !== model.edges[ toEdgeId ].type ) {
+               if( type !== model.edges[ toEdgeId ].type ) {
                   return operationsModule.noOp;
                }
 
                var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
                var edgeRef = { nodeId: toEdgeId };
+
                function connectPortToEdgeOp() {
                   vertexRef.port.edgeId = toEdgeId;
                   self.links.create( vertexRef, edgeRef );
                }
+
                connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
 
                return operationsModule.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
@@ -249,7 +254,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             function makeEnforceCardinalityOp( edgeId, type, portDirection ) {
                var restrictDests = portDirection === 'in';
                var limit = types[ type ] && types[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
-               if ( limit === undefined ) {
+               if( limit === undefined ) {
                   return operationsModule.noOp;
                }
 
@@ -258,9 +263,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                var links = self.links.byEdge( edgeId );
                Object.keys( links ).forEach( function( linkId ) {
                   var link = links[ linkId ];
-                  if ( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
+                  if( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
                      ++counter;
-                     if ( counter >= limit ) {
+                     if( counter >= limit ) {
                         disconnectOps.push( makeDisconnectOp( link[ restrictDests ? 'dest' : 'source' ] ) );
                      }
                   }
@@ -271,8 +276,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function makeConnectPortToPortOp( fromRef, toRef ) {
-               if ( fromRef.port.type !== toRef.port.type ||
-                    fromRef.port.direction === toRef.port.direction ) {
+               if( fromRef.port.type !== toRef.port.type ||
+                  fromRef.port.direction === toRef.port.direction ) {
                   return operationsModule.noOp;
                }
 
@@ -285,7 +290,12 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   } );
                   connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                }
-               return operationsModule.compose( [ makeDisconnectOp( fromRef ), makeDisconnectOp( toRef ), connectPortToPortOp ] );
+
+               return operationsModule.compose( [
+                  makeDisconnectOp( fromRef ),
+                  makeDisconnectOp( toRef ),
+                  connectPortToPortOp
+               ] );
             }
          }
 
@@ -295,7 +305,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             Object.freeze( ref );
 
             function disconnectOp() {
-               if ( !ref.port.edgeId ) {
+               if( !ref.port.edgeId ) {
                   disconnectOp.undo = operationsModule.noOp;
                   return;
                }
@@ -305,13 +315,13 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                delete ref.port.edgeId;
 
                var removedEdge;
-               if ( !Object.keys( self.links.byEdge( edgeId ) ).length ) {
+               if( !Object.keys( self.links.byEdge( edgeId ) ).length ) {
                   removedEdge = model.edges[ edgeId ];
                   delete model.edges[ edgeId ];
                }
 
                disconnectOp.undo = function() {
-                  if ( removedEdge ) {
+                  if( removedEdge ) {
                      model.edges[ edgeId ] = removedEdge;
                   }
                   var edgeRef = { nodeId: edgeId };
@@ -351,6 +361,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   model.vertices[ vertexId ] = vertex;
                };
             }
+
             steps.push( deleteVertexOp );
             return operationsModule.compose( steps );
          }
@@ -370,18 +381,18 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             function centerCoords( vertexId ) {
                var vertexLayout = layout.vertices[ vertexId ];
                var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
-               return [ vertexLayout.left + jqVertex.width()/2, vertexLayout.top + jqVertex.height()/2 ];
+               return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
             }
 
             function mean( v1, v2 ) {
                return [ 0, 1 ].map( function( i ) {
-                  return Math.round( (v1[i] + v2[i])/2 );
+                  return Math.round( (v1[ i ] + v2[ i ]) / 2 );
                } );
             }
 
             var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
             layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
-                                   top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
+               top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
 
             self.links.create( fromRef, edgeRef );
             self.links.create( edgeRef, toRef );
@@ -393,7 +404,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          function calculateLayout() {
             async.runEventually( function() {
                var input = $scope.model;
-               if ( !self.selection.isEmpty() ) {
+               if( !self.selection.isEmpty() ) {
                   var sel = $scope.view.selection;
                   input = { edges: {}, vertices: {} };
                   Object.keys( sel.edges ).forEach( function( edgeId ) {
@@ -405,7 +416,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
 
                var result = autoLayout.calculate( input, $scope.types, jqGraph );
-               if ( result ) {
+               if( result ) {
                   Object.keys( result.edges ).forEach( function( edgeId ) {
                      layout.edges[ edgeId ] = result.edges[ edgeId ];
                   } );
@@ -457,7 +468,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
 
                function insert( ref, linkId, link ) {
                   var map = ref.port ? linksByVertex : linksByEdge;
-                  if ( !map[ ref.nodeId ] ) {
+                  if( !map[ ref.nodeId ] ) {
                      map[ ref.nodeId ] = { };
                   }
                   map[ ref.nodeId ][ linkId ] = link;
@@ -470,8 +481,9 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                function remove( map, nodeId, linkId ) {
                   delete map[ nodeId ][ linkId ];
                }
+
                remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
-               remove( link.dest.port   ? linksByVertex : linksByEdge, link.dest.nodeId,   link.id );
+               remove( link.dest.port ? linksByVertex : linksByEdge, link.dest.nodeId, link.id );
                delete view.links[ link.id ];
             }
 
@@ -480,10 +492,14 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             function controllers( vertexIds, edgeIds ) {
                var result = [];
                ( vertexIds || [] ).forEach( function( vertexId ) {
-                  vertexLinkControllers( vertexId ).forEach( function( ctr ) { result.push( ctr ); } );
+                  vertexLinkControllers( vertexId ).forEach( function( ctr ) {
+                     result.push( ctr );
+                  } );
                } );
                ( edgeIds || [] ).forEach( function( edgeId ) {
-                  edgeLinkControllers( edgeId ).forEach( function( ctr ) { result.push( ctr ); } );
+                  edgeLinkControllers( edgeId ).forEach( function( ctr ) {
+                     result.push( ctr );
+                  } );
                } );
                return result;
             }
@@ -491,8 +507,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             /////////////////////////////////////////////////////////////////////////////////////////////////////
 
             function vertexLinkControllers( vertexId ) {
-               if ( linksByVertex[ vertexId ] === undefined ) {
-                  return [ ];
+               if( linksByVertex[ vertexId ] === undefined ) {
+                  return [];
                }
                return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
                   return linkControllers[ linkId ];
@@ -502,8 +518,8 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             /////////////////////////////////////////////////////////////////////////////////////////////////////
 
             function edgeLinkControllers( edgeId ) {
-               if ( linksByEdge[ edgeId ] === undefined ) {
-                  return [ ];
+               if( linksByEdge[ edgeId ] === undefined ) {
+                  return [];
                }
                return Object.keys( linksByEdge[ edgeId ] ).map( function( linkId ) {
                   return linkControllers[ linkId ];
@@ -519,13 +535,13 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                }
                var links = linksByVertex[ vertexId ];
                var keys = Object.keys( links );
-               for ( var i = keys.length; i --> 0; ) {
+               for( var i = keys.length; i-- > 0; ) {
                   var linkId = keys[ i ];
                   var link = links[ linkId ];
-                  if ( link.source.port && link.source.port.id === portId ) {
+                  if( link.source.port && link.source.port.id === portId ) {
                      return link;
                   }
-                  if ( link.dest.port && link.dest.port.id === portId ) {
+                  if( link.dest.port && link.dest.port.id === portId ) {
                      return link;
                   }
                }
@@ -604,14 +620,14 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                },
 
                finish: function() {
-                  if ( transaction ) {
+                  if( transaction ) {
                      transaction.commit();
                      clear();
                   }
                },
 
                cancel: function() {
-                  if ( transaction ) {
+                  if( transaction ) {
                      transaction.rollBack();
                      clear();
                      onCancel();
@@ -656,7 +672,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function selectEdge( edgeId, extend ) {
-               if ( !extend ) {
+               if( !extend ) {
                   clear();
                }
                var selected = view.selection.edges[ edgeId ];
@@ -667,7 +683,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function selectVertex( vertexId, extend ) {
-               if ( !extend ) {
+               if( !extend ) {
                   clear();
                }
                var selected = view.selection.vertices[ vertexId ];
@@ -710,7 +726,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                         visual.boundingBox( jqNode, jqGraph, tmpBox );
                         var selected = doesIntersect( tmpBox, selectionBox );
                         var id = domNode.dataset[ identity ];
-                        if ( selected ) {
+                        if( selected ) {
                            selectionModel[ id ] = true;
                         }
                         else {
@@ -735,7 +751,7 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
                   return !(
                      selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
                      selectionBox.right < box.left || selectionBox.left > box.right
-                  );
+                     );
                }
             }
 
@@ -839,12 +855,16 @@ function ( $, _, ng, visual, operationsModule, graphHtml ) {
          ] );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
-               return ports.filter( function( _ ) { return _.direction === 'in'; } );
+               return ports.filter( function( _ ) {
+                  return _.direction === 'in';
+               } );
             };
          } );
          module.filter( 'nbeOutputPorts', function() {
             return function( ports ) {
-               return ports.filter( function( _ ) { return _.direction !== 'in'; } );
+               return ports.filter( function( _ ) {
+                  return _.direction !== 'in';
+               } );
             };
          } );
       }
