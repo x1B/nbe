@@ -9,8 +9,7 @@ define( [
    './directives/link',
    './directives/port',
    './directives/vertex'
-],
-function ( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port, vertex ) {
+], function( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port, vertex ) {
    'use strict';
 
    var nbe = ng.module( 'nbe', [] );
@@ -25,7 +24,7 @@ function ( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port
    autoLayout.define( nbe );
    idGenerator.define( nbe );
 
-      // Directives
+   // Directives
    graph.define( nbe );
    edge.define( nbe );
    link.define( nbe );

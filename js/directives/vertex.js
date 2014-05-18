@@ -12,8 +12,7 @@ define( [
    'text!./vertex.html',
    'jquery_ui/draggable',
    'jquery_ui/droppable'
-],
-function( $, ng, visual, vertexHtml ) {
+], function( $, ng, visual, vertexHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +52,7 @@ function( $, ng, visual, vertexHtml ) {
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleVertexDragStart() {
-               linksToRepaint = graphController.links.controllers( [ id ] );
+               linksToRepaint = graphController.links.controllers( [id] );
                if( jqVertex.hasClass( 'selected' ) ) {
                   graphController.selection.setAnchor( $element[ 0 ] );
                }
@@ -108,7 +107,7 @@ function( $, ng, visual, vertexHtml ) {
 
    return {
       define: function( module ) {
-         module.directive( 'nbeVertex', [ 'nbeAsync', createVertexDirective ] );
+         module.directive( 'nbeVertex', ['nbeAsync', createVertexDirective] );
       }
    };
 

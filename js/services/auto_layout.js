@@ -5,8 +5,7 @@
 define( [
    'dagre',
    'jquery'
-],
-function ( dagre, $ ) {
+], function( dagre, $ ) {
    'use strict';
 
    function AutoLayout( nbeLayoutSettings ) {
@@ -15,7 +14,7 @@ function ( dagre, $ ) {
       function calculate( model, types, jqGraph ) {
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.edge', jqGraph[ 0 ] );
-         if ( !jqVertices.length || !jqEdges.length ) {
+         if( !jqVertices.length || !jqEdges.length ) {
             return false;
          }
          var offset = { left: Infinity, top: Infinity };
@@ -37,15 +36,15 @@ function ( dagre, $ ) {
          var top = offset.top;
          var layout = { vertices: {}, edges: {} };
          dagreResult.eachNode( function( dagreNodeId, properties ) {
-            if ( dagreNodeId.charAt( 0 ) === 'V' ) {
+            if( dagreNodeId.charAt( 0 ) === 'V' ) {
                var vertexLayout = layout.vertices[ dagreNodeId.substring( 2 ) ] = {};
-               vertexLayout.left = Math.round( properties.x - properties.width/2 + graphPadding + left );
-               vertexLayout.top = Math.round( properties.y - properties.height/2 + graphPadding + top );
+               vertexLayout.left = Math.round( properties.x - properties.width / 2 + graphPadding + left );
+               vertexLayout.top = Math.round( properties.y - properties.height / 2 + graphPadding + top );
             }
             else {
                var edgeLayout = layout.edges[ dagreNodeId.substring( 2 ) ] = {};
-               edgeLayout.left = Math.round( properties.x - properties.width/2 + graphPadding + left );
-               edgeLayout.top = Math.round( properties.y - properties.height/2 + graphPadding + top );
+               edgeLayout.left = Math.round( properties.x - properties.width / 2 + graphPadding + left );
+               edgeLayout.top = Math.round( properties.y - properties.height / 2 + graphPadding + top );
             }
          } );
          return layout;
@@ -58,7 +57,7 @@ function ( dagre, $ ) {
 
          jqVertices.each( function( i, domVertex ) {
             var id = domVertex.dataset.nbeVertex;
-            if ( model.vertices[ id ] ) {
+            if( model.vertices[ id ] ) {
                var dagreNodeId = 'V:' + id;
                var jqVertex = $( domVertex );
                var dagreNode = { width: jqVertex.width(), height: jqVertex.height() };
@@ -71,7 +70,7 @@ function ( dagre, $ ) {
 
          jqEdges.each( function( i, domEdge ) {
             var id = domEdge.dataset.nbeEdge;
-            if ( model.edges[ id ] ) {
+            if( model.edges[ id ] ) {
                var dagreNodeId = 'E:' + id;
                var jqEdge = $( domEdge );
                var dagreNode = { width: jqEdge.width(), height: jqEdge.height() };
@@ -93,7 +92,7 @@ function ( dagre, $ ) {
                var dagreEdgeId = 'E:' + port.edgeId;
                if( port.direction === 'in' ) {
                   // ignore incoming edges of hidden type.
-                  if ( !types[ port.type ].hidden ) {
+                  if( !types[ port.type ].hidden ) {
                      dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
                   }
                }
@@ -111,7 +110,7 @@ function ( dagre, $ ) {
 
    return {
       define: function( module ) {
-         module.service( 'nbeAutoLayout', [ 'nbeLayoutSettings', AutoLayout ] );
+         module.service( 'nbeAutoLayout', ['nbeLayoutSettings', AutoLayout] );
       }
    };
 

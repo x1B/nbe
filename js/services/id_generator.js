@@ -2,9 +2,7 @@
  * Dagre-based graph layout service.
  * Edges and vertices are fed to dagre layouter as nodes, and links are fed as edges.
  */
-define( [
-],
-function () {
+define( [], function() {
    'use strict';
 
    function IdGenerator() {
@@ -28,9 +26,15 @@ function () {
       function generator( prefix, currentMap ) {
          prefix = prefix || '';
          var maxIndex = Object.keys( currentMap )
-            .filter( function( k ) { return k.indexOf( prefix ) === 0; } )
-            .map( function( k ) { return parseInt( k.substring( prefix.length ), 10 ); } )
-            .reduce( function max( a, b ) { return a > b ? a : b; }, -1 );
+            .filter( function( k ) {
+               return k.indexOf( prefix ) === 0;
+            } )
+            .map( function( k ) {
+               return parseInt( k.substring( prefix.length ), 10 );
+            } )
+            .reduce( function max( a, b ) {
+               return a > b ? a : b;
+            }, -1 );
 
          return function nextId() {
             ++maxIndex;
@@ -44,7 +48,7 @@ function () {
 
    return {
       define: function( module ) {
-         module.service( 'nbeIdGenerator', [ IdGenerator ] );
+         module.service( 'nbeIdGenerator', [IdGenerator] );
       }
    };
 

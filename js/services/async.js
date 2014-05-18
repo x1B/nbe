@@ -4,8 +4,7 @@
  */
 define( [
    'underscore'
-],
-function ( underscore ) {
+], function( underscore ) {
    'use strict';
 
    function Async( $window, $timeout, nbeAsyncSettings ) {
@@ -26,10 +25,12 @@ function ( underscore ) {
             var args = arguments;
             var self = this;
             f.apply( self, args );
-            if ( handle ) {
+            if( handle ) {
                $timeout.cancel( handle );
             }
-            handle = $timeout( function() { f.apply( self, args ); }, delayMs );
+            handle = $timeout( function() {
+               f.apply( self, args );
+            }, delayMs );
          };
       }
 
@@ -56,17 +57,19 @@ function ( underscore ) {
        */
       function runEventually( tryRun, scope, intervalMs ) {
          var initTimeout = $window.setTimeout( retry, 0 );
+
          function retry() {
             var success = tryRun();
-            if ( !success ) {
+            if( !success ) {
                initTimeout = $window.setTimeout( retry, intervalMs || fixupDelayMs );
             }
-            else if ( scope ) {
+            else if( scope ) {
                scope.$digest();
             }
          }
+
          scope.$on( '$destroy', function() {
-            if ( initTimeout ) {
+            if( initTimeout ) {
                $window.clearTimeout( initTimeout );
             }
          } );
@@ -78,7 +81,7 @@ function ( underscore ) {
 
    return {
       define: function( module ) {
-         module.service( 'nbeAsync', [ '$window', '$timeout', 'nbeAsyncSettings', Async ] );
+         module.service( 'nbeAsync', ['$window', '$timeout', 'nbeAsyncSettings', Async] );
       }
    };
 
