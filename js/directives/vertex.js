@@ -31,13 +31,19 @@ define( [
             var id = $scope[ ATTR_VERTEX_ID ];
 
             var jqVertex = $( $element[ 0 ] );
-            jqVertex.draggable( {
+            var lockX = $scope.vertex.role === 'interface.in' || $scope.vertex.role === 'interface.out';
+            var options = {
                stack: '.graph *',
                containment: 'parent',
                start: handleVertexDragStart,
                drag: nbeAsync.ensure( handleVertexDrag ),
                stop: handleVertexDragStop
-            } );
+            };
+            if( lockX ) {
+               options.axis = 'y';
+            }
+            jqVertex.draggable( options );
+
 
             // Make sure that a drag/drop is not interpreted as a click (so that the selection survives it).
             var cancelClick = false;
@@ -76,7 +82,9 @@ define( [
                $scope.$apply( function() {
                   linksToRepaint = [];
                   var layout = $scope.layout.vertices[ id ];
-                  layout.left = ui.position.left;
+                  if( !lockX ) {
+                     layout.left = ui.position.left;
+                  }
                   layout.top = ui.position.top;
                } );
                if( jqVertex.hasClass( 'selected' ) ) {

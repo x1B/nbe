@@ -55,6 +55,22 @@
          "ports": [
             { "id": "messages", "label": "messages", "type": "CHANNEL", "direction": "in", "edgeId": "channel 0" }
          ]
+      },
+      "vIn": {
+         "label": "IN",
+         "role": "interface.in",
+         "ports": [
+            { "id": "x", "label": "x", "type": "WIRE", "direction": "out" },
+            { "id": "y", "label": "y", "type": "WIRE", "direction": "out" }
+         ]
+      },
+      "vOut": {
+         "label": "OUT",
+         "role": "interface.out",
+         "ports": [
+            { "id": "z", "label": "z", "type": "WIRE", "direction": "in" },
+            { "id": "log", "label": "log", "type": "CHANNEL", "direction": "in" }
+         ]
       }
    },
    "edges": {

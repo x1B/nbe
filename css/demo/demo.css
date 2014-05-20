@@ -182,7 +182,11 @@ body {
   text-shadow: 0 0 2px #f9f9f9;
   white-space: nowrap;
 }
-/* line 192, ../../sass/_nbe.scss */
+/* line 189, ../../sass/_nbe.scss */
+.graph .node.vertex.interface {
+  background: #c2e578;
+}
+/* line 195, ../../sass/_nbe.scss */
 .graph .node.edge {
   width: 20px;
   height: 20px;
@@ -191,7 +195,7 @@ body {
   margin-top: -10px;
   box-shadow: 4px 4px 4px #202020;
 }
-/* line 200, ../../sass/_nbe.scss */
+/* line 203, ../../sass/_nbe.scss */
 .graph .node.edge label {
   display: block;
   position: relative;
@@ -203,34 +207,34 @@ body {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   font-size: 12px;
 }
-/* line 215, ../../sass/_nbe.scss */
+/* line 218, ../../sass/_nbe.scss */
 .graph .node.selected {
   box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
 }
-/* line 220, ../../sass/_nbe.scss */
+/* line 223, ../../sass/_nbe.scss */
 .graph .GHOST {
   position: absolute;
 }
-/* line 225, ../../sass/_nbe.scss */
+/* line 228, ../../sass/_nbe.scss */
 .graph .links .link {
   position: absolute;
   fill: transparent;
 }
-/* line 229, ../../sass/_nbe.scss */
+/* line 232, ../../sass/_nbe.scss */
 .graph .links .link {
   stroke-width: 2;
 }
-/* line 234, ../../sass/_nbe.scss */
+/* line 237, ../../sass/_nbe.scss */
 .graph .tools {
   position: absolute;
   top: 4px;
   left: 4px;
 }
-/* line 239, ../../sass/_nbe.scss */
+/* line 242, ../../sass/_nbe.scss */
 .graph .tools button {
   opacity: 0.5;
 }
-/* line 241, ../../sass/_nbe.scss */
+/* line 244, ../../sass/_nbe.scss */
 .graph .tools button:hover {
   opacity: 1;
 }

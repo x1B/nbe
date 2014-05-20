@@ -186,6 +186,9 @@ body {
             white-space: nowrap;
          }
 
+         &.interface {
+            background: $interfaceBgColor;
+         }
       }
 
       // Default edge-node style;
