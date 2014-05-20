@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+- [#32](https://github.com/x1B/nbe/issues/32): Fixed dragging of diconnected nodes.
 - [#22](https://github.com/x1B/nbe/issues/22): Updated code-style (no space before opening brace).
 - [#29](https://github.com/x1B/nbe/issues/29): Implemented multiple selection.
   * Select multiple nodes by dragging a rectangle.
