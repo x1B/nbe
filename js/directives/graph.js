@@ -553,9 +553,15 @@ define( [
                destroy: destroyLink,
                byPort: byPort,
                byVertex: function( vertexId ) {
+                  if( !linksByVertex[ vertexId ] ) {
+                     linksByVertex[ vertexId ] = {};
+                  }
                   return linksByVertex[ vertexId ];
                },
                byEdge: function( edgeId ) {
+                  if( !linksByEdge[ edgeId ] ) {
+                     linksByEdge[ edgeId ] = {};
+                  }
                   return linksByEdge[ edgeId ];
                },
                repaint: function() {
