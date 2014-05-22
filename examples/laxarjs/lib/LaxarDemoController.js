@@ -1,5 +1,5 @@
 define( [
-   'jquery',
+   '../../../bower_components/jquery/dist/jquery',
    'angular',
    'json!./dummy_model.json',
    'json!./dummy_layout.json'
@@ -42,9 +42,7 @@ function (
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   LaxarDemoController.$inject = [ '$scope', 'nbeAutoLayout' ];
-
-   module.controller( 'LaxarDemoController', LaxarDemoController );
+   module.controller( 'LaxarDemoController', [ '$scope', 'nbeAutoLayout', LaxarDemoController ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

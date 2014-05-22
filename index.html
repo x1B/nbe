@@ -9,35 +9,6 @@
   </head>
   <body>
 
-  <h2>Logic Circuit Demo</h2>
-  <div style="overflow: auto; position: relative; width: 1200px; height: 500px;"
-       data-ng-controller="LogicDemoController"
-       data-ng-cloak
-       class="graph-container logic-app">
-     <div class="log">
-        <h4>Simulation Log</h4>
-        <ul><li data-ng-repeat="msg in messages track by $index">{{ msg }}</li></ul>
-     </div>
-
-     <div class="logic-app"
-          data-nbe-graph="circuit"
-          data-nbe-graph-types="{ WIRE: { maxSources: 1 }, CHANNEL: {} }"
-          data-nbe-graph-layout="layout"
-          data-nbe-graph-controller="nbeController">
-        <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-        <button data-ng-click="run()">Run Simulation</button>
-        Add Gate:
-        <button data-ng-click="addGate( 'AND' )">AND</button>
-        <button data-ng-click="addGate( 'OR' )">OR</button>
-        <button data-ng-click="addGate( 'NOT' )">NOT</button>
-        <button data-ng-click="addGate( 'TRUE' )">TRUE</button>
-        <button data-ng-click="addGate( 'FALSE' )">FALSE</button>
-        Add Interface:
-        <button data-ng-click="addGate( 'LOG' )">LOG</button>
-        <button data-ng-click="addGate( 'PROBE' )">PROBE</button>
-     </div>
-  </div>
-
   <h2>Reactive App Mockup Demo</h2>
   <div style="overflow: auto; position: relative; width: 1200px; height: 500px;"
        data-ng-controller="LaxarDemoController"
@@ -62,7 +33,7 @@
 
   <script type="text/javascript" src="bower_components/requirejs/require.js"
           data-main="js/start.js"></script>
-  <script type="text/javascript" src="require_config.js"></script>
+  <script type="text/javascript" src="examples/logic/require_config.js"></script>
 
   </body>
 </html>

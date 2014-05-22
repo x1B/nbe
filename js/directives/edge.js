@@ -25,7 +25,7 @@ define( [
          restrict: 'A',
          replace: true,
          template: edgeHtml,
-         controller: function EdgeController( $scope, $element ) {
+         controller: [ '$scope', '$element', function EdgeController( $scope, $element ) {
 
             $( $element[ 0 ] ).draggable( {
                stack: '.graph *',
@@ -98,7 +98,7 @@ define( [
                $scope.nbeController.selection.selectEdge( $scope.edgeId, $event.shiftKey );
             };
 
-         }
+         } ]
       };
 
 

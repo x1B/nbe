@@ -1,9 +1,9 @@
 define( [
    'jquery',
    'angular',
-   'json!./templates.json',
-   'json!./dummy_model.json',
-   'json!./dummy_layout.json'
+   'json!./data/templates.json',
+   'json!./data/dummy_model.json',
+   'json!./data/dummy_layout.json'
 ], function( $, ng, templates, dummyModel, dummyLayout ) {
    'use strict';
 
@@ -47,9 +47,7 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   LogicDemoController.$inject = [ '$scope', 'nbeIdGenerator' ];
-
-   module.controller( 'LogicDemoController', LogicDemoController );
+   module.controller( 'LogicDemoController', [ '$scope', 'nbeIdGenerator', LogicDemoController ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -29,7 +29,7 @@ define( [
 
       return {
          restrict: 'A',
-         controller: function LinkController( $scope, $element ) {
+         controller: [ '$scope', '$element', function LinkController( $scope, $element ) {
 
             $scope.nbeController.links.registerController( $scope.link.id, this );
 
@@ -145,7 +145,7 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-         }
+         } ]
       };
    }
 
