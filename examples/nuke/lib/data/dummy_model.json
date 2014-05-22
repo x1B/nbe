@@ -1,0 +1,1631 @@
+{
+    "edges": {
+        "Blur1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Blur2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Blur4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Blur5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Camera2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Card1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Clamp2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Colorspace1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Constant2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Constant3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Copy1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Copy2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot10": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot11": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot12": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot13": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot6": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot7": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot8": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Dot9": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "FilterErode3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "FilterErode4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "FilterErode8": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade7": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade8": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Grade9": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Invert1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Invert3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge10": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge6": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge7": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge8": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Merge9": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Premult1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Premult2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Premult4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Premult5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Ramp1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Ramp3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Read6": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Read7": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint10": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint11": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "RotoPaint9": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "ScanlineRender1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Scene1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove2": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove3": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove4": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove5": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Transform_MatchMove6": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Unpremult1": {
+            "label": "",
+            "type": "WIRE"
+        },
+        "Write2": {
+            "label": "",
+            "type": "WIRE"
+        }
+    },
+    "vertices": {
+        "Blur1": {
+            "label": "Blur",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Blur1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Blur2": {
+            "label": "Blur",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Blur2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Blur4": {
+            "label": "Blur",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "FilterErode3",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Blur4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Blur5": {
+            "label": "Blur",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "FilterErode4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Blur5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Camera2": {
+            "label": "Camera2",
+            "ports": [
+                {
+                    "edgeId": "Camera2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Card1": {
+            "label": "Card2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint9",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Card1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Clamp2": {
+            "label": "Clamp",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge6",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Clamp2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Colorspace1": {
+            "label": "Colorspace",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Read6",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Colorspace1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Constant2": {
+            "label": "Constant",
+            "ports": [
+                {
+                    "edgeId": "Constant2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Constant3": {
+            "label": "Constant",
+            "ports": [
+                {
+                    "edgeId": "Constant3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Copy1": {
+            "label": "Copy",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot8",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Dot4",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Copy1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Copy2": {
+            "label": "Copy",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot12",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Merge9",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Copy2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot10": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Grade1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot10",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot11": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot10",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot11",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot12": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot11",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot12",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot13": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Invert3",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot13",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot2": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot9",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot4": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge8",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot5": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Invert1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot6": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Premult5",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot6",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot7": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Blur1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot7",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot8": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge5",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot8",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Dot9": {
+            "label": "Dot",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot10",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Dot9",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "FilterErode3": {
+            "label": "FilterErode",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot5",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "FilterErode3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "FilterErode4": {
+            "label": "FilterErode",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot7",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "FilterErode4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "FilterErode8": {
+            "label": "FilterErode",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Unpremult1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "FilterErode8",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade1": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Colorspace1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade2": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Grade4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade4": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Read7",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade5": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot7",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Transform1",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade7": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade7",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade8": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Blur4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade8",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Grade9": {
+            "label": "Grade",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Transform2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Grade9",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Invert1": {
+            "label": "Invert",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Copy2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Invert1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Invert3": {
+            "label": "Invert",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot5",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Invert3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge1": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot8",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Grade5",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Grade7",
+                    "id": "2",
+                    "label": "2",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge10": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Ramp3",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "FilterErode8",
+                    "id": "2",
+                    "label": "2",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge10",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge2": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Premult4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Dot6",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge4": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Unpremult1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Ramp1",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "FilterErode8",
+                    "id": "2",
+                    "label": "2",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge5": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove4",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Dot6",
+                    "id": "2",
+                    "label": "2",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove5",
+                    "id": "3",
+                    "label": "3",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge6": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot13",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Premult2",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge6",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge7": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Merge2",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Blur5",
+                    "id": "2",
+                    "label": "2",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge7",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge8": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove3",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge8",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Merge9": {
+            "label": "Merge2",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint10",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Transform_MatchMove6",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Merge9",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Premult1": {
+            "label": "Premult",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Grade2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Premult1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Premult2": {
+            "label": "Premult",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Grade8",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Premult2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Premult4": {
+            "label": "Premult",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Copy1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Premult4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Premult5": {
+            "label": "Premult",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge10",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Premult5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Ramp1": {
+            "label": "Ramp",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Constant3",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Ramp1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Ramp3": {
+            "label": "Ramp",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Grade9",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Ramp3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Read6": {
+            "label": "Read",
+            "ports": [
+                {
+                    "edgeId": "Read6",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Read7": {
+            "label": "Read",
+            "ports": [
+                {
+                    "edgeId": "Read7",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint10": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "ScanlineRender1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "RotoPaint10",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint11": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "edgeId": "RotoPaint11",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint2": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "edgeId": "RotoPaint2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint3": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "edgeId": "RotoPaint3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint4": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "edgeId": "RotoPaint4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint5": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "edgeId": "RotoPaint5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "RotoPaint9": {
+            "label": "RotoPaint",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Constant2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "RotoPaint9",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "ScanlineRender1": {
+            "label": "ScanlineRender",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Scene1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "direction": "in",
+                    "edgeId": "Camera2",
+                    "id": "1",
+                    "label": "1",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "ScanlineRender1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Scene1": {
+            "label": "Scene",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Card1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Scene1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform1": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Blur2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform2": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Dot13",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove1": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove2": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Premult1",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove3": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint3",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove3",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove4": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint4",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove4",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove5": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint5",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove5",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Transform_MatchMove6": {
+            "label": "Transform",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "RotoPaint11",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Transform_MatchMove6",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Unpremult1": {
+            "label": "Unpremult",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Clamp2",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Unpremult1",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        },
+        "Write2": {
+            "label": "Write",
+            "ports": [
+                {
+                    "direction": "in",
+                    "edgeId": "Merge7",
+                    "id": "0",
+                    "label": "0",
+                    "type": "WIRE"
+                },
+                {
+                    "edgeId": "Write2",
+                    "id": "out",
+                    "label": ".",
+                    "type": "WIRE"
+                }
+            ]
+        }
+    }
+}
