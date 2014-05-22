@@ -11,11 +11,11 @@ function (
    dummyLayout ) {
    'use strict';
 
-   var module = ng.module( 'LaxarDemoApp', [ 'nbe' ] );
+   var module = ng.module( 'LaxarjsDemoApp', [ 'nbe' ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function LaxarDemoController( $scope ) {
+   function LaxarjsDemoController( $scope ) {
       $scope.model = dummyModel;
       $scope.layout = dummyLayout;
       $scope.types = {
@@ -42,7 +42,7 @@ function (
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   module.controller( 'LaxarDemoController', [ '$scope', 'nbeAutoLayout', LaxarDemoController ] );
+   module.controller( 'LaxarjsDemoController', [ '$scope', 'nbeAutoLayout', LaxarjsDemoController ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
