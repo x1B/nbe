@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+- [#33](https://github.com/x1B/nbe/issues/33): Added informations to install app
 - [#17](https://github.com/x1B/nbe/issues/17): Added several (incomplete) examples. Updated changelog.
 - [#32](https://github.com/x1B/nbe/issues/32): Fixed dragging of diconnected nodes.
 - [#22](https://github.com/x1B/nbe/issues/22): Updated code-style (no space before opening brace).
