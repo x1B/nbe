@@ -1,0 +1,15 @@
+<div style="overflow: auto; position: relative; width: 1100px; height: 740px;"
+     data-ng-controller="FfmpegDemoController"
+     data-ng-cloak
+     class="graph-container ffmpeg-app">
+
+   <div class="ffmpeg-app"
+        data-nbe-graph="model"
+        data-nbe-graph-types="{ WIRE: { maxSources: 1 }, CHANNEL: {} }"
+        data-nbe-graph-layout="layout"
+        data-nbe-graph-controller="nbeController">
+      <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+      <select data-ng-model="selectedFilter" data-ng-options="availableFilters"></select>
+      <button data-ng-click="addFilter( selectedFilter )">Add Filter</button>
+   </div>
+</div>

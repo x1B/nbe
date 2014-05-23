@@ -165,7 +165,7 @@
   }
 }
 
-/* line 7, ../scss/nbe_logic.scss */
+/* line 7, ../scss/nbe_ffmpeg.scss */
 .logic-app .log {
   position: absolute;
   top: 0;
@@ -176,17 +176,17 @@
   border-bottom-left-radius: 8px;
   background: rgba(0, 0, 0, 0.25);
 }
-/* line 17, ../scss/nbe_logic.scss */
+/* line 17, ../scss/nbe_ffmpeg.scss */
 .logic-app .log h4 {
   margin: 8px;
 }
-/* line 20, ../scss/nbe_logic.scss */
+/* line 20, ../scss/nbe_ffmpeg.scss */
 .logic-app .log ul {
   margin: 0;
   font-size: 11px;
 }
 
-/* line 31, ../scss/nbe_logic.scss */
+/* line 31, ../scss/nbe_ffmpeg.scss */
 h2 {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   color: #c8c8c8;
