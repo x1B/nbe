@@ -33,7 +33,7 @@ define( [
             types: '=nbeGraphTypes'
          },
          transclude: true,
-         controller: GraphController
+         controller: [ '$scope', '$element', GraphController ]
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -855,6 +855,7 @@ define( [
 
    return {
       define: function( module ) {
+
          module.directive( DIRECTIVE_NAME, [
             '$timeout', '$document', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator',
             createGraphDirective

@@ -1,0 +1,27 @@
+<div style="overflow: auto; position: relative; width: 100%; height: 100%; min-height: 600px;"
+     data-ng-controller="LogicDemoController"
+     data-ng-cloak
+     class="graph-container logic-app">
+   <div class="log">
+      <h4>Simulation Log</h4>
+      <ul><li data-ng-repeat="msg in messages track by $index">{{ msg }}</li></ul>
+   </div>
+
+   <div class="logic-app"
+        data-nbe-graph="circuit"
+        data-nbe-graph-types="{ WIRE: { maxSources: 1 }, CHANNEL: {} }"
+        data-nbe-graph-layout="layout"
+        data-nbe-graph-controller="nbeController">
+      <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+      <button data-ng-click="run()">Run Simulation</button>
+      Add Gate:
+      <button data-ng-click="addGate( 'AND' )">AND</button>
+      <button data-ng-click="addGate( 'OR' )">OR</button>
+      <button data-ng-click="addGate( 'NOT' )">NOT</button>
+      <button data-ng-click="addGate( 'TRUE' )">TRUE</button>
+      <button data-ng-click="addGate( 'FALSE' )">FALSE</button>
+      Add Interface:
+      <button data-ng-click="addGate( 'LOG' )">LOG</button>
+      <button data-ng-click="addGate( 'PROBE' )">PROBE</button>
+   </div>
+</div>

@@ -24,20 +24,20 @@ define( [
          restrict: 'A',
          replace: true,
          template: portHtml,
-         link: function linkPort( $scope, $element, $attrs ) {
+         link: function linkPort( scope, element, attrs ) {
 
             // Quick access to essential data for drawing links:
-            var graphController = $scope.nbeController;
+            var graphController = scope.nbeController;
             var graphOffset;
-            var stubDirection = $attrs[ ATTR_PORT_GROUP ] !== 'in' ? 1 : -1;
-            var vertexId = $scope[ ATTR_VERTEX_ID ];
+            var stubDirection = attrs[ ATTR_PORT_GROUP ] !== 'in' ? 1 : -1;
+            var vertexId = scope[ ATTR_VERTEX_ID ];
             var jqGraph = graphController.jqGraph;
             var jqPortGhost = $( '.port.GHOST', jqGraph );
             var jqLinkGhost = $( '.link.GHOST', jqGraph );
             // Drag starting position, relative to graph canvas.
             var fromLeft, fromTop, fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
-            $( 'i', $element[ 0 ] ).draggable( {
+            $( 'i', element[ 0 ] ).draggable( {
                opacity: 0.8,
                helper: function() {
                   return $( '.GHOST.port', jqGraph ).clone().show();
@@ -59,10 +59,10 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDoubleClick() {
-               if( $scope.port.edgeId ) {
+               if( scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
-                     nodeId: $scope[ ATTR_VERTEX_ID ],
-                     port: $scope.port
+                     nodeId: scope[ ATTR_VERTEX_ID ],
+                     port: scope.port
                   } );
                   graphController.operations.perform( disconnectOp );
                }
@@ -74,14 +74,14 @@ define( [
                var jqHandle = $( event.target );
 
                var dd = graphController.dragDrop;
-               var transaction = dd.start( { nodeId: $scope[ ATTR_VERTEX_ID ], port: $scope.port}, function() {
-                  $( 'i', $element[ 0 ] ).trigger( 'mouseup' );
+               var transaction = dd.start( { nodeId: scope[ ATTR_VERTEX_ID ], port: scope.port}, function() {
+                  $( 'i', element[ 0 ] ).trigger( 'mouseup' );
                } );
 
-               if( $scope.port.edgeId ) {
+               if( scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
-                     nodeId: $scope[ ATTR_VERTEX_ID ],
-                     port: $scope.port
+                     nodeId: scope[ ATTR_VERTEX_ID ],
+                     port: scope.port
                   } );
                   transaction.perform( disconnectOp );
                }
@@ -91,10 +91,10 @@ define( [
 
                fromLeft = p.left - graphOffset.left + dragOffset;
                fromTop = p.top - graphOffset.top + dragOffset;
-               $scope.nbeVertex.calculateBox( fromBox );
+               scope.nbeVertex.calculateBox( fromBox );
 
-               ui.helper.addClass( $scope.port.type ).show();
-               jqLinkGhost.attr( 'class', basicLinkClass + $scope.port.type ).show();
+               ui.helper.addClass( scope.port.type ).show();
+               jqLinkGhost.attr( 'class', basicLinkClass + scope.port.type ).show();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDragStop() {
-               jqPortGhost.removeClass( $scope.port.type );
+               jqPortGhost.removeClass( scope.port.type );
                jqLinkGhost.attr( 'class', basicLinkClass ).hide();
 
                var dd = graphController.dragDrop;
@@ -123,7 +123,7 @@ define( [
                }
 
                var op = graphController.makeConnectOp( {
-                  nodeId: vertexId, port: $scope.port
+                  nodeId: vertexId, port: scope.port
                }, dd.dropRef() );
                dd.transaction().perform( op );
                dd.finish();
@@ -132,7 +132,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDrop() {
-               graphController.dragDrop.setDropRef( { nodeId: vertexId, port: $scope.port } );
+               graphController.dragDrop.setDropRef( { nodeId: vertexId, port: scope.port } );
             }
 
          }
@@ -144,7 +144,7 @@ define( [
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, createPortDirective );
+         module.directive( DIRECTIVE_NAME, [ 'nbeLayoutSettings', createPortDirective ] );
       }
    };
 

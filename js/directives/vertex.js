@@ -26,7 +26,7 @@ define( [
          restrict: 'A',
          replace: true,
          template: vertexHtml,
-         controller: function VertexController( $scope, $element ) {
+         controller: [ '$scope', '$element', function VertexController( $scope, $element ) {
             var graphController = $scope.nbeController;
             var id = $scope[ ATTR_VERTEX_ID ];
 
@@ -99,7 +99,7 @@ define( [
                }
                graphController.selection.selectVertex( id, event.shiftKey );
             };
-         }
+         } ]
       };
    }
 

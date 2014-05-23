@@ -8,7 +8,7 @@ The model is a directed (hyper-)graph consisting of vertices and typed edges.
 
 - Each vertex may have an arbitrary number of labeled input and output ports
 - Each port may be connected to 0..1 edges of matching type
-- Each edge may be connected to any number of inputs or outputs (in the future, this may be dependent on the edge type)
+- Each edge may be connected to any number of inputs or outputs (1:n, n:m or n:1 depending on the edge type)
 
 
 ## Current Status
@@ -18,16 +18,17 @@ The model is a directed (hyper-)graph consisting of vertices and typed edges.
 - models can be displayed
 - vertices and edges can be moved around
 - edges and links can be created and destroyed
-
-#### Planned Features
 - undo/redo of structural operations
 - adding vertices by receiving data through API call and/or drag/drop
-- embed the HTML into the graph directive so that it may be used outside of the prototype (eventually there should be a [LaxarJS](http://laxarjs.org) UI-control).
+- automatic layout using the [https://github.com/cpettitt/dagre](dagre library)
+
+#### Planned Features
+- undo/redo of layout operations
+- simpler presentation of 1:n or n:1 edges (no visible edge node, just port-to-port links)
 - specs and spec-tests for the graph controller operations which are exposed as an API
-- rendering in Firefox and MSIE>=11 needs to be fixed for any type of release
-- automatic layout using existing layout algorithms
+- rendering in MSIE needs to be fixed (for >=11) for any type of release
 
 
 ## The Implementation
 
-The implementation is based around a set of angular directives which collaborate to implement a node-based editor. Links between vertices and edges are rendered using SVG. There is a separate model which describes the graph layout
+The implementation is based around a set of angular directives which collaborate to implement a node-based editor. Links between vertices and edges are rendered using SVG. There is a separate model which describes the graph layout.

@@ -1,0 +1,13 @@
+<div style="overflow: auto; position: relative; width: 1100px; height: 740px;"
+     data-ng-controller="NukeDemoController"
+     data-ng-cloak
+     class="graph-container nuke-app">
+
+   <div class="nuke-app"
+        data-nbe-graph="model"
+        data-nbe-graph-types="{ WIRE: { maxSources: 1 }, CHANNEL: {} }"
+        data-nbe-graph-layout="layout"
+        data-nbe-graph-controller="nbeController">
+      <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+   </div>
+</div>

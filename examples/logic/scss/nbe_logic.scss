@@ -1,0 +1,36 @@
+@import '../../../scss/nbe_variables';
+
+@include edgeType( 'logic-app', 'WIRE', $typeColor1 );
+@include edgeType( 'logic-app', 'CHANNEL', $typeColor4 );
+
+.logic-app {
+   .log {
+      position: absolute;
+      top: 0;
+      right: 20px;
+      padding: 10px;
+      width: 200px;
+      border-top-right-radius: 8px;
+      border-bottom-left-radius: 8px;
+      background: rgba( 0, 0, 0, 0.25 );
+
+      h4 {
+         margin: 8px;
+      }
+      ul {
+         margin: 0;
+         font-size: $fontSizePort;
+      }
+   }
+}
+
+
+
+// Demo specific styles that are not related to nbe:
+
+h2 {
+   font-family: $fontFamilyLabel;
+   color: $gray5;
+}
+
+
