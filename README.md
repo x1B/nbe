@@ -34,8 +34,12 @@ The model is a directed (hyper-)graph consisting of vertices and typed edges.
 The implementation is based around a set of angular directives which collaborate to implement a node-based editor. Links between vertices and edges are rendered using SVG. There is a separate model which describes the graph layout.
 
 
-## INSTALLATION
+## Installation
 
 git clone https://github.com/x1B/nbe.git
 npm install bower
 ./node_modules/.bin/bower install
+
+With running webserver navigate to one of the /examples/__/debug.html 
+
+Note: To use the index.html the installation of grunt is needed.
