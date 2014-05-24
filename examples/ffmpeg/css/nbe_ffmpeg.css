@@ -2,54 +2,54 @@
  * Use this to declare user-defined edge types.
  */
 /* line 88, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .port.WIRE > i {
+.graph.ffmpeg-app .port.AUDIO > i {
   background: #c3669c;
 }
 /* line 93, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .node.edge.WIRE {
+.graph.ffmpeg-app .node.edge.AUDIO {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
 /* line 99, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .node.edge.WIRE.ping {
-  animation-name: edge-ping-ffmpeg-app-WIRE;
+.graph.ffmpeg-app .node.edge.AUDIO.ping {
+  animation-name: edge-ping-ffmpeg-app-AUDIO;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
-  -webkit-animation-name: edge-ping-ffmpeg-app-WIRE;
+  -webkit-animation-name: edge-ping-ffmpeg-app-AUDIO;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
 /* line 109, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .link.WIRE {
+.graph.ffmpeg-app .link.AUDIO {
   stroke: #c3669c;
 }
 /* line 111, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .link.WIRE.selected {
+.graph.ffmpeg-app .link.AUDIO.selected {
   stroke: #e0afcb;
 }
 /* line 119, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.highlight-WIRE .port:not(.WIRE) > i,
-.graph.ffmpeg-app.highlight-WIRE .node.edge:not(.WIRE) {
+.graph.ffmpeg-app.highlight-AUDIO .port:not(.AUDIO) > i,
+.graph.ffmpeg-app.highlight-AUDIO .node.edge:not(.AUDIO) {
   background: #646464;
 }
 /* line 122, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.highlight-WIRE .link:not(.WIRE) {
+.graph.ffmpeg-app.highlight-AUDIO .link:not(.AUDIO) {
   stroke: #646464;
 }
 /* line 129, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-WIRE .link.WIRE {
+.graph.ffmpeg-app.hide-AUDIO .link.AUDIO {
   display: none;
 }
 /* line 132, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-WIRE .port.WIRE {
+.graph.ffmpeg-app.hide-AUDIO .port.AUDIO {
   display: none;
 }
 /* line 135, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-WIRE .edge.WIRE {
+.graph.ffmpeg-app.hide-AUDIO .edge.AUDIO {
   display: none;
 }
 
-@keyframes edge-ping-ffmpeg-app-WIRE {
+@keyframes edge-ping-ffmpeg-app-AUDIO {
   /* line 69, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -66,7 +66,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-ffmpeg-app-WIRE {
+@-webkit-keyframes edge-ping-ffmpeg-app-AUDIO {
   /* line 75, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -84,54 +84,54 @@
 }
 
 /* line 88, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .port.CHANNEL > i {
+.graph.ffmpeg-app .port.VIDEO > i {
   background: #f5c680;
 }
 /* line 93, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .node.edge.CHANNEL {
+.graph.ffmpeg-app .node.edge.VIDEO {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 /* line 99, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .node.edge.CHANNEL.ping {
-  animation-name: edge-ping-ffmpeg-app-CHANNEL;
+.graph.ffmpeg-app .node.edge.VIDEO.ping {
+  animation-name: edge-ping-ffmpeg-app-VIDEO;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
-  -webkit-animation-name: edge-ping-ffmpeg-app-CHANNEL;
+  -webkit-animation-name: edge-ping-ffmpeg-app-VIDEO;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
 /* line 109, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .link.CHANNEL {
+.graph.ffmpeg-app .link.VIDEO {
   stroke: #f5c680;
 }
 /* line 111, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app .link.CHANNEL.selected {
+.graph.ffmpeg-app .link.VIDEO.selected {
   stroke: #fcf0df;
 }
 /* line 119, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.highlight-CHANNEL .port:not(.CHANNEL) > i,
-.graph.ffmpeg-app.highlight-CHANNEL .node.edge:not(.CHANNEL) {
+.graph.ffmpeg-app.highlight-VIDEO .port:not(.VIDEO) > i,
+.graph.ffmpeg-app.highlight-VIDEO .node.edge:not(.VIDEO) {
   background: #646464;
 }
 /* line 122, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.highlight-CHANNEL .link:not(.CHANNEL) {
+.graph.ffmpeg-app.highlight-VIDEO .link:not(.VIDEO) {
   stroke: #646464;
 }
 /* line 129, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-CHANNEL .link.CHANNEL {
+.graph.ffmpeg-app.hide-VIDEO .link.VIDEO {
   display: none;
 }
 /* line 132, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-CHANNEL .port.CHANNEL {
+.graph.ffmpeg-app.hide-VIDEO .port.VIDEO {
   display: none;
 }
 /* line 135, ../../../scss/_nbe_variables.scss */
-.graph.ffmpeg-app.hide-CHANNEL .edge.CHANNEL {
+.graph.ffmpeg-app.hide-VIDEO .edge.VIDEO {
   display: none;
 }
 
-@keyframes edge-ping-ffmpeg-app-CHANNEL {
+@keyframes edge-ping-ffmpeg-app-VIDEO {
   /* line 69, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -148,7 +148,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-ffmpeg-app-CHANNEL {
+@-webkit-keyframes edge-ping-ffmpeg-app-VIDEO {
   /* line 75, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -165,29 +165,28 @@
   }
 }
 
-/* line 7, ../scss/nbe_ffmpeg.scss */
-.ffmpeg-app .log {
-  position: absolute;
-  top: 0;
-  right: 20px;
-  padding: 10px;
-  width: 200px;
-  border-top-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  background: rgba(0, 0, 0, 0.25);
-}
-/* line 17, ../scss/nbe_ffmpeg.scss */
-.ffmpeg-app .log h4 {
-  margin: 8px;
-}
-/* line 20, ../scss/nbe_ffmpeg.scss */
-.ffmpeg-app .log ul {
-  margin: 0;
-  font-size: 11px;
-}
-
-/* line 31, ../scss/nbe_ffmpeg.scss */
+/* line 8, ../scss/nbe_ffmpeg.scss */
 h2 {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   color: #c8c8c8;
+}
+
+/* line 13, ../scss/nbe_ffmpeg.scss */
+label {
+  position: relative;
+  display: block;
+}
+
+/* line 18, ../scss/nbe_ffmpeg.scss */
+label input {
+  position: absolute;
+  left: 200px;
+}
+
+/* line 23, ../scss/nbe_ffmpeg.scss */
+input, textarea {
+  background: #646464;
+  border: 1px solid #333333;
+  border-radius: 2px;
+  color: #e0e0e0;
 }

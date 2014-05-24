@@ -29,6 +29,7 @@ define( [
          scope: {
             nbeController: '=nbeGraphController',
             model: '=nbeGraph',
+            selection: '=nbeSelection',
             layout: '=nbeGraphLayout',
             types: '=nbeGraphTypes'
          },
@@ -47,6 +48,12 @@ define( [
          var layout;
          var types;
          var view;
+         $scope.selection = {
+            vertices: {},
+            edges: {},
+            links: {}
+         };
+
 
          /** Transient members, re-initialized when the model is replaced. */
 
@@ -161,13 +168,9 @@ define( [
                self.calculateLayout();
             }
             view = $scope.view = {
-               selection: {
-                  vertices: {},
-                  edges: {},
-                  links: {}
-               },
                links: {}
             };
+
 
             generateEdgeId = idGenerator.create(
                Object.keys( types ).map( function( _ ) {
@@ -405,7 +408,7 @@ define( [
             async.runEventually( function() {
                var input = $scope.model;
                if( !self.selection.isEmpty() ) {
-                  var sel = $scope.view.selection;
+                  var sel = $scope.selection;
                   input = { edges: {}, vertices: {} };
                   Object.keys( sel.edges ).forEach( function( edgeId ) {
                      input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
@@ -652,10 +655,10 @@ define( [
 
             function handleDelete() {
                var operations = [];
-               Object.keys( view.selection.edges ).forEach( function( eId ) {
+               Object.keys( $scope.selection.edges ).forEach( function( eId ) {
                   operations.push( makeDeleteEdgeOp( eId ) );
                } );
-               Object.keys( view.selection.vertices ).forEach( function( vId ) {
+               Object.keys( $scope.selection.vertices ).forEach( function( vId ) {
                   operations.push( makeDeleteVertexOp( vId ) );
                } );
                clear();
@@ -666,13 +669,13 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function isEmpty() {
-               return !Object.keys( view.selection.vertices ).length && !Object.keys( view.selection.edges ).length;
+               return !Object.keys( $scope.selection.vertices ).length && !Object.keys( $scope.selection.edges ).length;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function clear() {
-               view.selection = { vertices: {}, edges: {}, links: {} };
+               $scope.selection = { vertices: {}, edges: {}, links: {} };
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -681,8 +684,8 @@ define( [
                if( !extend ) {
                   clear();
                }
-               var selected = view.selection.edges[ edgeId ];
-               view.selection.edges[ edgeId ] = !selected;
+               var selected = $scope.selection.edges[ edgeId ];
+               $scope.selection.edges[ edgeId ] = !selected;
                updateLinks();
             }
 
@@ -692,8 +695,8 @@ define( [
                if( !extend ) {
                   clear();
                }
-               var selected = view.selection.vertices[ vertexId ];
-               view.selection.vertices[ vertexId ] = !selected;
+               var selected = $scope.selection.vertices[ vertexId ];
+               $scope.selection.vertices[ vertexId ] = !selected;
                updateLinks();
             }
 
@@ -724,7 +727,7 @@ define( [
 
                   var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
                   [ 'vertex', 'edge' ].forEach( function( nodeType ) {
-                     var selectionModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
+                     var selectionModel = $scope.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
                      var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
                      var tmpBox = {};
                      $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
@@ -811,14 +814,14 @@ define( [
             function updateLinks() {
                var linksState = { };
                Object.keys( model.edges ).forEach( function( edgeId ) {
-                  var edgeState = view.selection.edges[ edgeId ];
+                  var edgeState = $scope.selection.edges[ edgeId ];
                   Object.keys( self.links.byEdge( edgeId ) ).forEach( function( linkId ) {
                      linksState[ linkId ] = edgeState || linksState[ linkId ];
                   } );
                } );
 
                Object.keys( model.vertices ).forEach( function( vertexId ) {
-                  var vertexState = view.selection.vertices[ vertexId ];
+                  var vertexState = $scope.selection.vertices[ vertexId ];
                   Object.keys( self.links.byVertex( vertexId ) ).forEach( function( linkId ) {
                      linksState[ linkId ] = vertexState || linksState[ linkId ];
                   } );
@@ -828,7 +831,7 @@ define( [
                Object.keys( linkControllers ).forEach( function( linkId ) {
                   linkControllers[ linkId ].toggleSelect( linksState[ linkId ] || false );
                } );
-               view.selection.links = linksState;
+               $scope.selection.links = linksState;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

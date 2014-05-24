@@ -1,0 +1,64 @@
+{
+   "video": {
+      "boxblur": {
+         "label": "boxblur",
+         "description": "Blur the input.",
+         "ports": [
+            {
+               "id": "0",
+               "label": "X",
+               "direction": "in",
+               "type": "VIDEO"
+            },
+            {
+               "id": "1",
+               "label": "Y",
+               "direction": "out",
+               "type": "VIDEO"
+            }
+         ],
+         "details": {
+            "params": [
+               { "id": "luma_radius", "default": "2" },
+               { "id": "luma_power", "default": "2" },
+               { "id": "chroma_radius" },
+               { "id": "chroma_power" },
+               { "id": "alpha_radius" },
+               { "id": "alpha_power" }
+            ]
+         }
+      },
+      "crop": {
+         "label": "boxblur",
+         "description": "Blur the input.",
+         "ports": [
+            {
+               "id": "0",
+               "label": "X",
+               "direction": "in",
+               "type": "VIDEO"
+            },
+            {
+               "id": "1",
+               "label": "Y",
+               "direction": "out",
+               "type": "VIDEO"
+            }
+         ],
+         "details": {
+            "params": [
+               { "id": "luma_radius", "default": "2" },
+               { "id": "luma_power", "default": "2" },
+               { "id": "chroma_radius" },
+               { "id": "chroma_power" },
+               { "id": "alpha_radius" },
+               { "id": "alpha_power" }
+            ]
+         }
+      }
+   },
+   "layout": {
+      "left": 100,
+      "top": 100
+   }
+}

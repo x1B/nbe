@@ -1,15 +1,32 @@
-<div style="overflow: auto; position: relative; width: 1100px; height: 740px;"
-     data-ng-controller="FfmpegDemoController"
+<div data-ng-controller="FfmpegDemoController">
+
+<div style="overflow: auto; position: relative; width: 700px; height: 300px;"
+
      data-ng-cloak
      class="graph-container ffmpeg-app">
 
    <div class="ffmpeg-app"
         data-nbe-graph="model"
-        data-nbe-graph-types="{ WIRE: { maxSources: 1 }, CHANNEL: {} }"
+        data-nbe-graph-types="{ AUDIO: { maxSources: 1 }, VIDEO: { maxSources: 1 } }"
         data-nbe-graph-layout="layout"
+        data-nbe-selection="selection"
         data-nbe-graph-controller="nbeController">
       <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-      <select data-ng-model="selectedFilter" data-ng-options="availableFilters"></select>
-      <button data-ng-click="addFilter( selectedFilter )">Add Filter</button>
+      <select data-ng-model="newVideoFilter" data-ng-options="filter.label for (key, filter) in availableFilters"></select>
+      <button data-ng-click="addVideoFilter( newVideoFilter )">Add Filter</button>
    </div>
+</div>
+
+<div style="" data-ng-if="!!currentFilter">
+    <h4>Settings for <em>{{ currentFilter.label }}:</em></h4>
+    <div data-ng-repeat="param in currentFilter.details.params">
+        <label>{{ param.id }}<input type="text" data-ng-model="param.value" placeholder="{{ param.default }}"></label>
+    </div>
+</div>
+
+<div>
+    <button type="button" data-ng-click="createExport()">Export</button><br>
+    <textarea style="overflow: auto; position: relative; width: 700px; height: 200px;" data-ng-if="!!export" >{{ export }}</textarea>
+</div>
+
 </div>

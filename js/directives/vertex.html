@@ -1,7 +1,7 @@
 <div data-ng-style="{ left: layout.vertices[ vertexId ].left + 'px',
                       top: layout.vertices[ vertexId ].top + 'px' }"
      data-ng-click="handleVertexClick( $event )"
-     data-ng-class="{ selected: view.selection.vertices[ vertexId ] }"
+     data-ng-class="{ selected: selection.vertices[ vertexId ] }"
      class="node vertex">
    <div class="header">{{ vertex.label }}</div>
    <div class="port-group">
