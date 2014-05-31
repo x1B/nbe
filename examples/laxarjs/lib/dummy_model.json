@@ -22,7 +22,7 @@
             { "id": "o2", "label": "Active Badness", "type": "FLAG", "edgeId": "e2" }
          ]
       },
-      "v2": {
+      "container": {
          "label": "Container",
          "ports": [
             { "id": "o1", "label": "Header", "type": "CONTAINER", "edgeId": "e3" },
