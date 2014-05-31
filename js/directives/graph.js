@@ -49,15 +49,14 @@ define( [
          var view;
 
          /** Transient members, re-initialized when the model is replaced. */
-
          var generateLinkId;
          var generateEdgeId;
 
-         // var self = $scope.nbeTools = $scope.nbeController = this;
          var self = $scope.nbeController = this;
          self.dragDrop = dragDropController();
          self.selection = selectionController();
          self.links = linksController();
+
 
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
@@ -74,6 +73,10 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         function connected( port ) {
+            return !!port.edgeId;
+         }
+
          $scope.$watch( 'types', function( newTypes ) {
             Object.keys( newTypes ).forEach( function( type ) {
                var hideType = !!( newTypes[ type ] && newTypes[ type ].hidden );
@@ -87,6 +90,15 @@ define( [
             if( newVertices == null ) {
                return;
             }
+
+            var portRefsByEdge = { };
+            ng.forEach( newVertices, function( vertex, vId ) {
+               vertex.ports.filter( connected ).forEach( function( port ) {
+                  portRefsByEdge[ port.edgeId ] = portRefsByEdge[ vertex.edgeId ] || [];
+                  portRefsByEdge[ port.edgeId ].push( { nodeId: vId, port: port } );
+               } );
+            } );
+
             ng.forEach( newVertices, function( vertex, vId ) {
                if( !previousVertices[ vId ] ) {
                   $timeout( function() {
@@ -94,13 +106,20 @@ define( [
                      visual.pingAnimation( jqNew );
                   } );
                }
-               vertex.ports.filter( function( _ ) {
-                  return !!_.edgeId;
-               } ).forEach( function( port ) {
-                  var edgeRef = { nodeId: port.edgeId, port: null };
+               vertex.ports.filter( connected ).forEach( function( port ) {
                   var vertexRef = { nodeId: vId, port: port };
-                  if( !self.links.byPort( vId, port ) ) {
-                     self.links.create( vertexRef, edgeRef );
+                  if ( !self.links.byPort( vId, port ) ) {
+                     if ( $scope.types[ port.type ].simple ) {
+                        portRefsByEdge[ port.edgeId ].forEach( function ( ref ) {
+                           if( ref.vertexId !== vId || ref.portId !== port.id ) {
+                              self.links.create( vertexRef, ref );
+                           }
+                        } );
+                     }
+                     else {
+                        var edgeRef = { nodeId: port.edgeId, port: null };
+                        self.links.create( vertexRef, edgeRef );
+                     }
                   }
                } );
             } );
@@ -368,6 +387,18 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         function centerCoords( vertexId ) {
+            var vertexLayout = layout.vertices[ vertexId ];
+            var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
+            return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+         }
+
+         function mean( v1, v2 ) {
+            return [ 0, 1 ].map( function ( i ) {
+               return Math.round( (v1[ i ] + v2[ i ]) / 2 );
+            } );
+         }
+
          function createEdge( fromRef, toRef ) {
             var type = fromRef.port.type;
             var prefix = type.toLocaleLowerCase() + ' ';
@@ -378,24 +409,19 @@ define( [
                label: id
             };
 
-            function centerCoords( vertexId ) {
-               var vertexLayout = layout.vertices[ vertexId ];
-               var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
-               return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+            if( $scope.types[ type ].simple ) {
+               self.links.create( fromRef, toRef );
+            }
+            else {
+               var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
+               layout.edges[ id ] = {
+                  left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
+                  top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset
+               };
+               self.links.create( fromRef, edgeRef );
+               self.links.create( edgeRef, toRef );
             }
 
-            function mean( v1, v2 ) {
-               return [ 0, 1 ].map( function( i ) {
-                  return Math.round( (v1[ i ] + v2[ i ]) / 2 );
-               } );
-            }
-
-            var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
-            layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
-               top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
-
-            self.links.create( fromRef, edgeRef );
-            self.links.create( edgeRef, toRef );
             return id;
          }
 

@@ -21,11 +21,13 @@ function (
       $scope.types = {
          RESOURCE: {
             maxSources: 1,
+            simple: true,
             hidden: false,
             label: 'Resources'
          },
          CONTAINER: {
             maxSources: 1,
+            simple: true,
             hidden: false,
             label: 'Nesting'
          },
