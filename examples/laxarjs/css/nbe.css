@@ -50,29 +50,27 @@ body {
 /* line 41, ../../../scss/_nbe.scss */
 .graph {
   background: #333333;
-  border-radius: 10px;
-  font-size: 12px;
 }
-/* line 48, ../../../scss/_nbe.scss */
+/* line 45, ../../../scss/_nbe.scss */
 .graph .graph-contents {
   background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
   background-size: 50px 50px;
   width: 100%;
   height: 100%;
 }
-/* line 65, ../../../scss/_nbe.scss */
+/* line 62, ../../../scss/_nbe.scss */
 .graph svg {
   width: 100%;
   height: 100%;
 }
-/* line 70, ../../../scss/_nbe.scss */
+/* line 67, ../../../scss/_nbe.scss */
 .graph * {
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   cursor: default;
 }
-/* line 77, ../../../scss/_nbe.scss */
+/* line 74, ../../../scss/_nbe.scss */
 .graph .selection {
   border: 1px dashed #f4f4c0;
   background: rgba(244, 244, 192, 0.1);
@@ -82,42 +80,38 @@ body {
   width: 100px;
   height: 100px;
 }
-/* line 88, ../../../scss/_nbe.scss */
+/* line 85, ../../../scss/_nbe.scss */
 .graph .port i {
-  width: 11px;
-  height: 11px;
   background: #c3669c;
   border: solid #444444 1px;
-  border-radius: 6px;
-  margin: 3px 5px -3px 5px;
   display: inline-block;
   position: relative;
 }
-/* line 98, ../../../scss/_nbe.scss */
+/* line 91, ../../../scss/_nbe.scss */
 .graph .port i:hover {
   opacity: 0.5;
 }
-/* line 104, ../../../scss/_nbe.scss */
+/* line 97, ../../../scss/_nbe.scss */
 .graph.highlight-in .ports.out .port i {
   background: #646464;
 }
-/* line 110, ../../../scss/_nbe.scss */
+/* line 103, ../../../scss/_nbe.scss */
 .graph.highlight-out .ports.in .port i {
   background: #646464;
 }
-/* line 115, ../../../scss/_nbe.scss */
+/* line 108, ../../../scss/_nbe.scss */
 .graph .node {
   position: absolute;
   border: solid #c8c8c8 1.5px;
 }
-/* line 119, ../../../scss/_nbe.scss */
+/* line 112, ../../../scss/_nbe.scss */
 .graph .node.vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 5px;
   background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 127, ../../../scss/_nbe.scss */
+/* line 120, ../../../scss/_nbe.scss */
 .graph .node.vertex.ping {
   animation-name: vertex-ping;
   animation-duration: 0.3s;
@@ -126,18 +120,15 @@ body {
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 136, ../../../scss/_nbe.scss */
+/* line 129, ../../../scss/_nbe.scss */
 .graph .node.vertex .header {
   border-radius: 5px 5px 0px 0px;
-  height: 18px;
   text-align: center;
   background: rgba(0, 0, 0, 0.15);
-  padding: 2px 5px 1px 5px;
-  font-size: 12px;
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   text-shadow: 1px 1px 0.5px #444444;
 }
-/* line 147, ../../../scss/_nbe.scss */
+/* line 137, ../../../scss/_nbe.scss */
 .graph .node.vertex .port-group {
   background: rgba(0, 0, 0, 0.05);
   border-top: solid #c8c8c8 1px;
@@ -145,53 +136,46 @@ body {
   -webkit-flex-direction: row;
   -webkit-align-items: flex-start;
 }
-/* line 157, ../../../scss/_nbe.scss */
+/* line 147, ../../../scss/_nbe.scss */
 .graph .node.vertex .ports {
   -webkit-flex: 0 1 auto;
   display: -webkit-flex;
   -webkit-flex-flow: column;
   -webkit-justify-content: stretch;
 }
-/* line 166, ../../../scss/_nbe.scss */
+/* line 156, ../../../scss/_nbe.scss */
 .graph .node.vertex .ports.in {
   border-right: 1px solid #a0a0a0;
   -webkit-align-items: flex-start;
 }
-/* line 169, ../../../scss/_nbe.scss */
+/* line 159, ../../../scss/_nbe.scss */
 .graph .node.vertex .ports.in .port {
   text-align: left;
   padding-right: 9px;
 }
-/* line 172, ../../../scss/_nbe.scss */
+/* line 162, ../../../scss/_nbe.scss */
 .graph .node.vertex .ports.out {
   -webkit-align-items: flex-end;
 }
-/* line 174, ../../../scss/_nbe.scss */
+/* line 164, ../../../scss/_nbe.scss */
 .graph .node.vertex .ports.out .port {
   text-align: right;
   padding-left: 9px;
 }
-/* line 178, ../../../scss/_nbe.scss */
+/* line 168, ../../../scss/_nbe.scss */
 .graph .node.vertex .port {
   -webkit-flex: 0 1 auto;
-  line-height: 16px;
   padding-top: 0;
   color: #202020;
-  font-size: 11px;
   font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
   text-shadow: 0 0 2px #f9f9f9;
   white-space: nowrap;
 }
-/* line 192, ../../../scss/_nbe.scss */
+/* line 180, ../../../scss/_nbe.scss */
 .graph .node.edge {
-  width: 20px;
-  height: 20px;
   background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
-  border-radius: 20px;
-  margin-top: -10px;
-  box-shadow: 4px 4px 4px #202020;
 }
-/* line 200, ../../../scss/_nbe.scss */
+/* line 183, ../../../scss/_nbe.scss */
 .graph .node.edge label {
   display: block;
   position: relative;
@@ -203,34 +187,34 @@ body {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   font-size: 12px;
 }
-/* line 215, ../../../scss/_nbe.scss */
+/* line 196, ../../../scss/_nbe.scss */
 .graph .node.selected {
   box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
 }
-/* line 220, ../../../scss/_nbe.scss */
+/* line 201, ../../../scss/_nbe.scss */
 .graph .GHOST {
   position: absolute;
 }
-/* line 225, ../../../scss/_nbe.scss */
+/* line 206, ../../../scss/_nbe.scss */
 .graph .links .link {
   position: absolute;
   fill: transparent;
 }
-/* line 229, ../../../scss/_nbe.scss */
+/* line 210, ../../../scss/_nbe.scss */
 .graph .links .link {
   stroke-width: 2;
 }
-/* line 234, ../../../scss/_nbe.scss */
+/* line 215, ../../../scss/_nbe.scss */
 .graph .tools {
   position: absolute;
   top: 4px;
   left: 4px;
 }
-/* line 239, ../../../scss/_nbe.scss */
+/* line 220, ../../../scss/_nbe.scss */
 .graph .tools button {
   opacity: 0.5;
 }
-/* line 241, ../../../scss/_nbe.scss */
+/* line 222, ../../../scss/_nbe.scss */
 .graph .tools button:hover {
   opacity: 1;
 }

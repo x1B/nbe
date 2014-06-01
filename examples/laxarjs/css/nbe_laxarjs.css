@@ -1,16 +1,16 @@
 /**
  * Use this to declare user-defined edge types.
  */
-/* line 88, ../../scss/_nbe_variables.scss */
+/* line 124, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .port.FLAG > i {
   background: #c3669c;
 }
-/* line 93, ../../scss/_nbe_variables.scss */
+/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.FLAG {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
-/* line 99, ../../scss/_nbe_variables.scss */
+/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.FLAG.ping {
   animation-name: edge-ping-laxar-app-FLAG;
   animation-duration: 0.3s;
@@ -19,80 +19,80 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../scss/_nbe_variables.scss */
+/* line 145, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.FLAG {
   stroke: #c3669c;
 }
-/* line 111, ../../scss/_nbe_variables.scss */
+/* line 147, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.FLAG.selected {
   stroke: #e0afcb;
 }
-/* line 119, ../../scss/_nbe_variables.scss */
+/* line 155, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-FLAG .port:not(.FLAG) > i,
 .graph.laxar-app.highlight-FLAG .node.edge:not(.FLAG) {
   background: #646464;
 }
-/* line 122, ../../scss/_nbe_variables.scss */
+/* line 158, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-FLAG .link:not(.FLAG) {
   stroke: #646464;
 }
-/* line 129, ../../scss/_nbe_variables.scss */
+/* line 165, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-FLAG .link.FLAG {
   display: none;
 }
-/* line 132, ../../scss/_nbe_variables.scss */
+/* line 168, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-FLAG .port.FLAG {
   display: none;
 }
-/* line 135, ../../scss/_nbe_variables.scss */
+/* line 171, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-FLAG .edge.FLAG {
   display: none;
 }
 
 @keyframes edge-ping-laxar-app-FLAG {
-  /* line 69, ../../scss/_nbe_variables.scss */
+  /* line 104, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../scss/_nbe_variables.scss */
+  /* line 105, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../scss/_nbe_variables.scss */
+  /* line 106, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-FLAG {
-  /* line 75, ../../scss/_nbe_variables.scss */
+  /* line 110, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../scss/_nbe_variables.scss */
+  /* line 111, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../scss/_nbe_variables.scss */
+  /* line 112, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-/* line 88, ../../scss/_nbe_variables.scss */
+/* line 124, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .port.ACTION > i {
   background: #c2e578;
 }
-/* line 93, ../../scss/_nbe_variables.scss */
+/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.ACTION {
   background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
 }
-/* line 99, ../../scss/_nbe_variables.scss */
+/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.ACTION.ping {
   animation-name: edge-ping-laxar-app-ACTION;
   animation-duration: 0.3s;
@@ -101,80 +101,80 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../scss/_nbe_variables.scss */
+/* line 145, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.ACTION {
   stroke: #c2e578;
 }
-/* line 111, ../../scss/_nbe_variables.scss */
+/* line 147, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.ACTION.selected {
   stroke: #e9f5ce;
 }
-/* line 119, ../../scss/_nbe_variables.scss */
+/* line 155, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-ACTION .port:not(.ACTION) > i,
 .graph.laxar-app.highlight-ACTION .node.edge:not(.ACTION) {
   background: #646464;
 }
-/* line 122, ../../scss/_nbe_variables.scss */
+/* line 158, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-ACTION .link:not(.ACTION) {
   stroke: #646464;
 }
-/* line 129, ../../scss/_nbe_variables.scss */
+/* line 165, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-ACTION .link.ACTION {
   display: none;
 }
-/* line 132, ../../scss/_nbe_variables.scss */
+/* line 168, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-ACTION .port.ACTION {
   display: none;
 }
-/* line 135, ../../scss/_nbe_variables.scss */
+/* line 171, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-ACTION .edge.ACTION {
   display: none;
 }
 
 @keyframes edge-ping-laxar-app-ACTION {
-  /* line 69, ../../scss/_nbe_variables.scss */
+  /* line 104, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../scss/_nbe_variables.scss */
+  /* line 105, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c2e578, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../scss/_nbe_variables.scss */
+  /* line 106, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-ACTION {
-  /* line 75, ../../scss/_nbe_variables.scss */
+  /* line 110, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../scss/_nbe_variables.scss */
+  /* line 111, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c2e578, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../scss/_nbe_variables.scss */
+  /* line 112, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-/* line 88, ../../scss/_nbe_variables.scss */
+/* line 124, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .port.RESOURCE > i {
   background: #626ca8;
 }
-/* line 93, ../../scss/_nbe_variables.scss */
+/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.RESOURCE {
   background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
 }
-/* line 99, ../../scss/_nbe_variables.scss */
+/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.RESOURCE.ping {
   animation-name: edge-ping-laxar-app-RESOURCE;
   animation-duration: 0.3s;
@@ -183,80 +183,80 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../scss/_nbe_variables.scss */
+/* line 145, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.RESOURCE {
   stroke: #626ca8;
 }
-/* line 111, ../../scss/_nbe_variables.scss */
+/* line 147, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.RESOURCE.selected {
   stroke: #a4a9cc;
 }
-/* line 119, ../../scss/_nbe_variables.scss */
+/* line 155, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-RESOURCE .port:not(.RESOURCE) > i,
 .graph.laxar-app.highlight-RESOURCE .node.edge:not(.RESOURCE) {
   background: #646464;
 }
-/* line 122, ../../scss/_nbe_variables.scss */
+/* line 158, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-RESOURCE .link:not(.RESOURCE) {
   stroke: #646464;
 }
-/* line 129, ../../scss/_nbe_variables.scss */
+/* line 165, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-RESOURCE .link.RESOURCE {
   display: none;
 }
-/* line 132, ../../scss/_nbe_variables.scss */
+/* line 168, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-RESOURCE .port.RESOURCE {
   display: none;
 }
-/* line 135, ../../scss/_nbe_variables.scss */
+/* line 171, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-RESOURCE .edge.RESOURCE {
   display: none;
 }
 
 @keyframes edge-ping-laxar-app-RESOURCE {
-  /* line 69, ../../scss/_nbe_variables.scss */
+  /* line 104, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../scss/_nbe_variables.scss */
+  /* line 105, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #626ca8, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../scss/_nbe_variables.scss */
+  /* line 106, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-RESOURCE {
-  /* line 75, ../../scss/_nbe_variables.scss */
+  /* line 110, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../scss/_nbe_variables.scss */
+  /* line 111, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #626ca8, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../scss/_nbe_variables.scss */
+  /* line 112, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-/* line 88, ../../scss/_nbe_variables.scss */
+/* line 124, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .port.CONTAINER > i {
   background: #f5c680;
 }
-/* line 93, ../../scss/_nbe_variables.scss */
+/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.CONTAINER {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 99, ../../scss/_nbe_variables.scss */
+/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .node.edge.CONTAINER.ping {
   animation-name: edge-ping-laxar-app-CONTAINER;
   animation-duration: 0.3s;
@@ -265,66 +265,190 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../scss/_nbe_variables.scss */
+/* line 145, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.CONTAINER {
   stroke: #f5c680;
 }
-/* line 111, ../../scss/_nbe_variables.scss */
+/* line 147, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app .link.CONTAINER.selected {
   stroke: #fcf0df;
 }
-/* line 119, ../../scss/_nbe_variables.scss */
+/* line 155, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-CONTAINER .port:not(.CONTAINER) > i,
 .graph.laxar-app.highlight-CONTAINER .node.edge:not(.CONTAINER) {
   background: #646464;
 }
-/* line 122, ../../scss/_nbe_variables.scss */
+/* line 158, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.highlight-CONTAINER .link:not(.CONTAINER) {
   stroke: #646464;
 }
-/* line 129, ../../scss/_nbe_variables.scss */
+/* line 165, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-CONTAINER .link.CONTAINER {
   display: none;
 }
-/* line 132, ../../scss/_nbe_variables.scss */
+/* line 168, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-CONTAINER .port.CONTAINER {
   display: none;
 }
-/* line 135, ../../scss/_nbe_variables.scss */
+/* line 171, ../../../scss/_nbe_variables.scss */
 .graph.laxar-app.hide-CONTAINER .edge.CONTAINER {
   display: none;
 }
 
 @keyframes edge-ping-laxar-app-CONTAINER {
-  /* line 69, ../../scss/_nbe_variables.scss */
+  /* line 104, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../scss/_nbe_variables.scss */
+  /* line 105, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../scss/_nbe_variables.scss */
+  /* line 106, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-laxar-app-CONTAINER {
-  /* line 75, ../../scss/_nbe_variables.scss */
+  /* line 110, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../scss/_nbe_variables.scss */
+  /* line 111, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../scss/_nbe_variables.scss */
+  /* line 112, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
+}
+
+/* line 59, ../../../scss/_nbe_variables.scss */
+.graph.size-100 {
+  font-size: 12px;
+  border-radius: 10px;
+}
+/* line 63, ../../../scss/_nbe_variables.scss */
+.graph.size-100 .port {
+  line-height: 16px;
+  font-size: 11px;
+}
+/* line 68, ../../../scss/_nbe_variables.scss */
+.graph.size-100 .port i {
+  width: 11px;
+  height: 11px;
+  border-radius: 6px;
+  margin: 3px 5px -3px 5px;
+}
+/* line 75, ../../../scss/_nbe_variables.scss */
+.graph.size-100 header {
+  height: 18px;
+  padding: 2px 5px 1px 5px;
+  font-size: 12px;
+}
+/* line 81, ../../../scss/_nbe_variables.scss */
+.graph.size-100 .edge {
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  box-shadow: 4px 4px 4px #202020;
+}
+
+/* line 59, ../../../scss/_nbe_variables.scss */
+.graph.size-75 {
+  font-size: 9px;
+  border-radius: 8px;
+}
+/* line 63, ../../../scss/_nbe_variables.scss */
+.graph.size-75 .port {
+  line-height: 12px;
+  font-size: 8px;
+}
+/* line 68, ../../../scss/_nbe_variables.scss */
+.graph.size-75 .port i {
+  width: 8.25px;
+  height: 8.25px;
+  border-radius: 4.5px;
+  margin: 2.25px 3.75px -2.25px 3.75px;
+}
+/* line 75, ../../../scss/_nbe_variables.scss */
+.graph.size-75 header {
+  height: 13.5px;
+  padding: 1.5px 3.75px 0.75px 3.75px;
+  font-size: 9px;
+}
+/* line 81, ../../../scss/_nbe_variables.scss */
+.graph.size-75 .edge {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #202020;
+}
+
+/* line 59, ../../../scss/_nbe_variables.scss */
+.graph.size-50 {
+  font-size: 6px;
+  border-radius: 5px;
+}
+/* line 63, ../../../scss/_nbe_variables.scss */
+.graph.size-50 .port {
+  line-height: 8px;
+  font-size: 6px;
+}
+/* line 68, ../../../scss/_nbe_variables.scss */
+.graph.size-50 .port i {
+  width: 5.5px;
+  height: 5.5px;
+  border-radius: 3px;
+  margin: 1.5px 2.5px -1.5px 2.5px;
+}
+/* line 75, ../../../scss/_nbe_variables.scss */
+.graph.size-50 header {
+  height: 9px;
+  padding: 1px 2.5px 0.5px 2.5px;
+  font-size: 6px;
+}
+/* line 81, ../../../scss/_nbe_variables.scss */
+.graph.size-50 .edge {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px #202020;
+}
+
+/* line 59, ../../../scss/_nbe_variables.scss */
+.graph.size-25 {
+  font-size: 3px;
+  border-radius: 3px;
+}
+/* line 63, ../../../scss/_nbe_variables.scss */
+.graph.size-25 .port {
+  line-height: 4px;
+  font-size: 3px;
+}
+/* line 68, ../../../scss/_nbe_variables.scss */
+.graph.size-25 .port i {
+  width: 2.75px;
+  height: 2.75px;
+  border-radius: 1.5px;
+  margin: 0.75px 1.25px -0.75px 1.25px;
+}
+/* line 75, ../../../scss/_nbe_variables.scss */
+.graph.size-25 header {
+  height: 4.5px;
+  padding: 0.5px 1.25px 0.25px 1.25px;
+  font-size: 3px;
+}
+/* line 81, ../../../scss/_nbe_variables.scss */
+.graph.size-25 .edge {
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #202020;
 }

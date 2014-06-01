@@ -15,7 +15,6 @@ define( [
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.edge', jqGraph[ 0 ] );
          if( !jqVertices.length ) {
-            console.log( 'empty input', jqEdges, jqVertices );
             return false;
          }
          var offset = { left: Infinity, top: Infinity };

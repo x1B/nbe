@@ -1,20 +1,26 @@
+<div data-ng-controller="LaxarjsDemoController"
+     data-ng-cloak>
+
+<button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+<label data-ng-repeat="(typeName, type) in types">
+    <input type="checkbox"
+           data-ng-model="type.hidden"
+           data-ng-checked="!type.hidden"
+           data-ng-true-value=""
+           data-ng-false-value="true" />
+    {{ type.label }} ({{ type.maxSources || 'n' }}:{{ type.maxDestinations || 'm'}})
+</label>
+
 <div style="overflow: auto; position: relative; width: 1200px; height: 500px;"
-     data-ng-controller="LaxarjsDemoController"
-     data-ng-cloak
      class="graph-container">
-    <div class="laxar-app"
+
+    <div class="laxar-app size-50"
          data-nbe-graph="model"
          data-nbe-graph-types="types"
          data-nbe-graph-layout="layout"
          data-nbe-graph-controller="nbeController">
-        <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-        <label data-ng-repeat="(typeName, type) in types">
-            <input type="checkbox"
-                   data-ng-model="type.hidden"
-                   data-ng-checked="!type.hidden"
-                   data-ng-true-value=""
-                   data-ng-false-value="true" />
-            {{ type.label }} ({{ type.maxSources || 'n' }}:{{ type.maxDestinations || 'm'}})
-        </label>
     </div>
+</div>
+
+
 </div>

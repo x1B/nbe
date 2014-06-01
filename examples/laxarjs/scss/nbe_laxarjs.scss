@@ -4,3 +4,9 @@
 @include edgeType( 'laxar-app', 'ACTION', $typeColor2 );
 @include edgeType( 'laxar-app', 'RESOURCE', $typeColor3 );
 @include edgeType( 'laxar-app', 'CONTAINER', $typeColor4 );
+
+
+@include graphSizes( 'size-100', 1.0 );
+@include graphSizes( 'size-75', 0.75 );
+@include graphSizes( 'size-50', 0.50 );
+@include graphSizes( 'size-25', 0.25 );

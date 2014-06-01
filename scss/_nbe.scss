@@ -41,9 +41,6 @@ body {
 .graph {
 
    background: $graphBgColor;
-   border-radius: $graphBorderRadius;
-
-   font-size: $fontSizeLabel;
 
    .graph-contents {
       background:
@@ -86,12 +83,8 @@ body {
 
    .port {
       i {
-         width: $portAnchorSize;
-         height: $portAnchorSize;
          background: $typeColor1;
          border: solid $gray2 1px;
-         border-radius: 6px;
-         margin: 3px 5px -3px 5px;
          display: inline-block;
          position: relative;
       }
@@ -135,11 +128,8 @@ body {
 
          .header {
             border-radius: $vertexBorderRadius $vertexBorderRadius 0px 0px;
-            height: $nodeTitleHeight;
             text-align: center;
             background: rgba(0, 0, 0, 0.15);
-            padding: 2px 5px 1px 5px;
-            font-size: $fontSizeLabel;
             font-family: $fontFamilyLabel;
             text-shadow: 1px 1px 0.5px $gray2;
          }
@@ -177,10 +167,8 @@ body {
 
          .port {
             -webkit-flex: 0 1 auto;
-            line-height: $portHeight;
             padding-top: 0;
             color: $portTextColor;
-            font-size: $fontSizePort;
             font-family: $fontFamilyPort;
             text-shadow: 0 0 2px $gray7;
             white-space: nowrap;
@@ -190,12 +178,7 @@ body {
 
       // Default edge-node style;
       &.edge {
-         width: $edgeNodeSize;
-         height: $edgeNodeSize;
          background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
-         border-radius: $edgeNodeSize;
-         margin-top: -10px;
-         box-shadow: 4px 4px 4px $gray0;
 
          label {
             display: block;
@@ -242,3 +225,4 @@ body {
       }
    }
 }
+
