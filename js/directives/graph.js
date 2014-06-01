@@ -96,7 +96,7 @@ define( [
             ng.forEach( newVertices, function( vertex, vId ) {
                vertex.ports.filter( connected ).forEach( function( port ) {
                   var table = port.direction === 'in' ? inputRefsByEdge : outputRefsByEdge;
-                  table[ port.edgeId ] = table[ vertex.edgeId ] || [];
+                  table[ port.edgeId ] = table[ port.edgeId ] || [];
                   table[ port.edgeId ].push( { nodeId: vId, port: port } );
                } );
             } );
@@ -321,14 +321,12 @@ define( [
                   if( !edgeId ) {
                      // collection forms an edge (completely new or has disconnected previous edges)
                      edgeId = createEdge( fromRef, toRef );
-                     console.log( 'undo: make delete' );
                      connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                   }
                   else {
                      var link = self.links.create( fromRef, toRef );
                      fromRef.port.edgeId = edgeId;
                      toRef.port.edgeId = edgeId;
-                     console.log( 'undo: make cut' );
                      connectPortToPortOp.undo = makeCutOp( link );
                   }
 
