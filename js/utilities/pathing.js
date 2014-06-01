@@ -3,9 +3,14 @@ define( [
 ], function( settings ) {
    'use strict';
 
+   var X = 0, Y = 1;
+   var FROM = 0, TO = 1;
+
+   var DEFAULT_STUBS = [ 1, -1 ];
+
    // Length of a horizontal link stub that helps visualizing where a link is attached
-   var stubLength = settings.pathing.stubLength;
-   var arrowHeadLength = settings.pathing.arrowHeadLength;
+   var baseStubLength = settings.pathing.stubLength;
+   var baseArrowHeadLength = settings.pathing.arrowHeadLength;
    var curvePadding = settings.pathing.curvePadding;
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,15 +19,14 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn ) {
-      var fromX = round( fromLeft ),
-         fromY = round( fromTop ),
-         toX = round( toLeft ),
-         toY = round( toTop );
+   function svgLinearLinkPath( from, to, stubs, zoomFactor, boxes, showArrow ) {
+      var fromX = round( from[X] ), fromY = round( from[Y] ),
+          toX = round( to[X] ), toY = round( to[Y] ),
+          stubLength = baseStubLength * ( zoomFactor || 1 );
 
       var path = ['M', fromX, ',', fromY];
-      path.push( 'H', fromX + fromStubSgn * stubLength / 2 );
-      path.push( 'L', toX + toStubSgn * stubLength / 2, ',', toY );
+      path.push( 'H', fromX + stubs[FROM] * stubLength / 2 );
+      path.push( 'L', toX + stubs[TO] * stubLength / 2, ',', toY );
       path.push( 'H', toX );
 
       return path.join( '' );
@@ -31,20 +35,21 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Try to circumvent boxes which are in the way
+    * Try to circumvent start and end box so that connections are obvious.
     */
-   function svgCubicBezierLinkPath( fromLeft,
-                                    fromTop,
-                                    toLeft,
-                                    toTop,
-                                    fromStubSgn,
-                                    toStubSgn,
-                                    fromBox,
-                                    toBox,
-                                    noArrow ) {
+   function svgCubicBezierLinkPath( from,
+                                    to,
+                                    stubs,
+                                    zoomFactor,
+                                    boxes,
+                                    showArrow ) {
 
-      if( abs( fromLeft - toLeft ) < 40 && abs( fromTop - toTop ) < 50 ) {
-         return svgLinearLinkPath( fromLeft, fromTop, toLeft, toTop, fromStubSgn, toStubSgn );
+      stubs = stubs || DEFAULT_STUBS;
+      var stubLength = baseStubLength * ( zoomFactor || 1 );
+      var arrowHeadLength = baseArrowHeadLength * ( zoomFactor || 1 );
+
+      if( abs( from[X] - to[X] ) < 2*stubLength && abs( from[Y] - to[Y] ) < 2.5*stubLength ) {
+         return svgLinearLinkPath( from, to, stubs );
       }
 
       var params = initializeParameters();
@@ -82,6 +87,9 @@ define( [
       function initializeParameters() {
          var params = { stubLength: stubLength, curvePadding: curvePadding };
 
+         var fromLeft = from[X], fromTop = from[Y], toLeft = to[X], toTop = to[Y],
+             fromBox = boxes[FROM], toBox = boxes[TO], fromStub = stubs[ FROM ], toStub = stubs[ TO ];
+
          var yRatio = 1;
          if( toBox ) {
             var boxDeltaY = abs( toTop > fromTop ? fromBox.bottom - toBox.top : toBox.bottom - fromBox.top );
@@ -100,14 +108,14 @@ define( [
          }
 
          // Simplify by always drawing a path from left to right:
-         params.reverse = fromLeft + fromStubSgn * stubLength > toLeft + toStubSgn * stubLength;
+         params.reverse = fromLeft + fromStub * stubLength > toLeft + toStub * stubLength;
          if( params.reverse ) {
             params.x0 = round( toLeft );
             params.xN = round( fromLeft );
             params.y0 = round( toTop );
             params.yN = round( fromTop );
-            params.stub0 = toStubSgn;
-            params.stubN = fromStubSgn;
+            params.stub0 = toStub;
+            params.stubN = fromStub;
             params.box0 = toBox;
             params.boxN = fromBox;
          }
@@ -116,8 +124,8 @@ define( [
             params.xN = round( toLeft );
             params.y0 = round( fromTop );
             params.yN = round( toTop );
-            params.stub0 = fromStubSgn;
-            params.stubN = toStubSgn;
+            params.stub0 = fromStub;
+            params.stubN = toStub;
             params.box0 = fromBox;
             params.boxN = toBox;
          }
@@ -168,12 +176,13 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function arrowHead() {
-         if( noArrow ) {
+         if( !showArrow ) {
             return;
          }
-         var ax = x - 20 - arrowHeadLength, ay = y;
-         path.push( 'M', ax, ',', ay - arrowHeadLength,
-            'L', ax + 20 / 2, ',', ay,
+         var ax = x - stubLength - arrowHeadLength, ay = y;
+         path.push(
+            'M', ax, ',', ay - arrowHeadLength,
+            'L', ax + stubLength / 2, ',', ay,
             'L', ax, ',', ay + arrowHeadLength,
             'L', ax + arrowHeadLength, ',', ay,
             'L', ax, ',', ay - arrowHeadLength,

@@ -9,9 +9,9 @@ define( [], function() {
 
       layout: {
          /** When dragging a port, how much to set it off left and top. */
-         portDragOffset: 8,
+         portOffset: 8,
          /** When dragging an edge, how much to set it off left and top. */
-         edgeDragOffset: 10,
+         edgeOffset: 10,
          /** How much padding to use when applying an automatic graph layout. */
          graphPadding: 40
       },

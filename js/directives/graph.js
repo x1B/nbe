@@ -56,18 +56,20 @@ define( [
          self.dragDrop = dragDropController();
          self.selection = selectionController();
          self.links = linksController();
+         self.zoom = zoomController();
 
 
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
 
          // Controller API:
-         this.makeConnectOp = makeConnectOp;
-         this.makeDisconnectOp = makeDisconnectOp;
+         self.makeConnectOp = makeConnectOp;
+         self.makeDisconnectOp = makeDisconnectOp;
 
          // Manage layout and rendering:
-         this.calculateLayout = calculateLayout;
-         this.adjustCanvasSize = adjustCanvasSize;
+         self.calculateLayout = calculateLayout;
+         self.adjustCanvasSize = adjustCanvasSize;
+
 
          var ops = this.operations = operationsModule.create( $scope );
 
@@ -154,21 +156,29 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          /**
+          * The graph drawing canvas must fill the available container.
+          * It also must accommodate all nodes in the graph model.
+          * Third, it needs to take into account the current zoom level when calculating the space needed
+          * by the graph model.
+          *
           * In each dimension, pick max( offset container size, content size ) and use it as the canvas size.
           */
          function adjustCanvasSize() {
             var offsetContainer = jqGraph.offsetParent();
             var graphOffset = jqGraph.offset();
+            var yScrollbarSpace = Math.max( 15, offsetContainer.height() - offsetContainer.get(0).clientHeight );
+            var xScrollbarSpace = Math.max( 15, offsetContainer.width() - offsetContainer.get(0).clientWidth );
+            var width = offsetContainer.width() - xScrollbarSpace;
+            var height = offsetContainer.height() - yScrollbarSpace;
+
             var padding = layoutSettings.graphPadding;
-            var scollbarSpace = 20;
-            var width = offsetContainer.width() - scollbarSpace;
-            var height = offsetContainer.height() - scollbarSpace;
             $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
                var jqVertex = $( domNode );
                var pos = jqVertex.offset();
                width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );
                height = Math.max( height, pos.top - graphOffset.top + jqVertex.height() + padding );
             } );
+
             jqGraph.width( width ).height( height );
          }
 
@@ -193,7 +203,13 @@ define( [
                   edges: {},
                   links: {}
                },
-               links: {}
+               links: {},
+               zoom: {
+                  factor: 1,
+                  percent: 100,
+                  levels: [ 10, 25, 50, 75, 100 ],
+                  level: 3
+               }
             };
 
             generateEdgeId = idGenerator.create(
@@ -448,8 +464,8 @@ define( [
             else {
                var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
                layout.edges[ id ] = {
-                  left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
-                  top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset
+                  left: edgeCenter[ 0 ] - layoutSettings.edgeOffset,
+                  top: edgeCenter[ 1 ] - layoutSettings.edgeOffset
                };
                self.links.create( fromRef, edgeRef );
                self.links.create( edgeRef, toRef );
@@ -474,7 +490,7 @@ define( [
                   } );
                }
 
-               var result = autoLayout.calculate( input, $scope.types, jqGraph );
+               var result = autoLayout.calculate( input, $scope.types, jqGraph, $scope.view.zoom.factor );
                if( result ) {
                   Object.keys( result.edges ).forEach( function( edgeId ) {
                      layout.edges[ edgeId ] = result.edges[ edgeId ];
@@ -801,7 +817,6 @@ define( [
                   } );
 
                   updateLinks();
-
                }
 
                function finish() {
@@ -838,6 +853,7 @@ define( [
                if( !anchor ) {
                   return;
                }
+               var zoomFactor = view.zoom.factor;
                var newPos = $( anchor.domNode ).position();
                var dx = newPos.left - anchor.left;
                var dy = newPos.top - anchor.top;
@@ -845,8 +861,8 @@ define( [
                   var nodeLayout = domNode.dataset.nbeVertex ?
                      $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
                      $scope.layout.edges[ domNode.dataset.nbeEdge ];
-                  domNode.style.left = nodeLayout.left + dx + 'px';
-                  domNode.style.top = nodeLayout.top + dy + 'px';
+                  domNode.style.left = nodeLayout.left*zoomFactor + dx + 'px';
+                  domNode.style.top = nodeLayout.top*zoomFactor + dy + 'px';
                } );
                self.links.repaint();
             }
@@ -854,12 +870,13 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function clearAnchor() {
+               var zoomFactor = view.zoom.factor;
                anchor.followers.each( function( _, domNode ) {
                   var nodeLayout = domNode.dataset.nbeVertex ?
                      $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
                      $scope.layout.edges[ domNode.dataset.nbeEdge ];
-                  nodeLayout.left = parseInt( domNode.style.left, 10 );
-                  nodeLayout.top = parseInt( domNode.style.top, 10 );
+                  nodeLayout.left = parseInt( domNode.style.left, 10 )/zoomFactor;
+                  nodeLayout.top = parseInt( domNode.style.top, 10 )/zoomFactor;
                } );
                anchor = null;
             }
@@ -907,8 +924,38 @@ define( [
 
          }
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         function zoomController() {
+
+            function apply( level ) {
+               var z = view.zoom;
+               z.percent = z.levels[ level ];
+               z.factor = z.percent/100;
+               $timeout( function() {
+                  adjustCanvasSize();
+                  self.links.repaint();
+               }, 0 );
+            }
+
+            return {
+               zoomOut: function() {
+                  var z = view.zoom;
+                  if( z.level > 0 ) {
+                     apply( --z.level );
+                  }
+               },
+               zoomIn: function() {
+                  var z = view.zoom;
+                  if( z.level < z.levels.length - 1 ) {
+                     apply( ++z.level );
+                  }
+               }
+            };
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function isInput( port ) {
             return port && port.direction === 'in';
@@ -922,7 +969,7 @@ define( [
             return !!$scope.types[ typed.type ].simple;
          }
 
-         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
       }
 

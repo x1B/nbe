@@ -31,10 +31,11 @@ $vertexBorderColor: $gray4!default;
 $unHighlightColor: $gray3!default;
 
 $nodeBorderColor: $gray5!default;
-$nodeShadowColor: $gray0!default;
+$shadowColor: $gray0!default;
 
 $textColor: $gray6!default;
 $portTextColor: $gray0!default;
+
 
 
 // Sizes:
@@ -52,6 +53,53 @@ $fontFamilyLabel: "Futura", "Helvetica Neue", "Verdana", sans-serif!default;
 $fontSizeLabel: 12px!default;
 $fontFamilyPort: "Gill Sans", "Helvetica Neue", "Arial", sans-serif!default;
 $fontSizePort: 11px!default;
+
+
+@mixin graphSizes( $sizeName, $f ) {
+   .graph.#{$sizeName} {
+      font-size: round( $fontSizeLabel * $f );
+      border-radius: round( $graphBorderRadius * $f );
+
+      .port {
+         line-height: $portHeight*$f;
+         font-size: round( $fontSizePort*$f );
+      }
+
+      .port i {
+         width: $portAnchorSize * $f;
+         height: $portAnchorSize * $f;
+         border-radius: 6px*$f;
+         border-width: round(1px*$f);
+         margin: (3px * $f) (5px * $f) (-3px * $f) (5px * $f);
+      }
+
+      header {
+         height: $nodeTitleHeight*$f;
+         padding: 2px*$f 5px*$f 1px*$f 5px*$f;
+         font-size: round( $fontSizeLabel * $f );
+      }
+
+      .edge {
+         width: $edgeNodeSize * $f;
+         height: $edgeNodeSize * $f;
+         border-radius: $edgeNodeSize * $f;
+         box-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+
+         label {
+            width: 100px*$f;
+            left: (-50px + $edgeNodeSize/2)*$f;
+            text-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+            top: ($edgeNodeSize + 2px)*$f;
+            font-size: round( $fontSizeLabel * $f );
+         }
+      }
+
+      .link {
+         stroke-width: min(2, max(1.5, 2*$f));
+      }
+   }
+}
+
 
 @mixin edgePing( $themeName, $name, $color ) {
 
@@ -77,6 +125,7 @@ $fontSizePort: 11px!default;
       to { box-shadow: $toMiddle, $toRing, $regularShadow; }
    }
 }
+
 
 /**
  * Use this to declare user-defined edge types.
@@ -141,3 +190,4 @@ $fontSizePort: 11px!default;
    @include edgePing( $themeName, $name, $color );
 
 }
+

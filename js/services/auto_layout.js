@@ -9,17 +9,18 @@ define( [
    'use strict';
 
    function AutoLayout( nbeLayoutSettings ) {
+      var round = Math.round,
+          min = Math.min;
       var graphPadding = nbeLayoutSettings.graphPadding;
 
-      function calculate( model, types, jqGraph ) {
+      function calculate( model, types, jqGraph, zoomFactor ) {
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.edge', jqGraph[ 0 ] );
          if( !jqVertices.length ) {
-            console.log( 'empty input', jqEdges, jqVertices );
             return false;
          }
          var offset = { left: Infinity, top: Infinity };
-         var dagreGraph = createDagreGraph( jqVertices, jqEdges, model, types, offset );
+         var dagreGraph = createDagreGraph( jqVertices, jqEdges, zoomFactor, model, types, offset );
          if( offset.left === Infinity || offset.top === Infinity ) {
             return { vertices: {}, edges: {} };
          }
@@ -39,13 +40,13 @@ define( [
          dagreResult.eachNode( function( dagreNodeId, properties ) {
             if( dagreNodeId.charAt( 0 ) === 'V' ) {
                var vertexLayout = layout.vertices[ dagreNodeId.substring( 2 ) ] = {};
-               vertexLayout.left = Math.round( properties.x - properties.width / 2 + graphPadding + left );
-               vertexLayout.top = Math.round( properties.y - properties.height / 2 + graphPadding + top );
+               vertexLayout.left = round( properties.x - properties.width / 2 + graphPadding + left );
+               vertexLayout.top = round( properties.y - properties.height / 2 + graphPadding + top );
             }
             else {
                var edgeLayout = layout.edges[ dagreNodeId.substring( 2 ) ] = {};
-               edgeLayout.left = Math.round( properties.x - properties.width / 2 + graphPadding + left );
-               edgeLayout.top = Math.round( properties.y - properties.height / 2 + graphPadding + top );
+               edgeLayout.left = round( properties.x - properties.width / 2 + graphPadding + left );
+               edgeLayout.top = round( properties.y - properties.height / 2 + graphPadding + top );
             }
          } );
          return layout;
@@ -53,7 +54,7 @@ define( [
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function createDagreGraph( jqVertices, jqEdges, model, types, offset ) {
+      function createDagreGraph( jqVertices, jqEdges, zoomFactor, model, types, offset ) {
          var dagreGraph = new dagre.Digraph();
 
          var inputRefsByEdge = {};
@@ -63,10 +64,10 @@ define( [
             if( vertex ) {
                var dagreNodeId = 'V:' + id;
                var jqVertex = $( domVertex );
-               var dagreNode = { width: jqVertex.width(), height: jqVertex.height() };
+               var dagreNode = { width: jqVertex.width() / zoomFactor, height: jqVertex.height() / zoomFactor };
                var pos = jqVertex.position();
-               offset.left = Math.min( parseInt( pos.left ), offset.left );
-               offset.top = Math.min( parseInt( pos.top ), offset.top );
+               offset.left = min( parseInt( pos.left ), offset.left );
+               offset.top = min( parseInt( pos.top ), offset.top );
                dagreGraph.addNode( dagreNodeId, dagreNode );
 
                vertex.ports.forEach( function( port ) {
@@ -83,10 +84,10 @@ define( [
             if( model.edges[ id ] ) {
                var dagreNodeId = 'E:' + id;
                var jqEdge = $( domEdge );
-               var dagreNode = { width: jqEdge.width(), height: jqEdge.height() };
+               var dagreNode = { width: jqEdge.width() / zoomFactor, height: jqEdge.height() / zoomFactor };
                var pos = jqEdge.position();
-               offset.left = Math.min( parseInt( pos.left ), offset.left );
-               offset.top = Math.min( parseInt( pos.top ), offset.top );
+               offset.left = min( parseInt( pos.left ), offset.left );
+               offset.top = min( parseInt( pos.top ), offset.top );
                dagreGraph.addNode( dagreNodeId, dagreNode );
             }
          } );
