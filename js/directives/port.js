@@ -58,6 +58,14 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
+            function supportsMultipleLinks() {
+               var typeDef = scope.types[ scope.port.type ];
+               var isInput = scope.port.direction === 'in';
+               return typeDef.simple && 1 === (isInput ? typeDef.maxDestinations : typeDef.maxSources );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
             function handlePortDoubleClick() {
                if( scope.port.edgeId ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
@@ -78,7 +86,7 @@ define( [
                   $( 'i', element[ 0 ] ).trigger( 'mouseup' );
                } );
 
-               if( scope.port.edgeId ) {
+               if( scope.port.edgeId && !supportsMultipleLinks() ) {
                   var disconnectOp = graphController.makeDisconnectOp( {
                      nodeId: scope[ ATTR_VERTEX_ID ],
                      port: scope.port

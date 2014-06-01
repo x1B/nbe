@@ -49,15 +49,14 @@ define( [
          var view;
 
          /** Transient members, re-initialized when the model is replaced. */
-
          var generateLinkId;
          var generateEdgeId;
 
-         // var self = $scope.nbeTools = $scope.nbeController = this;
          var self = $scope.nbeController = this;
          self.dragDrop = dragDropController();
          self.selection = selectionController();
          self.links = linksController();
+
 
          /** Provide access to the jQuery handle to the graph canvas element */
          var jqGraph = this.jqGraph = $( $element[ 0 ] );
@@ -74,19 +73,34 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         $scope.$watch( 'types', function( newTypes ) {
+         function connected( port ) {
+            return !!port.edgeId;
+         }
+
+         function updateTypes( newTypes ) {
             Object.keys( newTypes ).forEach( function( type ) {
                var hideType = !!( newTypes[ type ] && newTypes[ type ].hidden );
                jqGraph.toggleClass( 'hide-' + type, hideType );
             } );
             repaint();
             adjustCanvasSize();
-         }, true );
+         }
 
-         $scope.$watch( 'model.vertices', function( newVertices, previousVertices ) {
+         function updateVertices( newVertices, previousVertices ) {
             if( newVertices == null ) {
                return;
             }
+
+            var outputRefsByEdge = { };
+            var inputRefsByEdge = { };
+            ng.forEach( newVertices, function( vertex, vId ) {
+               vertex.ports.filter( connected ).forEach( function( port ) {
+                  var table = port.direction === 'in' ? inputRefsByEdge : outputRefsByEdge;
+                  table[ port.edgeId ] = table[ port.edgeId ] || [];
+                  table[ port.edgeId ].push( { nodeId: vId, port: port } );
+               } );
+            } );
+
             ng.forEach( newVertices, function( vertex, vId ) {
                if( !previousVertices[ vId ] ) {
                   $timeout( function() {
@@ -94,19 +108,26 @@ define( [
                      visual.pingAnimation( jqNew );
                   } );
                }
-               vertex.ports.filter( function( _ ) {
-                  return !!_.edgeId;
-               } ).forEach( function( port ) {
-                  var edgeRef = { nodeId: port.edgeId, port: null };
-                  var vertexRef = { nodeId: vId, port: port };
-                  if( !self.links.byPort( vId, port ) ) {
-                     self.links.create( vertexRef, edgeRef );
+               vertex.ports.filter( connected ).forEach( function( port ) {
+                  var contextRef = { nodeId: vId, port: port };
+                  if( !self.links.byPort( vId, port ).length ) {
+                     if( $scope.types[ port.type ].simple ) {
+                        var isInput = port.direction === 'in';
+                        var table = isInput ? outputRefsByEdge : inputRefsByEdge;
+                        ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
+                           self.links.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
+                        } );
+                     }
+                     else {
+                        var edgeRef = { nodeId: port.edgeId, port: null };
+                        self.links.create( contextRef, edgeRef );
+                     }
                   }
                } );
             } );
-         }, true );
+         }
 
-         $scope.$watch( 'model.edges', function( newEdges, previousEdges ) {
+         function updateEdges( newEdges, previousEdges ) {
             if( newEdges == null ) {
                return;
             }
@@ -118,7 +139,13 @@ define( [
                   } );
                }
             } );
-         }, true );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         $scope.$watch( 'types', updateTypes, true );
+         $scope.$watch( 'model.vertices', updateVertices, true );
+         $scope.$watch( 'model.edges', updateEdges, true );
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -238,12 +265,11 @@ define( [
                var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
                var edgeRef = { nodeId: toEdgeId };
 
-               function connectPortToEdgeOp() {
+               var connectPortToEdgeOp = function() {
                   vertexRef.port.edgeId = toEdgeId;
-                  self.links.create( vertexRef, edgeRef );
-               }
-
-               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
+                  var link = self.links.create( vertexRef, edgeRef );
+                  connectPortToEdgeOp.undo = makeCutOp( link );
+               };
 
                return operationsModule.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
             }
@@ -281,70 +307,93 @@ define( [
                   return operationsModule.noOp;
                }
 
+               var ops = [];
+               [ fromRef, toRef ].forEach( function( ref ) {
+                  var isDest = isInput( ref.port );
+                  var typeDef = $scope.types[ ref.port.type ];
+                  if( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
+                     ops.push( makeDisconnectOp( ref ) );
+                  }
+               } );
+
                function connectPortToPortOp() {
-                  var edgeId = createEdge( fromRef, toRef );
-                  fromRef.port.edgeId = edgeId;
-                  toRef.port.edgeId = edgeId;
+                  var edgeId = fromRef.port.edgeId || toRef.port.edgeId;
+                  if( !edgeId ) {
+                     // collection forms an edge (completely new or has disconnected previous edges)
+                     edgeId = createEdge( fromRef, toRef );
+                     connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
+                  }
+                  else {
+                     var link = self.links.create( fromRef, toRef );
+                     fromRef.port.edgeId = edgeId;
+                     toRef.port.edgeId = edgeId;
+                     connectPortToPortOp.undo = makeCutOp( link );
+                  }
+
                   $timeout( function() {
                      visual.pingAnimation( $( '[data-nbe-edge="' + edgeId + '"]' ) );
                   } );
-                  connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                }
 
-               return operationsModule.compose( [
-                  makeDisconnectOp( fromRef ),
-                  makeDisconnectOp( toRef ),
-                  connectPortToPortOp
-               ] );
+               ops.push( connectPortToPortOp );
+               return operationsModule.compose( ops );
             }
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function makeCutOp( link ) {
+            var edgeId = ( link.source.port || link.dest.port ).edgeId;
+            var edge = model.edges[ edgeId ];
+
+            var cutLink = function() {
+               self.links.destroy( link );
+               [ link.source, link.dest ].forEach( function( ref ) {
+                  var port = ref.port;
+                  if( port && self.links.byPort( ref.nodeId, port ).length === 0 ) {
+                     port.edgeId = null;
+                  }
+               } );
+               var remaining = Object.keys( self.links.byEdge( edgeId ) );
+               if( remaining.length === 0 ) {
+                  delete model.edges[ edgeId ];
+                  cutLink.undo = operationsModule.compose( [
+                     function() { model.edges[ edgeId ] = edge; }, cutLink.undo
+                  ] );
+               }
+            };
+            cutLink.undo = function() {
+               [ link.source, link.dest ].forEach( function( ref ) {
+                  if( ref.port ) {
+                     ref.port.edgeId = edgeId;
+                  }
+               } );
+               self.links.create( link.source, link.dest );
+            };
+            return cutLink;
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function makeDisconnectOp( ref ) {
             Object.freeze( ref );
-
-            function disconnectOp() {
-               if( !ref.port.edgeId ) {
-                  disconnectOp.undo = operationsModule.noOp;
-                  return;
-               }
-               var edgeId = ref.port.edgeId;
-               var link = self.links.byPort( ref.nodeId, ref.port );
-               self.links.destroy( link );
-               delete ref.port.edgeId;
-
-               var removedEdge;
-               if( !Object.keys( self.links.byEdge( edgeId ) ).length ) {
-                  removedEdge = model.edges[ edgeId ];
-                  delete model.edges[ edgeId ];
-               }
-
-               disconnectOp.undo = function() {
-                  if( removedEdge ) {
-                     model.edges[ edgeId ] = removedEdge;
-                  }
-                  var edgeRef = { nodeId: edgeId };
-                  ref.port.edgeId = edgeId;
-                  self.links.create( ref, edgeRef );
-               };
+            var portLinks = self.links.byPort( ref.nodeId, ref.port );
+            if( portLinks.length === 0 ) {
+               return operationsModule.noOp;
             }
-
-            return disconnectOp;
+            return operationsModule.compose( portLinks.map( function( link ) {
+               return makeCutOp( link );
+            } ) );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function makeDeleteEdgeOp( edgeId ) {
-            var steps = [];
-            ng.forEach( model.vertices, function( vertex, vertexId ) {
-               vertex.ports.forEach( function( port ) {
-                  if( port.edgeId === edgeId ) {
-                     steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
-                  }
-               } );
-            } );
-            return operationsModule.compose( steps );
+            var links = self.links.byEdge( edgeId );
+            var linkIds = Object.keys( links );
+            return operationsModule.compose( linkIds.map( function( linkId ) {
+               return makeCutOp( links[ linkId ] );
+            } ) );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -368,6 +417,18 @@ define( [
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+         function centerCoords( vertexId ) {
+            var vertexLayout = layout.vertices[ vertexId ];
+            var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
+            return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+         }
+
+         function mean( v1, v2 ) {
+            return [ 0, 1 ].map( function ( i ) {
+               return Math.round( (v1[ i ] + v2[ i ]) / 2 );
+            } );
+         }
+
          function createEdge( fromRef, toRef ) {
             var type = fromRef.port.type;
             var prefix = type.toLocaleLowerCase() + ' ';
@@ -378,24 +439,22 @@ define( [
                label: id
             };
 
-            function centerCoords( vertexId ) {
-               var vertexLayout = layout.vertices[ vertexId ];
-               var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
-               return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+            fromRef.port.edgeId = id;
+            toRef.port.edgeId = id;
+
+            if( $scope.types[ type ].simple ) {
+               self.links.create( fromRef, toRef );
+            }
+            else {
+               var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
+               layout.edges[ id ] = {
+                  left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
+                  top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset
+               };
+               self.links.create( fromRef, edgeRef );
+               self.links.create( edgeRef, toRef );
             }
 
-            function mean( v1, v2 ) {
-               return [ 0, 1 ].map( function( i ) {
-                  return Math.round( (v1[ i ] + v2[ i ]) / 2 );
-               } );
-            }
-
-            var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
-            layout.edges[ id ] = { left: edgeCenter[ 0 ] - layoutSettings.edgeDragOffset,
-               top: edgeCenter[ 1 ] - layoutSettings.edgeDragOffset };
-
-            self.links.create( fromRef, edgeRef );
-            self.links.create( edgeRef, toRef );
             return id;
          }
 
@@ -454,17 +513,14 @@ define( [
 
                insert( fromRef, link.id, link );
                insert( toRef, link.id, link );
+               if( isSimple( link ) ) {
+                  var edgeId = fromRef.port.edgeId;
+                  insert( { nodeId: edgeId }, link.id, link );
+               }
                view.links[ link.id ] = link;
+               return link;
 
                //////////////////////////////////////////////////////////////////////////////////////////////////
-
-               function isInput( port ) {
-                  return port && port.direction === 'in';
-               }
-
-               function isOutput( port ) {
-                  return port && port.direction !== 'in';
-               }
 
                function insert( ref, linkId, link ) {
                   var map = ref.port ? linksByVertex : linksByEdge;
@@ -473,6 +529,7 @@ define( [
                   }
                   map[ ref.nodeId ][ linkId ] = link;
                }
+
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -533,19 +590,20 @@ define( [
                if( !linksByVertex[ vertexId ] ) {
                   linksByVertex[ vertexId ] = {};
                }
-               var links = linksByVertex[ vertexId ];
-               var keys = Object.keys( links );
-               for( var i = keys.length; i-- > 0; ) {
+               var candidates = linksByVertex[ vertexId ];
+               var links = [];
+               var keys = Object.keys( candidates );
+               for( var i = keys.length; i --> 0; ) {
                   var linkId = keys[ i ];
-                  var link = links[ linkId ];
-                  if( link.source.port && link.source.port.id === portId ) {
-                     return link;
+                  var link = candidates[ linkId ];
+                  if( link.source.nodeId === vertexId && link.source.port.id === portId ) {
+                     links.push( link );
                   }
-                  if( link.dest.port && link.dest.port.id === portId ) {
-                     return link;
+                  if( link.dest.nodeId === vertexId && link.dest.port.id === portId ) {
+                     links.push( link );
                   }
                }
-               return null;
+               return links;
             }
 
             return {
@@ -833,6 +891,8 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
             return {
                isEmpty: isEmpty,
                selectVertex: selectVertex,
@@ -847,11 +907,37 @@ define( [
 
          }
 
+
+         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function isInput( port ) {
+            return port && port.direction === 'in';
+         }
+
+         function isOutput( port ) {
+            return port && port.direction !== 'in';
+         }
+
+         function isSimple( typed ) {
+            return !!$scope.types[ typed.type ].simple;
+         }
+
+         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       }
 
    }
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+   /*
+   function fmtR( ref ) {
+      return '[' + ref.nodeId + ':' + ( ref.port || {id:'*'} ).id + ']';
+   }
+
+   function fmtL( link ) {
+      var edgeId = ( link.source.port || link.dest.port ).edgeId;
+      return link.id + ':' + fmtR( link.source ) + '--(' + edgeId +')-->' + fmtR( link.dest );
+   }
+   */
 
    return {
       define: function( module ) {

@@ -12,6 +12,7 @@
       <div class="selection" style="display: none;"></div>
 
       <div data-ng-repeat="(edgeId, edge) in model.edges"
+           data-ng-if="!types[ edge.type ].simple"
            data-nbe-edge="{{ edgeId }}"></div>
 
       <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">

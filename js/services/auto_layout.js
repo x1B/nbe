@@ -14,7 +14,8 @@ define( [
       function calculate( model, types, jqGraph ) {
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.edge', jqGraph[ 0 ] );
-         if( !jqVertices.length || !jqEdges.length ) {
+         if( !jqVertices.length ) {
+            console.log( 'empty input', jqEdges, jqVertices );
             return false;
          }
          var offset = { left: Infinity, top: Infinity };
@@ -55,9 +56,11 @@ define( [
       function createDagreGraph( jqVertices, jqEdges, model, types, offset ) {
          var dagreGraph = new dagre.Digraph();
 
+         var inputRefsByEdge = {};
          jqVertices.each( function( i, domVertex ) {
             var id = domVertex.dataset.nbeVertex;
-            if( model.vertices[ id ] ) {
+            var vertex = model.vertices[ id ];
+            if( vertex ) {
                var dagreNodeId = 'V:' + id;
                var jqVertex = $( domVertex );
                var dagreNode = { width: jqVertex.width(), height: jqVertex.height() };
@@ -65,6 +68,13 @@ define( [
                offset.left = Math.min( parseInt( pos.left ), offset.left );
                offset.top = Math.min( parseInt( pos.top ), offset.top );
                dagreGraph.addNode( dagreNodeId, dagreNode );
+
+               vertex.ports.forEach( function( port ) {
+                  if( port.edgeId && port.direction !== 'in' ) {
+                     inputRefsByEdge[ port.edgeId ] = inputRefsByEdge[ port.edgeId ] || [];
+                     inputRefsByEdge[ port.edgeId ].push( { nodeId: id, port: port } );
+                  }
+               } );
             }
          } );
 
@@ -86,18 +96,30 @@ define( [
          Object.keys( vertices ).forEach( function( vertexId ) {
             var dagreVertexId = 'V:' + vertexId;
             vertices[ vertexId ].ports.forEach( function( port ) {
-               if( !port.edgeId || !model.edges[ port.edgeId ] ) {
+               var edgeId = port.edgeId;
+               if( !edgeId || !model.edges[ edgeId ] ) {
                   return;
                }
-               var dagreEdgeId = 'E:' + port.edgeId;
-               if( port.direction === 'in' ) {
-                  // ignore incoming edges of hidden type.
-                  if( !types[ port.type ].hidden ) {
-                     dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+
+               var typeDef = types[ port.type ];
+               if( typeDef.simple ) {
+                  if( !typeDef.hidden && port.direction === 'in' ) {
+                     ( inputRefsByEdge[ edgeId ] || [] ).forEach( function( ref ) {
+                        dagreGraph.addEdge( null, 'V:' + ref.nodeId, dagreVertexId );
+                     } );
                   }
                }
                else {
-                  dagreGraph.addEdge( null, dagreVertexId, dagreEdgeId );
+                  var dagreEdgeId = 'E:' + port.edgeId;
+                  if( port.direction === 'in' ) {
+                     // ignore incoming edges of hidden type.
+                     if( !typeDef.hidden ) {
+                        dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+                     }
+                  }
+                  else {
+                     dagreGraph.addEdge( null, dagreVertexId, dagreEdgeId );
+                  }
                }
             } );
          } );

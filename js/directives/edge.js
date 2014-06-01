@@ -47,7 +47,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handleEdgeDragStart() {
-               linksToRepaint = graphController.links.controllers( [], [$scope.edgeId] );
+               linksToRepaint = graphController.links.controllers( [], [ $scope.edgeId ] );
                if( $element.hasClass( 'selected' ) ) {
                   graphController.selection.setAnchor( $element[ 0 ] );
                }
