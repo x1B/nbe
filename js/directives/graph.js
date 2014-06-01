@@ -109,18 +109,18 @@ define( [
                   } );
                }
                vertex.ports.filter( connected ).forEach( function( port ) {
-                  var vertexRef = { nodeId: vId, port: port };
-                  if ( !self.links.byPort( vId, port ).length ) {
-                     if ( $scope.types[ port.type ].simple ) {
+                  var contextRef = { nodeId: vId, port: port };
+                  if( !self.links.byPort( vId, port ).length ) {
+                     if( $scope.types[ port.type ].simple ) {
                         var isInput = port.direction === 'in';
                         var table = isInput ? outputRefsByEdge : inputRefsByEdge;
                         ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
-                           self.links.create( isInput ? ref : vertexRef, isInput ? vertexRef : ref );
+                           self.links.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
                         } );
                      }
                      else {
                         var edgeRef = { nodeId: port.edgeId, port: null };
-                        self.links.create( vertexRef, edgeRef );
+                        self.links.create( contextRef, edgeRef );
                      }
                   }
                } );
@@ -265,12 +265,11 @@ define( [
                var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
                var edgeRef = { nodeId: toEdgeId };
 
-               function connectPortToEdgeOp() {
+               var connectPortToEdgeOp = function() {
                   vertexRef.port.edgeId = toEdgeId;
-                  self.links.create( vertexRef, edgeRef );
-               }
-
-               connectPortToEdgeOp.undo = makeDisconnectOp( vertexRef );
+                  var link = self.links.create( vertexRef, edgeRef );
+                  connectPortToEdgeOp.undo = makeCutOp( link );
+               };
 
                return operationsModule.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
             }
@@ -308,86 +307,95 @@ define( [
                   return operationsModule.noOp;
                }
 
+               var ops = [];
+               [ fromRef, toRef ].forEach( function( ref ) {
+                  var isDest = isInput( ref.port );
+                  var typeDef = $scope.types[ ref.port.type ];
+                  if( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
+                     ops.push( makeDisconnectOp( ref ) );
+                  }
+               } );
+
                function connectPortToPortOp() {
-                  var edgeId = createEdge( fromRef, toRef );
-                  fromRef.port.edgeId = edgeId;
-                  toRef.port.edgeId = edgeId;
+                  var edgeId = fromRef.port.edgeId || toRef.port.edgeId;
+                  if( !edgeId ) {
+                     // collection forms an edge (completely new or has disconnected previous edges)
+                     edgeId = createEdge( fromRef, toRef );
+                     console.log( 'undo: make delete' );
+                     connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
+                  }
+                  else {
+                     var link = self.links.create( fromRef, toRef );
+                     fromRef.port.edgeId = edgeId;
+                     toRef.port.edgeId = edgeId;
+                     console.log( 'undo: make cut' );
+                     connectPortToPortOp.undo = makeCutOp( link );
+                  }
+
                   $timeout( function() {
                      visual.pingAnimation( $( '[data-nbe-edge="' + edgeId + '"]' ) );
                   } );
-                  connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
                }
 
-               return operationsModule.compose( [
-                  makeDisconnectOp( fromRef ),
-                  makeDisconnectOp( toRef ),
-                  connectPortToPortOp
-               ] );
+               ops.push( connectPortToPortOp );
+               return operationsModule.compose( ops );
             }
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function makeCutOp( link ) {
+            var edgeId = ( link.source.port || link.dest.port ).edgeId;
+            var edge = model.edges[ edgeId ];
+
+            var cutLink = function() {
+               self.links.destroy( link );
+               [ link.source, link.dest ].forEach( function( ref ) {
+                  var port = ref.port;
+                  if( port && self.links.byPort( ref.nodeId, port ).length === 0 ) {
+                     port.edgeId = null;
+                  }
+               } );
+               var remaining = Object.keys( self.links.byEdge( edgeId ) );
+               if( remaining.length === 0 ) {
+                  delete model.edges[ edgeId ];
+                  cutLink.undo = operationsModule.compose( [
+                     function() { model.edges[ edgeId ] = edge; }, cutLink.undo
+                  ] );
+               }
+            };
+            cutLink.undo = function() {
+               [ link.source, link.dest ].forEach( function( ref ) {
+                  if( ref.port ) {
+                     ref.port.edgeId = edgeId;
+                  }
+               } );
+               self.links.create( link.source, link.dest );
+            };
+            return cutLink;
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function makeDisconnectOp( ref ) {
             Object.freeze( ref );
-
-            function disconnectOp() {
-               if( !ref.port.edgeId ) {
-                  disconnectOp.undo = operationsModule.noOp;
-                  return;
-               }
-
-               var edgeId = ref.port.edgeId;
-               var links = self.links.byPort( ref.nodeId, ref.port );
-               var counterparts = [];
-               links.forEach( function( link ) {
-                  self.links.destroy( link );
-                  if( isSimple( ref.port ) ) {
-                     counterparts.push( link.dest );
-                     delete link.dest.port.edgeId;
-                  }
-               } );
-               delete ref.port.edgeId;
-
-               var remainingLinks = Object.keys( self.links.byEdge( edgeId ) );
-               var removedEdge;
-               if( remainingLinks === 0 ) {
-                  removedEdge = model.edges[ edgeId ];
-                  delete model.edges[ edgeId ];
-               }
-
-               disconnectOp.undo = function() {
-                  if( removedEdge ) {
-                     model.edges[ edgeId ] = removedEdge;
-                  }
-                  ref.port.edgeId = edgeId;
-
-                  counterparts.forEach( function( counterpartRef ) {
-                     counterpartRef.edgeId = edgeId;
-                     self.links.create( ref, counterpartRef );
-                  } );
-                  if( !isSimple( ref.port ) ) {
-                     var edgeRef = { nodeId: edgeId };
-                     self.links.create( ref, edgeRef );
-                  }
-               };
+            var portLinks = self.links.byPort( ref.nodeId, ref.port );
+            if( portLinks.length === 0 ) {
+               return operationsModule.noOp;
             }
-
-            return disconnectOp;
+            return operationsModule.compose( portLinks.map( function( link ) {
+               return makeCutOp( link );
+            } ) );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function makeDeleteEdgeOp( edgeId ) {
-            var steps = [];
-            ng.forEach( model.vertices, function( vertex, vertexId ) {
-               vertex.ports.forEach( function( port ) {
-                  if( port.edgeId === edgeId ) {
-                     steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
-                  }
-               } );
-            } );
-            return operationsModule.compose( steps );
+            var links = self.links.byEdge( edgeId );
+            var linkIds = Object.keys( links );
+            return operationsModule.compose( linkIds.map( function( linkId ) {
+               return makeCutOp( links[ linkId ] );
+            } ) );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,6 +440,9 @@ define( [
                type: type,
                label: id
             };
+
+            fromRef.port.edgeId = id;
+            toRef.port.edgeId = id;
 
             if( $scope.types[ type ].simple ) {
                self.links.create( fromRef, toRef );
@@ -509,7 +520,7 @@ define( [
                   insert( { nodeId: edgeId }, link.id, link );
                }
                view.links[ link.id ] = link;
-
+               return link;
 
                //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -587,10 +598,10 @@ define( [
                for( var i = keys.length; i --> 0; ) {
                   var linkId = keys[ i ];
                   var link = candidates[ linkId ];
-                  if( link.source.port && link.source.port.id === portId ) {
+                  if( link.source.nodeId === vertexId && link.source.port.id === portId ) {
                      links.push( link );
                   }
-                  if( link.dest.port && link.dest.port.id === portId ) {
+                  if( link.dest.nodeId === vertexId && link.dest.port.id === portId ) {
                      links.push( link );
                   }
                }
@@ -919,6 +930,16 @@ define( [
 
    }
 
+   /*
+   function fmtR( ref ) {
+      return '[' + ref.nodeId + ':' + ( ref.port || {id:'*'} ).id + ']';
+   }
+
+   function fmtL( link ) {
+      var edgeId = ( link.source.port || link.dest.port ).edgeId;
+      return link.id + ':' + fmtR( link.source ) + '--(' + edgeId +')-->' + fmtR( link.dest );
+   }
+   */
 
    return {
       define: function( module ) {
