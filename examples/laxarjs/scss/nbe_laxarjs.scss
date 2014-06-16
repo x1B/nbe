@@ -6,7 +6,8 @@
 @include edgeType( 'laxar-app', 'CONTAINER', $typeColor4 );
 
 
-@include graphSizes( 'size-100', 1.0 );
-@include graphSizes( 'size-75', 0.75 );
-@include graphSizes( 'size-50', 0.50 );
-@include graphSizes( 'size-25', 0.25 );
+@include graphSizes( 'zoom-100', 1.0 );
+@include graphSizes( 'zoom-75', 0.75 );
+@include graphSizes( 'zoom-50', 0.50 );
+@include graphSizes( 'zoom-25', 0.25 );
+@include graphSizes( 'zoom-10', 0.10 );

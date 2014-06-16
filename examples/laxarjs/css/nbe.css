@@ -195,26 +195,22 @@ body {
 .graph .GHOST {
   position: absolute;
 }
-/* line 206, ../../../scss/_nbe.scss */
-.graph .links .link {
+/* line 205, ../../../scss/_nbe.scss */
+.graph .link {
   position: absolute;
   fill: transparent;
 }
 /* line 210, ../../../scss/_nbe.scss */
-.graph .links .link {
-  stroke-width: 2;
-}
-/* line 215, ../../../scss/_nbe.scss */
 .graph .tools {
   position: absolute;
   top: 4px;
   left: 4px;
 }
-/* line 220, ../../../scss/_nbe.scss */
+/* line 215, ../../../scss/_nbe.scss */
 .graph .tools button {
   opacity: 0.5;
 }
-/* line 222, ../../../scss/_nbe.scss */
+/* line 217, ../../../scss/_nbe.scss */
 .graph .tools button:hover {
   opacity: 1;
 }

@@ -18,7 +18,7 @@ define( [
 
    function createPortDirective( nbeLayoutSettings ) {
 
-      var dragOffset = nbeLayoutSettings.portDragOffset;
+      var dragOffset = nbeLayoutSettings.portOffset;
 
       return {
          restrict: 'A',
@@ -109,13 +109,18 @@ define( [
 
             // noinspection JSUnusedLocalSymbols
             function handlePortDrag( _, ui ) {
+               var zoomFactor = scope.view.zoom.factor;
                var pos = ui.offset;
-               var toLeft = pos.left - graphOffset.left + dragOffset;
-               var toTop = pos.top - graphOffset.top + dragOffset;
-               jqLinkGhost.attr(
-                  'd',
-                  pathing.cubic( fromLeft, fromTop, toLeft, toTop, stubDirection, 0, fromBox, null, true )
-               );
+               var toLeft = pos.left - graphOffset.left + (dragOffset*zoomFactor);
+               var toTop = pos.top - graphOffset.top + (dragOffset*zoomFactor);
+               jqLinkGhost.attr( 'd',
+                  pathing.cubic(
+                     [fromLeft, fromTop],
+                     [toLeft, toTop],
+                     [stubDirection, 0],
+                     zoomFactor,
+                     [fromBox, null],
+                     false ) );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

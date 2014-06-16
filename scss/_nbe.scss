@@ -202,14 +202,9 @@ body {
       position: absolute;
    }
 
-   .links {
-      .link {
-         position: absolute;
-         fill: transparent;
-      }
-      .link {
-         stroke-width: 2;
-      }
+   .link {
+      position: absolute;
+      fill: transparent;
    }
 
    .tools {

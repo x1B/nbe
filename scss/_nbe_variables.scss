@@ -55,7 +55,8 @@ $fontSizePort: 11px!default;
 
 
 @mixin graphSizes( $sizeName, $f ) {
-   .graph.#{$sizeName} {
+   .graph.#{$sizeName},
+   .graph .node.#{$sizeName} {
       font-size: round( $fontSizeLabel * $f );
       border-radius: round( $graphBorderRadius * $f );
 
@@ -68,6 +69,7 @@ $fontSizePort: 11px!default;
          width: $portAnchorSize * $f;
          height: $portAnchorSize * $f;
          border-radius: 6px*$f;
+         border-width: round(1px*$f);
          margin: (3px * $f) (5px * $f) (-3px * $f) (5px * $f);
       }
 
@@ -82,6 +84,10 @@ $fontSizePort: 11px!default;
          height: $edgeNodeSize * $f;
          border-radius: $edgeNodeSize * $f;
          box-shadow: 4px*$f 4px*$f 4px*$f $gray0;
+      }
+
+      .link {
+         stroke-width: min(2, max(1.5, 2*$f));
       }
    }
 }

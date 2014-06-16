@@ -75,9 +75,10 @@ define( [
             function handleVertexDragStop( event, ui ) {
                $scope.$apply( function() {
                   linksToRepaint = [];
+                  var zoomFactor = $scope.view.zoom.factor;
                   var layout = $scope.layout.vertices[ id ];
-                  layout.left = ui.position.left;
-                  layout.top = ui.position.top;
+                  layout.left = ui.position.left / zoomFactor;
+                  layout.top = ui.position.top / zoomFactor;
                } );
                if( jqVertex.hasClass( 'selected' ) ) {
                   graphController.selection.clearAnchor();
