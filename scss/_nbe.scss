@@ -110,7 +110,7 @@ body {
       border: solid $nodeBorderColor 1.5px;
 
       &.vertex {
-         box-shadow: 4px 4px 6px $nodeShadowColor;
+         box-shadow: 4px 4px 6px $shadowColor;
 
          border-radius: $vertexBorderRadius;
          background: -moz-linear-gradient(left top, $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
@@ -183,13 +183,8 @@ body {
          label {
             display: block;
             position: relative;
-            width: 100px;
-            left: -50px + $edgeNodeSize/2;
             text-align: center;
-            text-shadow: 4px 4px 4px $gray0;
-            top: $edgeNodeSize + 2px;
             font-family: $fontFamilyLabel;
-            font-size: $fontSizeLabel;
          }
       }
 

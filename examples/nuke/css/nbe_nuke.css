@@ -1,16 +1,13 @@
 /**
  * Use this to declare user-defined edge types.
  */
-/* line 88, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .port.WIRE > i {
   background: #c3669c;
 }
-/* line 93, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .node.edge.WIRE {
   background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
-/* line 99, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .node.edge.WIRE.ping {
   animation-name: edge-ping-nuke-app-WIRE;
   animation-duration: 0.3s;
@@ -19,80 +16,64 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .link.WIRE {
   stroke: #c3669c;
 }
-/* line 111, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .link.WIRE.selected {
   stroke: #e0afcb;
 }
-/* line 119, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.highlight-WIRE .port:not(.WIRE) > i,
 .graph.nuke-app.highlight-WIRE .node.edge:not(.WIRE) {
   background: #646464;
 }
-/* line 122, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.highlight-WIRE .link:not(.WIRE) {
   stroke: #646464;
 }
-/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-WIRE .link.WIRE {
   display: none;
 }
-/* line 132, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-WIRE .port.WIRE {
   display: none;
 }
-/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-WIRE .edge.WIRE {
   display: none;
 }
 
 @keyframes edge-ping-nuke-app-WIRE {
-  /* line 69, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-nuke-app-WIRE {
-  /* line 75, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-/* line 88, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .port.CHANNEL > i {
   background: #f5c680;
 }
-/* line 93, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .node.edge.CHANNEL {
   background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
   background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
-/* line 99, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .node.edge.CHANNEL.ping {
   animation-name: edge-ping-nuke-app-CHANNEL;
   animation-duration: 0.3s;
@@ -101,71 +82,57 @@
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
 }
-/* line 109, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .link.CHANNEL {
   stroke: #f5c680;
 }
-/* line 111, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app .link.CHANNEL.selected {
   stroke: #fcf0df;
 }
-/* line 119, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.highlight-CHANNEL .port:not(.CHANNEL) > i,
 .graph.nuke-app.highlight-CHANNEL .node.edge:not(.CHANNEL) {
   background: #646464;
 }
-/* line 122, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.highlight-CHANNEL .link:not(.CHANNEL) {
   stroke: #646464;
 }
-/* line 129, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-CHANNEL .link.CHANNEL {
   display: none;
 }
-/* line 132, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-CHANNEL .port.CHANNEL {
   display: none;
 }
-/* line 135, ../../../scss/_nbe_variables.scss */
 .graph.nuke-app.hide-CHANNEL .edge.CHANNEL {
   display: none;
 }
 
 @keyframes edge-ping-nuke-app-CHANNEL {
-  /* line 69, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 70, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
-  /* line 71, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes edge-ping-nuke-app-CHANNEL {
-  /* line 75, ../../../scss/_nbe_variables.scss */
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
 
-  /* line 76, ../../../scss/_nbe_variables.scss */
   20% {
     box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
-  /* line 77, ../../../scss/_nbe_variables.scss */
   to {
     box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-/* line 7, ../scss/nbe_ffmpeg.scss */
 .nuke-app .log {
   position: absolute;
   top: 0;
@@ -176,18 +143,200 @@
   border-bottom-left-radius: 8px;
   background: rgba(0, 0, 0, 0.25);
 }
-/* line 17, ../scss/nbe_ffmpeg.scss */
 .nuke-app .log h4 {
   margin: 8px;
 }
-/* line 20, ../scss/nbe_ffmpeg.scss */
 .nuke-app .log ul {
   margin: 0;
   font-size: 11px;
 }
 
-/* line 31, ../scss/nbe_ffmpeg.scss */
 h2 {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   color: #c8c8c8;
+}
+
+.graph.zoom-100 {
+  font-size: 12px;
+  border-radius: 10px;
+}
+.graph.zoom-100 .port {
+  line-height: 16px;
+  font-size: 11px;
+}
+.graph.zoom-100 .port i {
+  width: 11px;
+  height: 11px;
+  border-radius: 6px;
+  border-width: 1px;
+  margin: 3px 5px -3px 5px;
+}
+.graph.zoom-100 header {
+  height: 18px;
+  padding: 2px 5px 1px 5px;
+  font-size: 12px;
+}
+.graph.zoom-100 .edge {
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  box-shadow: 4px 4px 4px #202020;
+}
+.graph.zoom-100 .edge label {
+  width: 100px;
+  left: -40px;
+  text-shadow: 4px 4px 4px #202020;
+  top: 22px;
+  font-size: 12px;
+}
+.graph.zoom-100 .link {
+  stroke-width: 2;
+}
+
+.graph.zoom-75 {
+  font-size: 9px;
+  border-radius: 8px;
+}
+.graph.zoom-75 .port {
+  line-height: 12px;
+  font-size: 8px;
+}
+.graph.zoom-75 .port i {
+  width: 8.25px;
+  height: 8.25px;
+  border-radius: 4.5px;
+  border-width: 1px;
+  margin: 2.25px 3.75px -2.25px 3.75px;
+}
+.graph.zoom-75 header {
+  height: 13.5px;
+  padding: 1.5px 3.75px 0.75px 3.75px;
+  font-size: 9px;
+}
+.graph.zoom-75 .edge {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  box-shadow: 3px 3px 3px #202020;
+}
+.graph.zoom-75 .edge label {
+  width: 75px;
+  left: -30px;
+  text-shadow: 3px 3px 3px #202020;
+  top: 16.5px;
+  font-size: 9px;
+}
+.graph.zoom-75 .link {
+  stroke-width: 1.5;
+}
+
+.graph.zoom-50 {
+  font-size: 6px;
+  border-radius: 5px;
+}
+.graph.zoom-50 .port {
+  line-height: 8px;
+  font-size: 6px;
+}
+.graph.zoom-50 .port i {
+  width: 5.5px;
+  height: 5.5px;
+  border-radius: 3px;
+  border-width: 1px;
+  margin: 1.5px 2.5px -1.5px 2.5px;
+}
+.graph.zoom-50 header {
+  height: 9px;
+  padding: 1px 2.5px 0.5px 2.5px;
+  font-size: 6px;
+}
+.graph.zoom-50 .edge {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px #202020;
+}
+.graph.zoom-50 .edge label {
+  width: 50px;
+  left: -20px;
+  text-shadow: 2px 2px 2px #202020;
+  top: 11px;
+  font-size: 6px;
+}
+.graph.zoom-50 .link {
+  stroke-width: 1.5;
+}
+
+.graph.zoom-25 {
+  font-size: 3px;
+  border-radius: 3px;
+}
+.graph.zoom-25 .port {
+  line-height: 4px;
+  font-size: 3px;
+}
+.graph.zoom-25 .port i {
+  width: 2.75px;
+  height: 2.75px;
+  border-radius: 1.5px;
+  border-width: 0px;
+  margin: 0.75px 1.25px -0.75px 1.25px;
+}
+.graph.zoom-25 header {
+  height: 4.5px;
+  padding: 0.5px 1.25px 0.25px 1.25px;
+  font-size: 3px;
+}
+.graph.zoom-25 .edge {
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #202020;
+}
+.graph.zoom-25 .edge label {
+  width: 25px;
+  left: -10px;
+  text-shadow: 1px 1px 1px #202020;
+  top: 5.5px;
+  font-size: 3px;
+}
+.graph.zoom-25 .link {
+  stroke-width: 1.5;
+}
+
+.graph.zoom-10 {
+  font-size: 1px;
+  border-radius: 1px;
+}
+.graph.zoom-10 .port {
+  line-height: 1.6px;
+  font-size: 1px;
+}
+.graph.zoom-10 .port i {
+  width: 1.1px;
+  height: 1.1px;
+  border-radius: 0.6px;
+  border-width: 0px;
+  margin: 0.3px 0.5px -0.3px 0.5px;
+}
+.graph.zoom-10 header {
+  height: 1.8px;
+  padding: 0.2px 0.5px 0.1px 0.5px;
+  font-size: 1px;
+}
+.graph.zoom-10 .edge {
+  width: 2px;
+  height: 2px;
+  border-radius: 2px;
+  box-shadow: 0.4px 0.4px 0.4px #202020;
+}
+.graph.zoom-10 .edge label {
+  width: 10px;
+  left: -4px;
+  text-shadow: 0.4px 0.4px 0.4px #202020;
+  top: 2.2px;
+  font-size: 1px;
+}
+.graph.zoom-10 .link {
+  stroke-width: 1.5;
 }

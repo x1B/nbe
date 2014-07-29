@@ -1,9 +1,9 @@
 @import '../../../scss/nbe_variables';
 
-@include edgeType( 'logic-app', 'WIRE', $typeColor1 );
-@include edgeType( 'logic-app', 'CHANNEL', $typeColor4 );
+@include edgeType( 'nuke-app', 'WIRE', $typeColor1 );
+@include edgeType( 'nuke-app', 'CHANNEL', $typeColor4 );
 
-.logic-app {
+.nuke-app {
    .log {
       position: absolute;
       top: 0;
@@ -34,3 +34,8 @@ h2 {
 }
 
 
+@include graphSizes( 'zoom-100', 1.0 );
+@include graphSizes( 'zoom-75', 0.75 );
+@include graphSizes( 'zoom-50', 0.50 );
+@include graphSizes( 'zoom-25', 0.25 );
+@include graphSizes( 'zoom-10', 0.10 );

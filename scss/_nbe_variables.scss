@@ -31,10 +31,11 @@ $vertexBorderColor: $gray4!default;
 $unHighlightColor: $gray3!default;
 
 $nodeBorderColor: $gray5!default;
-$nodeShadowColor: $gray0!default;
+$shadowColor: $gray0!default;
 
 $textColor: $gray6!default;
 $portTextColor: $gray0!default;
+
 
 
 // Sizes:
@@ -55,8 +56,7 @@ $fontSizePort: 11px!default;
 
 
 @mixin graphSizes( $sizeName, $f ) {
-   .graph.#{$sizeName},
-   .graph .node.#{$sizeName} {
+   .graph.#{$sizeName} {
       font-size: round( $fontSizeLabel * $f );
       border-radius: round( $graphBorderRadius * $f );
 
@@ -83,7 +83,15 @@ $fontSizePort: 11px!default;
          width: $edgeNodeSize * $f;
          height: $edgeNodeSize * $f;
          border-radius: $edgeNodeSize * $f;
-         box-shadow: 4px*$f 4px*$f 4px*$f $gray0;
+         box-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+
+         label {
+            width: 100px*$f;
+            left: (-50px + $edgeNodeSize/2)*$f;
+            text-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+            top: ($edgeNodeSize + 2px)*$f;
+            font-size: round( $fontSizeLabel * $f );
+         }
       }
 
       .link {

@@ -2,12 +2,13 @@
      data-ng-controller="NukeDemoController"
      data-ng-cloak
      class="graph-container nuke-app">
-
+    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+    <button data-ng-click="nbeController.zoom.zoomOut()">-</button
+    ><button data-ng-click="nbeController.zoom.zoomIn()">+</button>
    <div class="nuke-app"
         data-nbe-graph="model"
         data-nbe-graph-types="{ WIRE: { maxSources: 1, simple: true } }"
         data-nbe-graph-layout="layout"
         data-nbe-graph-controller="nbeController">
-      <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
    </div>
 </div>
