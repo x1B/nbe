@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+- [#37](https://github.com/x1B/nbe/issues/37): Implemented configurable zoom levels based on SCSS mixins.
 - [#36](https://github.com/x1B/nbe/issues/36): Added 'simple' edge types for 1:n and n:1 relations.
 - [#33](https://github.com/x1B/nbe/issues/33): Added informations to install app
 - [#17](https://github.com/x1B/nbe/issues/17): Added several (incomplete) examples. Updated changelog.
