@@ -58,11 +58,13 @@ define( [
                var to = [ 0, 0 ];
                var toBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
-               var portOffset = nbeLayoutSettings.portDragOffset,
-                  edgeOffset = nbeLayoutSettings.edgeDragOffset,
-                  boundingBox = layoutModule.boundingBox;
+               var boundingBox = layoutModule.boundingBox;
+               var round = Math.round;
 
-               function calculateLinkEnd( jqNode, jqHandle, coords ) {
+               function calculateLinkEnd( jqNode, jqHandle, coords, zoomFactor ) {
+                  var portOffset = round( nbeLayoutSettings.portOffset * zoomFactor ),
+                      edgeOffset = round( nbeLayoutSettings.edgeOffset * zoomFactor );
+
                   var graphOffset = jqGraph.offset();
                   if( jqHandle ) {
                      var portPos = jqHandle.offset();
@@ -77,11 +79,12 @@ define( [
                }
 
                function update() {
-                  calculateLinkEnd( jqSourceNode, jqSourceHandle, from );
-                  calculateLinkEnd( jqDestNode, jqDestHandle, to );
+                  var zoomFactor = $scope.view.zoom.factor;
+                  calculateLinkEnd( jqSourceNode, jqSourceHandle, from, zoomFactor );
+                  calculateLinkEnd( jqDestNode, jqDestHandle, to, zoomFactor );
                   boundingBox( jqSourceNode, jqGraph, fromBox );
                   boundingBox( jqDestNode, jqGraph, toBox );
-                  var path = svgLinkPath.cubic( from[ 0 ], from[ 1 ], to[ 0 ], to[ 1 ], 1, -1, fromBox, toBox, false );
+                  var path = svgLinkPath.cubic( from, to, null, zoomFactor, [fromBox, toBox], true );
                   $element.attr( 'd', path );
                }
 

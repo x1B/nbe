@@ -18,7 +18,7 @@ define( [], function() {
       }
 
       compositionOp.undo = function() {
-         for( var i = n; i-- > 0; ) {
+         for( var i = n; i--> 0; ) {
             args[ i ].undo();
          }
       };

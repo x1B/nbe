@@ -72,9 +72,10 @@ define( [
                if( $( ui.helper ).hasClass( 'edge' ) ) {
                   // stopped dragging this edge
                   $scope.$apply( function() {
+                     var zoomFactor = $scope.view.zoom.factor;
                      var edgeLayout = $scope.layout.edges[ $scope.edgeId ];
-                     edgeLayout.left = ui.position.left;
-                     edgeLayout.top = ui.position.top;
+                     edgeLayout.left = ui.position.left / zoomFactor;
+                     edgeLayout.top = ui.position.top / zoomFactor;
                      linksToRepaint = [];
                   } );
                   if( $element.hasClass( 'selected' ) ) {
