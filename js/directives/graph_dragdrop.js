@@ -4,7 +4,7 @@ define( [], function() {
    /**
     * Manages drag/drop of ports to create links or even new edges.
     */
-   return function dragDropController( jqGraph, ops ) {
+   return function( jqGraph, ops ) {
 
       /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
       var dropRef;

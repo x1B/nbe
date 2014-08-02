@@ -1,10 +1,27 @@
 define( [
    'jquery',
-   'underscore',
    'angular',
    '../utilities/operations',
+   './graph_layout',
+   './graph_links',
+   './graph_updates',
+   './graph_operations',
+   './graph_dragdrop',
+   './graph_selection',
+   './graph_keys',
    'text!./graph.html'
-], function( $, _, ng, operationsModule, graphHtml ) {
+], function(
+   $,
+   ng,
+   operationsModule,
+   createLayoutController,
+   createLinksController,
+   createUpdatesController,
+   createOperationsController,
+   createDragDropController,
+   createSelectionController,
+   createKeysController,
+   graphHtml ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,132 +36,140 @@ define( [
     * Links are visible connections that represent multi-edge membership.
     * Each link has one end at a vertex node's port (input or output) and one end at an edge node.
     */
-   function createGraphDirective( $timeout, $document, layoutSettings, async, autoLayout, idGenerator ) {
+   var createGraphDirective = [
+      '$timeout', '$document', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator',
+      function( $timeout, $document, layoutSettings, async, autoLayout, idGenerator ) {
 
-      return {
-         template: graphHtml,
-         replace: true,
-         restrict: 'A',
-         scope: {
-            nbeController: '=nbeGraphController',
-            model: '=nbeGraph',
-            layout: '=nbeGraphLayout',
-            types: '=nbeGraphTypes'
-         },
-         transclude: true,
-         controller: [ '$scope', '$element', GraphController ]
-      };
+         return {
+            template: graphHtml,
+            replace: true,
+            restrict: 'A',
+            scope: {
+               nbeController: '=nbeGraphController',
+               model: '=nbeGraph',
+               layout: '=nbeGraphLayout',
+               types: '=nbeGraphTypes'
+            },
+            transclude: true,
+            controller: [ '$scope', '$element', GraphController ]
+         };
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function GraphController( $scope, $element ) {
+         function GraphController( $scope, $element ) {
 
-         /** Shorthands to $scope.* */
+            /** Shorthands to $scope.* */
 
-         /** @type {{ edges: {}, vertices: {}<String, {ports: []}> }} */
-         var model;
-         var layout;
-         var types;
-         var view;
+            /** @type {{ edges: {}, vertices: {}<String, {ports: []}> }} */
+            var model;
+            var layout;
+            var types;
+            var view;
 
-         /** Transient members, re-initialized when the model is replaced. */
-         var generateLinkId;
-         var generateEdgeId;
+            var ops = this.operations = operationsModule.create( $scope );
 
-         var self = $scope.nbeController = this;
-         self.dragDrop = dragDropController();
-         self.selection = selectionController();
-         self.links = linksController();
-         self.zoom = zoomController();
-
-
-         /** Provide access to the jQuery handle to the graph canvas element */
-         var jqGraph = this.jqGraph = $( $element[ 0 ] );
-
-         // Controller API:
-         self.makeConnectOp = makeConnectOp;
-         self.makeDisconnectOp = makeDisconnectOp;
-
-         // Manage layout and rendering:
-         self.calculateLayout = calculateLayout;
-         self.adjustCanvasSize = adjustCanvasSize;
+            /** Transient members, re-initialized when the model is replaced. */
+            var self = $scope.nbeController = this;
+            self.layout = createLayoutController();
+            self.links = createLinksController();
+            self.updates = createUpdatesController();
+            self.dragDrop = createDragDropController();
+            self.selection = createSelectionController();
+            self.keys = createKeysController();
+            self.zoom = self.layout.zoom;
 
 
-         var ops = this.operations = operationsModule.create( $scope );
+            /** Provide access to the jQuery handle to the graph canvas element */
+            var jqGraph = this.jqGraph = $( $element[ 0 ] );
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            // External controller API for application controllers:
+            self.makeConnectOp = makeConnectOp;
+            self.makeDisconnectOp = makeDisconnectOp;
 
-         $scope.$watch( 'types', updateTypes, true );
-         $scope.$watch( 'model.vertices', updateVertices, true );
-         $scope.$watch( 'model.edges', updateEdges, true );
+            // Internal controller API for nbe-directives:
+            self.calculateLayout = calculateLayout;
+            self.adjustCanvasSize = adjustCanvasSize;
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         initGraph( $scope );
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
+            $scope.$watch( 'types', updateTypes, true );
+            $scope.$watch( 'model.vertices', updateVertices, true );
+            $scope.$watch( 'model.edges', updateEdges, true );
 
-         function initGraph( $scope ) {
-            model = $scope.model;
-            types = $scope.types || {};
-            layout = $scope.layout;
-            if( !layout ) {
-               self.calculateLayout();
-            }
-            view = $scope.view = {
-               selection: {
-                  vertices: {},
-                  edges: {},
-                  links: {}
-               },
-               links: {},
-               zoom: {
-                  factor: 1,
-                  percent: 100,
-                  levels: [ 10, 25, 50, 75, 100 ],
-                  level: 3
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            initialize( $scope );
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function initialize( $scope ) {
+               model = $scope.model;
+               types = $scope.types || {};
+               layout = $scope.layout;
+               if( !layout ) {
+                  self.calculateLayout();
                }
-            };
+               view = $scope.view = {
+                  selection: {
+                     vertices: {},
+                     edges: {},
+                     links: {}
+                  },
+                  links: {},
+                  zoom: {
+                     factor: 1,
+                     percent: 100,
+                     levels: [ 10, 25, 50, 75, 100 ],
+                     level: 3
+                  }
+               };
 
-            generateEdgeId = idGenerator.create(
-               Object.keys( types ).map( function( _ ) {
-                  return _.toLocaleLowerCase() + ' ';
-               } ),
-               model.edges
-            );
-            generateLinkId = idGenerator.create( [ 'lnk' ], {} );
+               generateEdgeId = idGenerator.create(
+                  Object.keys( types ).map( function( _ ) {
+                     return _.toLocaleLowerCase() + ' ';
+                  } ),
+                  model.edges
+               );
 
-            jqGraph[ 0 ].addEventListener( 'mousedown', self.selection.start );
-            $document.on( 'keydown', handleKeys );
-            repaint();
-            $scope.$watch( 'layout', async.ensure( adjustCanvasSize, 50 ), true );
+               self.layout.repaint();
+               $scope.$watch( 'layout', async.ensure( adjustCanvasSize, 50 ), true );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function calculateLayout() {
+               async.runEventually( function () {
+                  var input = $scope.model;
+                  if ( !self.selection.isEmpty() ) {
+                     var sel = $scope.view.selection;
+                     input = { edges: {}, vertices: {} };
+                     Object.keys( sel.edges ).forEach( function ( edgeId ) {
+                        input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
+                     } );
+                     Object.keys( sel.vertices ).forEach( function ( vertexId ) {
+                        input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
+                     } );
+                  }
+
+                  var result = autoLayout.calculate( input, $scope.types, jqGraph, $scope.view.zoom.factor );
+                  if ( result ) {
+                     Object.keys( result.edges ).forEach( function ( edgeId ) {
+                        layout.edges[ edgeId ] = result.edges[ edgeId ];
+                     } );
+                     Object.keys( result.vertices ).forEach( function ( vertexId ) {
+                        layout.vertices[ vertexId ] = result.vertices[ vertexId ];
+                     } );
+                     $timeout( self.layout.repaint );
+                  }
+                  return !!result;
+               }, $scope, 1500 );
+            }
+
          }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function isInput( port ) {
-            return port && port.direction === 'in';
-         }
-
-         function isOutput( port ) {
-            return port && port.direction !== 'in';
-         }
-
-         function isSimple( typed ) {
-            return !!$scope.types[ typed.type ].simple;
-         }
-
-         function connected( port ) {
-            return !!port.edgeId;
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
       }
-
-   }
+   ];
 
    /*
    function fmtR( ref ) {
@@ -159,10 +184,7 @@ define( [
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, [
-            '$timeout', '$document', 'nbeLayoutSettings', 'nbeAsync', 'nbeAutoLayout', 'nbeIdGenerator',
-            createGraphDirective
-         ] );
+         module.directive( DIRECTIVE_NAME, createGraphDirective );
          module.filter( 'nbeInputPorts', function() {
             return function( ports ) {
                return ports.filter( function( _ ) {

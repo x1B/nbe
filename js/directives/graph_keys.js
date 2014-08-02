@@ -1,7 +1,14 @@
 define( [], function() {
    'use strict';
 
-   return function graphKeysController( selectionController, dragDropController, operations ) {
+   return function graphKeysController( $document, selectionController, dragDropController, operations ) {
+
+      $document.on( 'keydown', handleKeys );
+
+      return {
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function handleKeys( event ) {
          var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;

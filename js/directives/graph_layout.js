@@ -1,7 +1,37 @@
-define( [], function() {
+define( [ 'jquery' ], function( $ ) {
    'use strict';
 
-   return function graphLayoutController( jqGraph ) {
+   /**
+    * @param {object} layoutSettings
+    *    configuration for the graph layout
+    * @param {object} layout
+    *    a layout model with coordinates for vertices and edges
+    * @param {object} view
+    *    the graph view model where zoom state is kept
+    * @param {$} jqGraph
+    *    a jQuery handle to the graph DOM
+    * @param {Function} nextTick
+    *    a function to schedule an asynchronous operation.
+    * @param {object} async
+    *    more async helpers
+    */
+   return function( layoutSettings, layout, view, jqGraph, nextTick, async ) {
+
+      var repaintHandlers = [ adjustCanvasSize ];
+
+      return {
+         repaint: repaint,
+         addRepaintHandler: addRepaintHandler,
+         zoom: zoomController()
+      };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function addRepaintHandler( handler ) {
+         repaintHandlers.push( handler );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function centerCoords( vertexId ) {
          var vertexLayout = layout.vertices[ vertexId ];
@@ -18,36 +48,6 @@ define( [], function() {
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function calculateLayout() {
-         async.runEventually( function () {
-            var input = $scope.model;
-            if ( !self.selection.isEmpty() ) {
-               var sel = $scope.view.selection;
-               input = { edges: {}, vertices: {} };
-               Object.keys( sel.edges ).forEach( function ( edgeId ) {
-                  input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
-               } );
-               Object.keys( sel.vertices ).forEach( function ( vertexId ) {
-                  input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
-               } );
-            }
-
-            var result = autoLayout.calculate( input, $scope.types, jqGraph, $scope.view.zoom.factor );
-            if ( result ) {
-               Object.keys( result.edges ).forEach( function ( edgeId ) {
-                  layout.edges[ edgeId ] = result.edges[ edgeId ];
-               } );
-               Object.keys( result.vertices ).forEach( function ( vertexId ) {
-                  layout.vertices[ vertexId ] = result.vertices[ vertexId ];
-               } );
-               $timeout( repaint );
-               $timeout( adjustCanvasSize );
-            }
-            return !!result;
-         }, $scope, 1500 );
-      }
-
 
       /**
        * The graph drawing canvas must fill the available container.
@@ -76,12 +76,13 @@ define( [], function() {
          jqGraph.width( width ).height( height );
       }
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function repaint() {
-         self.links.repaint();
+         repaintHandlers.forEach( function( _ ) { _(); } );
       }
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function zoomController() {
 
@@ -89,10 +90,10 @@ define( [], function() {
             var z = view.zoom;
             z.percent = z.levels[ level ];
             z.factor = z.percent / 100;
-            $timeout( function () {
+            nextTick( function () {
                adjustCanvasSize();
-               self.links.repaint();
-            }, 0 );
+               repaint();
+            } );
          }
 
          return {

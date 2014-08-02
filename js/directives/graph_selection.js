@@ -10,7 +10,20 @@ define( [ 'angular' ], function( ng ) {
     */
    return function graphSelectionController( view, graphOperations ) {
 
+      jqGraph[ 0 ].addEventListener( 'mousedown', self.selection.start );
       var anchor;
+
+      return {
+         isEmpty: isEmpty,
+         selectVertex: selectVertex,
+         selectEdge: selectEdge,
+         setAnchor: setAnchor,
+         followAnchor: followAnchor,
+         clearAnchor: clearAnchor,
+         start: start,
+         handleDelete: handleDelete,
+         clear: clear
+      };
 
       function handleDelete() {
          var operations = [];
@@ -195,19 +208,6 @@ define( [ 'angular' ], function( ng ) {
       }
 
       //////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-      return {
-         isEmpty: isEmpty,
-         selectVertex: selectVertex,
-         selectEdge: selectEdge,
-         setAnchor: setAnchor,
-         followAnchor: followAnchor,
-         clearAnchor: clearAnchor,
-         start: start,
-         handleDelete: handleDelete,
-         clear: clear
-      };
 
    };
 
