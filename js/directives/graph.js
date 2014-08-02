@@ -156,21 +156,29 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          /**
+          * The graph drawing canvas must fill the available container.
+          * It also must accommodate all nodes in the graph model.
+          * Third, it needs to take into account the current zoom level when calculating the space needed
+          * by the graph model.
+          *
           * In each dimension, pick max( offset container size, content size ) and use it as the canvas size.
           */
          function adjustCanvasSize() {
             var offsetContainer = jqGraph.offsetParent();
             var graphOffset = jqGraph.offset();
+            var yScrollbarSpace = Math.max( 15, offsetContainer.height() - offsetContainer.get(0).clientHeight );
+            var xScrollbarSpace = Math.max( 15, offsetContainer.width() - offsetContainer.get(0).clientWidth );
+            var width = offsetContainer.width() - xScrollbarSpace;
+            var height = offsetContainer.height() - yScrollbarSpace;
+
             var padding = layoutSettings.graphPadding;
-            var scollbarSpace = 20;
-            var width = offsetContainer.width() - scollbarSpace;
-            var height = offsetContainer.height() - scollbarSpace;
             $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
                var jqVertex = $( domNode );
                var pos = jqVertex.offset();
                width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );
                height = Math.max( height, pos.top - graphOffset.top + jqVertex.height() + padding );
             } );
+
             jqGraph.width( width ).height( height );
          }
 
@@ -925,7 +933,10 @@ define( [
                var z = view.zoom;
                z.percent = z.levels[ level ];
                z.factor = z.percent/100;
-               $timeout( self.links.repaint, 0 );
+               $timeout( function() {
+                  adjustCanvasSize();
+                  self.links.repaint();
+               }, 0 );
             }
 
             return {
