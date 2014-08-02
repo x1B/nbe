@@ -27,7 +27,7 @@ define( [
          replace: true,
          template: vertexHtml,
          controller: [ '$scope', '$element', function VertexController( $scope, $element ) {
-            var graphController = $scope.nbeController;
+            var graphController = $scope.controller;
             var id = $scope[ ATTR_VERTEX_ID ];
 
             var jqVertex = $( $element[ 0 ] );

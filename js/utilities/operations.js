@@ -8,7 +8,7 @@ define( [], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function makeCompositionOp( args ) {
+   function compose( args ) {
       var n = args.length;
 
       function compositionOp() {
@@ -51,10 +51,10 @@ define( [], function() {
                      }
                   },
                   commit: function() {
-                     past.push( makeCompositionOp( tx ) );
+                     past.push( compose( tx ) );
                   },
                   rollBack: function() {
-                     $scope.$apply( makeCompositionOp( tx ).undo );
+                     $scope.$apply( compose( tx ).undo );
                   }
                };
             },
@@ -71,14 +71,11 @@ define( [], function() {
                   $scope.$apply( op );
                   past.push( op );
                }
-            }
+            },
+            noOp: noOp,
+            compose: compose
          };
-      },
-
-      noOp: noOp,
-
-      compose: makeCompositionOp
-
+      }
    };
 
 } );

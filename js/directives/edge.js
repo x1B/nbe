@@ -39,7 +39,7 @@ define( [
                drop: handleDrop
             } );
 
-            var graphController = $scope.nbeController;
+            var graphController = $scope.controller;
             var linksToRepaint = [];
             // Make sure that a drag/drop is not interpreted as a click (so that the selection survives it).
             var cancelClick = false;
@@ -84,7 +84,7 @@ define( [
                }
                else {
                   // dropped a port onto this edge
-                  $scope.nbeController.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
+                  $scope.controller.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
                   visual.pingAnimation( $element );
                }
             }
@@ -96,7 +96,7 @@ define( [
                   cancelClick = false;
                   return;
                }
-               $scope.nbeController.selection.selectEdge( $scope.edgeId, $event.shiftKey );
+               $scope.controller.selection.selectEdge( $scope.edgeId, $event.shiftKey );
             };
 
          } ]
