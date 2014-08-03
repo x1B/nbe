@@ -110,7 +110,6 @@ define( [
          function setupModel( $scope, self ) {
             $scope.types = $scope.types || {};
             if( !$scope.layout ) {
-               // :TODO: needed?
                $scope.layout = { edges: {}, vertices: {} };
                self.calculateLayout();
             }

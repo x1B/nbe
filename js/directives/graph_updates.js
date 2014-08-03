@@ -71,17 +71,9 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
          if( newEdges == null ) {
             return;
          }
-         // :TODO: vId -> edgeId ?
-         // :TODO: delete
-         /*
-         nextTick( function() {
-            var jqNew = $( '[data-nbe-edge="' + vId + '"]' );
-            visual.pingAnimation( jqNew );
-         } );
-         */
-         ng.forEach( newEdges, function( vertex, vId ) {
-            if( !previousEdges[ vId ] ) {
-               canvasController.pingEdge( vId );
+         Object.keys( newEdges ).forEach( function( edgeId ) {
+            if( !previousEdges[ edgeId ] ) {
+               canvasController.pingEdge( edgeId );
             }
          } );
       }
