@@ -1,6 +1,7 @@
 # Changelog
 
 ## Last Changes
+- [#39](https://github.com/x1B/nbe/issues/39): Fixed port dragging and double click.
 - [#38](https://github.com/x1B/nbe/issues/38): Refactored the graph directive controller.
 - [#37](https://github.com/x1B/nbe/issues/37): Implemented configurable zoom levels based on SCSS mixins.
 - [#36](https://github.com/x1B/nbe/issues/36): Added 'simple' edge types for 1:n and n:1 relations.
