@@ -11,7 +11,7 @@ define( [], function() {
     *    edge types available on the current graph
     * @param {object} ops
     *    the operations stack managing undo/redo for all operations performed on the current graph
-    * @param {object} layoutController
+    * @param {object} canvasController
     *    a controller for the edges' and vertices' view model
     * @param {object} linksController
     *    a controller for the links' view model
@@ -20,7 +20,7 @@ define( [], function() {
     * @param {Function} nextTick
     *    a helper to apply functions asynchronously
     */
-   return function( model, typesModel, ops, linksController, layoutController, idGenerator ) {
+   return function( model, typesModel, ops, canvasController, linksController, selectionController, idGenerator ) {
 
       var generateEdgeId = idGenerator.create(
          Object.keys( typesModel ).map( function( _ ) {
@@ -34,8 +34,22 @@ define( [], function() {
          disconnect: makeDisconnectOp,
          deleteVertex: makeDeleteVertexOp,
          deleteEdge: makeDeleteEdgeOp,
-         cut: makeCutOp
+         deleteSelected: deleteSelected
       };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function deleteSelected() {
+         var operations = [];
+         Object.keys( selectionController.edges() ).forEach( function( eId ) {
+            operations.push( makeDeleteEdgeOp( eId ) );
+         } );
+         Object.keys( selectionController.vertices() ).forEach( function( vId ) {
+            operations.push( makeDeleteVertexOp( vId ) );
+         } );
+         selectionController.clear();
+         return ops.compose( operations );
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +70,7 @@ define( [], function() {
             linksController.create( fromRef, toRef );
          }
          else {
-            layoutController.centerEdge( id, fromRef, toRef );
+            canvasController.centerEdge( id, fromRef, toRef );
             linksController.create( fromRef, edgeRef );
             linksController.create( edgeRef, toRef );
          }
@@ -155,8 +169,7 @@ define( [], function() {
                   toRef.port.edgeId = edgeId;
                   connectPortToPortOp.undo = makeCutOp( link );
                }
-
-               layoutController.pingEdge( edgeId );
+               canvasController.pingEdge( edgeId );
             }
 
             sequence.push( connectPortToPortOp );
@@ -194,7 +207,7 @@ define( [], function() {
                   ref.port.edgeId = edgeId;
                }
             } );
-            linksController.create( link.source, link.dest );
+            linksController.create( link.source, link.dest, link.id );
          };
          return cutLink;
       }

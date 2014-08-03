@@ -5,10 +5,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
    'use strict';
 
    /**
-    * @param {object} layout
-    *    a layout model with coordinates for vertices and edges
-    * @param {object} view
-    *    the graph view model where zoom state is kept
+    * @param {object} layoutModel
+    *    a layout model with coordinates for vertices and edges (read)
+    * @param {object} viewModel
+    *    the graph view model where zoom state is kept (read/write)
     * @param {object} layoutSettings
     *    configuration for the graph layout
     * @param {$} jqGraph

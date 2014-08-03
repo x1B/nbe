@@ -5,14 +5,14 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
    'use strict';
 
    /**
+    * @param {Object} model
+    *    the graph model (edges, vertices)
     * @param {Object} viewModel
-    *    the graph view model
-    * @param {Object} ops
-    *    the operations stack which coordinates undo/redo for all operations on the graph
-    * @param {Object} operationsController
-    *    the graph operations controller, to apply selection operations to the graph
+    *    the graph view model (zoom, selection)
+    * @param {Object} layoutModel
+    *    the graph layout model (positions of edges, vertices)
     */
-   return function( model, viewModel, layoutModel, ops, operationsController, linksController, jqGraph, $document ) {
+   return function( model, viewModel, layoutModel, linksController, jqGraph, $document, $scope ) {
 
       var selection = viewModel.selection;
       var anchor;
@@ -20,32 +20,21 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       jqGraph[ 0 ].addEventListener( 'mousedown', start );
 
       return {
-         // :TODO: move these two ops to canvasController? (they write to layoutModel)
          setAnchor: setAnchor,
          followAnchor: followAnchor,
-
          start: start,
          isEmpty: isEmpty,
          selectVertex: selectVertex,
          selectEdge: selectEdge,
          clearAnchor: clearAnchor,
-         handleDelete: handleDelete,
-         clear: clear
+         clear: clear,
+         edges: function() {
+            return selection.edges;
+         },
+         vertices: function() {
+            return selection.vertices;
+         }
       };
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      function handleDelete() {
-         var operations = [];
-         Object.keys( selection.edges ).forEach( function( eId ) {
-            operations.push( operationsController.deleteEdge( eId ) );
-         } );
-         Object.keys( selection.vertices ).forEach( function( vId ) {
-            operations.push( operationsController.deleteVertex( vId ) );
-         } );
-         clear();
-         ops.perform( ops.compose( operations ) );
-      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -78,6 +67,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          }
          var selected = selection.vertices[ vertexId ];
          selection.vertices[ vertexId ] = !selected;
+         console.log( vertexId, selection.vertices[ vertexId ] );
          updateLinks();
       }
 
@@ -111,7 +101,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
 
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
             [ 'vertex', 'edge' ].forEach( function( nodeType ) {
-               var selectionModel = selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
+               var selectionState = selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
                var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
                var tmpBox = {};
                $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
@@ -120,16 +110,17 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
                   var selected = doesIntersect( tmpBox, selectionBox );
                   var id = domNode.dataset[ identity ];
                   if( selected ) {
-                     selectionModel[ id ] = true;
+                     selectionState[ id ] = true;
                   }
                   else {
-                     delete selectionModel[ id ];
+                     delete selectionState[ id ];
                   }
-                  jqNode.toggleClass( 'selected', selected );
                } );
             } );
 
             updateLinks();
+            // :TODO: debounce
+            $scope.$apply();
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,8 +209,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          } );
          selection.links = linksState;
       }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    };
 

@@ -58,13 +58,13 @@ define( [ 'angular' ], function( ng ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function createLink( refA, refB ) {
+      function createLink( refA, refB, optionalId ) {
          var reverse = isInput( refA.port ) || isOutput( refB.port );
          var fromRef = reverse ? refB : refA;
          var toRef = reverse ? refA : refB;
 
          var link = {
-            id: generateLinkId(),
+            id: optionalId || generateLinkId(),
             type: ( fromRef.port || toRef.port ).type,
             source: fromRef,
             dest: toRef

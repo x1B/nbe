@@ -3,8 +3,13 @@ define( [], function() {
 
    /**
     * Manages drag/drop of ports to create links or even new edges.
+    *
+    * @param {object} ops
+    *    an operations stack that manages undoable transactions
+    * @param {$} jqGraph
+    *    a jQuery handle to the graph DOM
     */
-   return function( jqGraph, ops ) {
+   return function( ops, jqGraph ) {
 
       /** When port/link ghosts are dropped, the most recent drop target can be accessed here. */
       var dropRef;
@@ -23,7 +28,7 @@ define( [], function() {
          dropRef = dragRef = transaction = null;
       }
 
-      return Object.freeze( {
+      return {
          start: function( ref, cancel ) {
             onCancel = cancel;
             transaction = ops.startTransaction();
@@ -59,7 +64,7 @@ define( [], function() {
                onCancel();
             }
          }
-      } );
+      };
    };
 
 } );

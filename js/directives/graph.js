@@ -67,7 +67,42 @@ define( [
 
             setupControllers( $scope, self );
 
-            setupApi( self );
+            self.calculateLayout = calculateLayout;
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function calculateLayout() {
+               async.runEventually( function() {
+                  var input;
+                  if( self.selection.isEmpty() ) {
+                     input = $scope.model;
+                  }
+                  else {
+                     input = { edges: {}, vertices: {} };
+                     Object.keys( self.selection.edges() ).forEach( function( edgeId ) {
+                        input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
+                     } );
+                     Object.keys( self.selection.vertices() ).forEach( function( vertexId ) {
+                        input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
+                     } );
+                  }
+
+                  var result = autoLayout.calculate( input, $scope.types, self.jqGraph, $scope.view.zoom.factor );
+                  if( result ) {
+                     var layoutEdges = $scope.layout.edges;
+                     Object.keys( result.edges ).forEach( function( edgeId ) {
+                        layoutEdges[ edgeId ] = result.edges[ edgeId ];
+                     } );
+                     var layoutVertices = $scope.layout.vertices;
+                     Object.keys( result.vertices ).forEach( function( vertexId ) {
+                        layoutVertices[ vertexId ] = result.vertices[ vertexId ];
+                     } );
+                     $timeout( self.canvas.repaint );
+                  }
+                  return !!result;
+               }, $scope, 1500 );
+            }
+
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +112,7 @@ define( [
             if( !$scope.layout ) {
                // :TODO: needed?
                $scope.layout = { edges: {}, vertices: {} };
-               calculateLayout( $scope, self );
+               self.calculateLayout();
             }
             $scope.view = {
                selection: {
@@ -103,7 +138,7 @@ define( [
             var jqGraph = self.jqGraph;
 
 
-            var canvas =
+            var canvas = self.canvas =
                    createCanvasController( $scope.layout, $scope.view, layoutSettings, jqGraph, $timeout );
 
             var links = self.links =
@@ -115,14 +150,13 @@ define( [
             var dragDrop = self.dragDrop =
                    createDragDropController( jqGraph, ops );
 
-            var graphOps = self.operations =
-                   createGraphOperationsController( $scope.model, $scope.types, ops, links, canvas, idGenerator );
-
-            // TODO: too many dependencies: too tightly coupled
             var selection = self.selection =
-               createSelectionController( $scope.model, $scope.view, $scope.layout, ops, graphOps, links, jqGraph, $document );
+               createSelectionController( $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
 
-            createKeysController( $document, ops, selection, dragDrop );
+            var operations = self.operations =
+                   createGraphOperationsController( $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
+
+            createKeysController( $document, ops, operations, dragDrop );
 
             self.zoom = canvas.zoom;
 
@@ -131,51 +165,6 @@ define( [
             $scope.$watch( 'types', updates.updateTypes, true );
             $scope.$watch( 'model.vertices', updates.updateVertices, true );
             $scope.$watch( 'model.edges', updates.updateEdges, true );
-         }
-
-         //////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function setupApi() {
-            /*
-             self.makeConnectOp = makeConnectOp;
-             self.makeDisconnectOp = makeDisconnectOp;
-             self.calculateLayout = calculateLayout;
-             self.adjustCanvasSize = adjustCanvasSize;
-             */
-         }
-
-         //////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function calculateLayout( $scope, self ) {
-            async.runEventually( function() {
-               var input;
-               if( self.selection.isEmpty() ) {
-                  input = $scope.model;
-               }
-               else {
-                  input = { edges: {}, vertices: {} };
-                  Object.keys( self.selection.edges() ).forEach( function( edgeId ) {
-                     input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
-                  } );
-                  Object.keys( self.selection.vertices() ).forEach( function( vertexId ) {
-                     input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
-                  } );
-               }
-
-               var result = autoLayout.calculate( input, $scope.types, self.jqGraph, $scope.view.zoom.factor );
-               if( result ) {
-                  var layoutEdges = $scope.layout.edges;
-                  Object.keys( result.edges ).forEach( function( edgeId ) {
-                     layoutEdges[ edgeId ] = result.edges[ edgeId ];
-                  } );
-                  var layoutVertices = $scope.layout.vertices;
-                  Object.keys( result.vertices ).forEach( function( vertexId ) {
-                     layoutVertices[ vertexId ] = result.vertices[ vertexId ];
-                  } );
-                  $timeout( self.layout.repaint );
-               }
-               return !!result;
-            }, $scope, 1500 );
          }
 
       }

@@ -1,7 +1,7 @@
 define( [], function() {
    'use strict';
 
-   return function( $document, ops, selectionController, dragDropController ) {
+   return function( $document, ops, graphOperationsController, dragDropController ) {
 
       var KEY_CODE_DELETE = 46;
       var KEY_CODE_Y = 89;
@@ -16,7 +16,7 @@ define( [], function() {
 
       function handleKeys( event ) {
          if( event.keyCode === KEY_CODE_DELETE ) {
-            selectionController.handleDelete();
+            ops.perform( graphOperationsController.deleteSelected() );
          }
          else if( event.keyCode === KEY_CODE_ESCAPE ) {
             if( dragDropController.transaction() ) {
