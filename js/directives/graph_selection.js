@@ -67,7 +67,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          }
          var selected = selection.vertices[ vertexId ];
          selection.vertices[ vertexId ] = !selected;
-         console.log( vertexId, selection.vertices[ vertexId ] );
          updateLinks();
       }
 

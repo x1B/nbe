@@ -136,24 +136,23 @@ define( [
 
             var jqGraph = self.jqGraph;
 
+            var canvas = self.canvas = createCanvasController(
+               $scope.layout, $scope.view, layoutSettings, jqGraph, $timeout );
 
-            var canvas = self.canvas =
-                   createCanvasController( $scope.layout, $scope.view, layoutSettings, jqGraph, $timeout );
+            var links = self.links = createLinksController(
+               $scope.view, $scope.types, canvas, idGenerator );
 
-            var links = self.links =
-                   createLinksController( $scope.view, $scope.types, canvas, idGenerator );
+            var updates = createUpdatesController(
+               $scope.types, canvas, links, jqGraph, $timeout );
 
-            var updates =
-                   createUpdatesController( $scope.types, canvas, links, jqGraph, $timeout );
+            var dragDrop = self.dragDrop = createDragDropController(
+               ops, jqGraph );
 
-            var dragDrop = self.dragDrop =
-                   createDragDropController( jqGraph, ops );
+            var selection = self.selection = createSelectionController(
+               $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
 
-            var selection = self.selection =
-               createSelectionController( $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
-
-            var operations = self.operations =
-                   createGraphOperationsController( $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
+            var operations = self.operations = createGraphOperationsController(
+               $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
 
             createKeysController( $document, ops, operations, dragDrop );
 

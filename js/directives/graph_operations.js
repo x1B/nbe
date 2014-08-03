@@ -30,6 +30,7 @@ define( [], function() {
       );
 
       return {
+         perform: ops.perform,
          connect: makeConnectOp,
          disconnect: makeDisconnectOp,
          deleteVertex: makeDeleteVertexOp,
