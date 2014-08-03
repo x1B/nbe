@@ -91,7 +91,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
 
          var jqSelection = $( '.selection', jqGraph );
-         var selection = jqSelection[ 0 ];
+         var domSelection = jqSelection[ 0 ];
          var referenceX = event.pageX;
          var referenceY = event.pageY;
          var fromX = event.offsetX || event.layerX;
@@ -104,10 +104,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          function updateSelection( event ) {
             var dx = event.pageX - referenceX;
             var dy = event.pageY - referenceY;
-            selection.style.width = Math.abs( dx ) + 'px';
-            selection.style.height = Math.abs( dy ) + 'px';
-            selection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
-            selection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
+            domSelection.style.width = Math.abs( dx ) + 'px';
+            domSelection.style.height = Math.abs( dy ) + 'px';
+            domSelection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
+            domSelection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
 
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
             [ 'vertex', 'edge' ].forEach( function( nodeType ) {

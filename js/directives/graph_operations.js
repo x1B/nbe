@@ -1,10 +1,7 @@
 /**
  * Offers operations on the graph model, with undo/redo and model consistency.
  */
-define( [
-   '../utilities/operations',
-   '../utilities/visual'
-], function( operationsModule, visual ) {
+define( [], function() {
    'use strict';
 
    /**
@@ -100,7 +97,7 @@ define( [
                connectPortToEdgeOp.undo = makeCutOp( link );
             };
 
-            return operationsModule.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
+            return ops.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +122,7 @@ define( [
                   }
                }
             } );
-            return operationsModule.compose( disconnectOps );
+            return ops.compose( disconnectOps );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,15 +130,15 @@ define( [
          function makeConnectPortToPortOp( fromRef, toRef ) {
             if( fromRef.port.type !== toRef.port.type ||
                fromRef.port.direction === toRef.port.direction ) {
-               return operationsModule.noOp;
+               return ops.noOp;
             }
 
-            var ops = [];
+            var sequence = [];
             [ fromRef, toRef ].forEach( function( ref ) {
                var isDest = isInput( ref.port );
                var typeDef = typesModel[ ref.port.type ];
                if( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
-                  ops.push( makeDisconnectOp( ref ) );
+                  sequence.push( makeDisconnectOp( ref ) );
                }
             } );
 
@@ -162,8 +159,8 @@ define( [
                layoutController.pingEdge( edgeId );
             }
 
-            ops.push( connectPortToPortOp );
-            return operationsModule.compose( ops );
+            sequence.push( connectPortToPortOp );
+            return ops.compose( sequence );
          }
       }
 
@@ -184,7 +181,7 @@ define( [
             var remaining = Object.keys( linksController.byEdge( edgeId ) );
             if( remaining.length === 0 ) {
                delete model.edges[ edgeId ];
-               cutLink.undo = operationsModule.compose( [
+               cutLink.undo = ops.compose( [
                   function() {
                      model.edges[ edgeId ] = edge;
                   }, cutLink.undo
@@ -208,9 +205,9 @@ define( [
          Object.freeze( ref );
          var portLinks = linksController.byPort( ref.nodeId, ref.port );
          if( portLinks.length === 0 ) {
-            return operationsModule.noOp;
+            return ops.noOp;
          }
-         return operationsModule.compose( portLinks.map( function( link ) {
+         return ops.compose( portLinks.map( function( link ) {
             return makeCutOp( link );
          } ) );
       }
@@ -220,7 +217,7 @@ define( [
       function makeDeleteEdgeOp( edgeId ) {
          var links = linksController.byEdge( edgeId );
          var linkIds = Object.keys( links );
-         return operationsModule.compose( linkIds.map( function( linkId ) {
+         return ops.compose( linkIds.map( function( linkId ) {
             return makeCutOp( links[ linkId ] );
          } ) );
       }
@@ -241,7 +238,7 @@ define( [
          }
 
          steps.push( deleteVertexOp );
-         return operationsModule.compose( steps );
+         return ops.compose( steps );
       }
 
    };

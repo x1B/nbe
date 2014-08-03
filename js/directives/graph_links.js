@@ -12,13 +12,15 @@ define( [ 'angular' ], function( ng ) {
     * @param {object} idGenerator
     *    the idGenerator service used to generate link ids
     */
-   return function( viewModel, typesModel, idGenerator ) {
+   return function( viewModel, typesModel, canvasController, idGenerator ) {
 
       var linksByEdge = {};
       var linksByVertex = {};
       var linkControllers = {};
 
       var generateLinkId = idGenerator.create( [ 'lnk' ], {} );
+
+      canvasController.addRepaintHandler( repaint );
 
       return {
          create: createLink,
@@ -36,11 +38,7 @@ define( [ 'angular' ], function( ng ) {
             }
             return linksByEdge[ edgeId ];
          },
-         repaint: function() {
-            ng.forEach( linkControllers, function( controller ) {
-               controller.repaint();
-            } );
-         },
+         repaint: repaint,
          registerController: function( linkId, linkController ) {
             linkControllers[ linkId ] = linkController;
          },
@@ -49,6 +47,14 @@ define( [ 'angular' ], function( ng ) {
             return linkControllers;
          }
       };
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function repaint() {
+         ng.forEach( linkControllers, function( controller ) {
+            controller.repaint();
+         } );
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 

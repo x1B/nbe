@@ -1,7 +1,12 @@
 define( [], function() {
    'use strict';
 
-   return function( $document, selectionController, dragDropController, operations ) {
+   return function( $document, ops, selectionController, dragDropController ) {
+
+      var KEY_CODE_DELETE = 46;
+      var KEY_CODE_Y = 89;
+      var KEY_CODE_Z = 90;
+      var KEY_CODE_ESCAPE = 0x1B;
 
       $document.on( 'keydown', handleKeys );
 
@@ -10,8 +15,6 @@ define( [], function() {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function handleKeys( event ) {
-         var KEY_CODE_DELETE = 46, KEY_CODE_Y = 89, KEY_CODE_Z = 90, KEY_CODE_ESCAPE = 0x1B;
-
          if( event.keyCode === KEY_CODE_DELETE ) {
             selectionController.handleDelete();
          }
@@ -23,14 +26,14 @@ define( [], function() {
          else if( event.metaKey || event.ctrlKey ) {
             if( event.keyCode === KEY_CODE_Z ) {
                if( event.shiftKey ) {
-                  operations.redo();
+                  ops.redo();
                }
                else {
-                  operations.undo();
+                  ops.undo();
                }
             }
             else if( event.keyCode === KEY_CODE_Y ) {
-               operations.redo();
+               ops.redo();
             }
          }
       }

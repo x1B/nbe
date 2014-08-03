@@ -17,7 +17,7 @@ define( [
    createCanvasController,
    createLinksController,
    createUpdatesController,
-   createOperationsController,
+   createGraphOperationsController,
    createDragDropController,
    createSelectionController,
    createKeysController,
@@ -75,7 +75,8 @@ define( [
          function setupModel( $scope, self ) {
             $scope.types = $scope.types || {};
             if( !$scope.layout ) {
-               $scope.layout = {};
+               // :TODO: needed?
+               $scope.layout = { edges: {}, vertices: {} };
                calculateLayout( $scope, self );
             }
             $scope.view = {
@@ -101,27 +102,29 @@ define( [
 
             var jqGraph = self.jqGraph;
 
-            var layoutModel = $scope.layout;
-            var viewModel = $scope.view;
-            var typesModel = $scope.types;
 
-            var canvas = self.canvas =
-               createCanvasController( layoutModel, viewModel, layoutSettings, jqGraph, $timeout );
+            var canvas =
+                   createCanvasController( $scope.layout, $scope.view, layoutSettings, jqGraph, $timeout );
 
             var links = self.links =
-               createLinksController( viewModel, typesModel, idGenerator );
+                   createLinksController( $scope.view, $scope.types, canvas, idGenerator );
 
-            var updates = self.updates =
-               createUpdatesController( typesModel, canvas, links, jqGraph, $timeout );
+            var updates =
+                   createUpdatesController( $scope.types, canvas, links, jqGraph, $timeout );
 
-            var dragdrop = self.dragDrop =
-               createDragDropController( jqGraph, ops );
+            var dragDrop = self.dragDrop =
+                   createDragDropController( jqGraph, ops );
 
+            var graphOps = self.operations =
+                   createGraphOperationsController( $scope.model, $scope.types, ops, links, canvas, idGenerator );
+
+            // TODO: too many dependencies: too tightly coupled
             var selection = self.selection =
-               createSelectionController();
+               createSelectionController( $scope.model, $scope.view, $scope.layout, ops, graphOps, links, jqGraph, $document );
 
-            var keys = self.keys = createKeysController();
-            self.zoom = self.layout.zoom;
+            createKeysController( $document, ops, selection, dragDrop );
+
+            self.zoom = canvas.zoom;
 
             canvas.repaint();
             $scope.$watch( 'layout', async.ensure( canvas.repaint, 50 ), true );
