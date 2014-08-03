@@ -31,7 +31,8 @@ define( [
          restrict: 'A',
          controller: [ '$scope', '$element', function LinkController( $scope, $element ) {
 
-            $scope.nbeController.links.registerController( $scope.link.id, this );
+            $scope.controller.links.registerController( $scope.link.id, this );
+            var jqGraph = $scope.controller.jqGraph;
 
             // Cache information that frequently accessed when repainting (during drag/drop):
             var jqSourceNode, jqSourceHandle;
@@ -51,8 +52,6 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function pathUpdater() {
-               var jqGraph = $scope.nbeController.jqGraph;
-
                var from = [ 0, 0 ];
                var fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
                var to = [ 0, 0 ];
@@ -134,7 +133,7 @@ define( [
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                function jqVertexPlusHandle( ref ) {
-                  var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', $scope.nbeController.jqGraph );
+                  var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', jqGraph );
                   var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
                   return [ jqNode, jqHandle ];
                }
@@ -142,7 +141,7 @@ define( [
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                function jqEdge( ref ) {
-                  return $( '[data-nbe-edge="' + ref.nodeId + '"]', $scope.nbeController.jqGraph );
+                  return $( '[data-nbe-edge="' + ref.nodeId + '"]', jqGraph );
                }
             }
 

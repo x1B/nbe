@@ -27,7 +27,7 @@ define( [
          link: function linkPort( scope, element, attrs ) {
 
             // Quick access to essential data for drawing links:
-            var graphController = scope.nbeController;
+            var graphController = scope.controller;
             var graphOffset;
             var stubDirection = attrs[ ATTR_PORT_GROUP ] !== 'in' ? 1 : -1;
             var vertexId = scope[ ATTR_VERTEX_ID ];
@@ -68,7 +68,7 @@ define( [
 
             function handlePortDoubleClick() {
                if( scope.port.edgeId ) {
-                  var disconnectOp = graphController.makeDisconnectOp( {
+                  var disconnectOp = graphController.operations.disconnect( {
                      nodeId: scope[ ATTR_VERTEX_ID ],
                      port: scope.port
                   } );
@@ -87,7 +87,7 @@ define( [
                } );
 
                if( scope.port.edgeId && !supportsMultipleLinks() ) {
-                  var disconnectOp = graphController.makeDisconnectOp( {
+                  var disconnectOp = graphController.operations.disconnect( {
                      nodeId: scope[ ATTR_VERTEX_ID ],
                      port: scope.port
                   } );
@@ -135,7 +135,7 @@ define( [
                   return;
                }
 
-               var op = graphController.makeConnectOp( {
+               var op = graphController.operations.connect( {
                   nodeId: vertexId, port: scope.port
                }, dd.dropRef() );
                dd.transaction().perform( op );
