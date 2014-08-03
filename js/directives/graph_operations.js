@@ -85,7 +85,7 @@ define( [], function() {
          function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
             var type = vertexRef.port.type;
             if( type !== model.edges[ toEdgeId ].type ) {
-               return operationsModule.noOp;
+               return ops.noOp;
             }
 
             var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
@@ -107,7 +107,7 @@ define( [], function() {
             var restrictDests = portDirection === 'in';
             var limit = typesModel[ type ] && typesModel[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
             if( limit === undefined ) {
-               return operationsModule.noOp;
+               return ops.noOp;
             }
 
             var disconnectOps = [];
