@@ -1,16 +1,18 @@
 /**
- * Offers operations for the graph links.
+ * Manages the links which represent simple edges (1:n, n:1) and connect complex edges (n:m) to vertices.
  */
-define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule ) {
+define( [ 'angular' ], function( ng ) {
    'use strict';
 
    /**
-    * @param {object} view
+    * @param {object} viewModel
     *    the graph view model where link state is managed
-    * @param {object} types
+    * @param {object} typesModel
     *    edge types on the current graph
+    * @param {object} idGenerator
+    *    the idGenerator service used to generate link ids
     */
-   return function linksController( view, types, idGenerator ) {
+   return function( viewModel, typesModel, idGenerator ) {
 
       var linksByEdge = {};
       var linksByVertex = {};
@@ -22,28 +24,28 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
          create: createLink,
          destroy: destroyLink,
          byPort: byPort,
-         byVertex: function ( vertexId ) {
-            if ( !linksByVertex[ vertexId ] ) {
+         byVertex: function( vertexId ) {
+            if( !linksByVertex[ vertexId ] ) {
                linksByVertex[ vertexId ] = {};
             }
             return linksByVertex[ vertexId ];
          },
-         byEdge: function ( edgeId ) {
-            if ( !linksByEdge[ edgeId ] ) {
+         byEdge: function( edgeId ) {
+            if( !linksByEdge[ edgeId ] ) {
                linksByEdge[ edgeId ] = {};
             }
             return linksByEdge[ edgeId ];
          },
-         repaint: function () {
-            ng.forEach( linkControllers, function ( controller ) {
+         repaint: function() {
+            ng.forEach( linkControllers, function( controller ) {
                controller.repaint();
             } );
          },
-         registerController: function ( linkId, linkController ) {
+         registerController: function( linkId, linkController ) {
             linkControllers[ linkId ] = linkController;
          },
          controllers: controllers,
-         controllersById: function () {
+         controllersById: function() {
             return linkControllers;
          }
       };
@@ -64,18 +66,18 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
 
          insert( fromRef, link.id, link );
          insert( toRef, link.id, link );
-         if ( isSimple( link ) ) {
+         if( isSimple( link ) ) {
             var edgeId = fromRef.port.edgeId;
             insert( { nodeId: edgeId }, link.id, link );
          }
-         view.links[ link.id ] = link;
+         viewModel.links[ link.id ] = link;
          return link;
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function insert( ref, linkId, link ) {
             var map = ref.port ? linksByVertex : linksByEdge;
-            if ( !map[ ref.nodeId ] ) {
+            if( !map[ ref.nodeId ] ) {
                map[ ref.nodeId ] = { };
             }
             map[ ref.nodeId ][ linkId ] = link;
@@ -92,20 +94,20 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
 
          remove( link.source.port ? linksByVertex : linksByEdge, link.source.nodeId, link.id );
          remove( link.dest.port ? linksByVertex : linksByEdge, link.dest.nodeId, link.id );
-         delete view.links[ link.id ];
+         delete viewModel.links[ link.id ];
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function controllers( vertexIds, edgeIds ) {
          var result = [];
-         ( vertexIds || [] ).forEach( function ( vertexId ) {
-            vertexLinkControllers( vertexId ).forEach( function ( ctr ) {
+         ( vertexIds || [] ).forEach( function( vertexId ) {
+            vertexLinkControllers( vertexId ).forEach( function( ctr ) {
                result.push( ctr );
             } );
          } );
-         ( edgeIds || [] ).forEach( function ( edgeId ) {
-            edgeLinkControllers( edgeId ).forEach( function ( ctr ) {
+         ( edgeIds || [] ).forEach( function( edgeId ) {
+            edgeLinkControllers( edgeId ).forEach( function( ctr ) {
                result.push( ctr );
             } );
          } );
@@ -115,10 +117,10 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function vertexLinkControllers( vertexId ) {
-         if ( linksByVertex[ vertexId ] === undefined ) {
+         if( linksByVertex[ vertexId ] === undefined ) {
             return [];
          }
-         return Object.keys( linksByVertex[ vertexId ] ).map( function ( linkId ) {
+         return Object.keys( linksByVertex[ vertexId ] ).map( function( linkId ) {
             return linkControllers[ linkId ];
          } );
       }
@@ -126,10 +128,10 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function edgeLinkControllers( edgeId ) {
-         if ( linksByEdge[ edgeId ] === undefined ) {
+         if( linksByEdge[ edgeId ] === undefined ) {
             return [];
          }
-         return Object.keys( linksByEdge[ edgeId ] ).map( function ( linkId ) {
+         return Object.keys( linksByEdge[ edgeId ] ).map( function( linkId ) {
             return linkControllers[ linkId ];
          } );
       }
@@ -138,7 +140,7 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
 
       function byPort( vertexId, port ) {
          var portId = port.id;
-         if ( !linksByVertex[ vertexId ] ) {
+         if( !linksByVertex[ vertexId ] ) {
             linksByVertex[ vertexId ] = {};
          }
          var candidates = linksByVertex[ vertexId ];
@@ -147,10 +149,10 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
          for ( var i = keys.length; i-- > 0; ) {
             var linkId = keys[ i ];
             var link = candidates[ linkId ];
-            if ( link.source.nodeId === vertexId && link.source.port.id === portId ) {
+            if( link.source.nodeId === vertexId && link.source.port.id === portId ) {
                links.push( link );
             }
-            if ( link.dest.nodeId === vertexId && link.dest.port.id === portId ) {
+            if( link.dest.nodeId === vertexId && link.dest.port.id === portId ) {
                links.push( link );
             }
          }
@@ -163,16 +165,16 @@ define( [ 'angular', '../utilities/operations' ], function( ng, operationsModule
          return port && port.direction === 'in';
       }
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function isOutput( port ) {
          return port && port.direction !== 'in';
       }
 
-      function isSimple( typed ) {
-         return !!types[ typed.type ].simple;
-      }
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function connected( port ) {
-         return !!port.edgeId;
+      function isSimple( typed ) {
+         return !!typesModel[ typed.type ].simple;
       }
 
    };

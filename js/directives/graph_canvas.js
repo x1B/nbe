@@ -1,27 +1,30 @@
-define( [ 'jquery' ], function( $ ) {
+/**
+ * Manages the graph drawing surface and offers related operations, such as ping animations and zoom.
+ */
+define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
    'use strict';
 
    /**
-    * @param {object} layoutSettings
-    *    configuration for the graph layout
     * @param {object} layout
     *    a layout model with coordinates for vertices and edges
     * @param {object} view
     *    the graph view model where zoom state is kept
+    * @param {object} layoutSettings
+    *    configuration for the graph layout
     * @param {$} jqGraph
     *    a jQuery handle to the graph DOM
     * @param {Function} nextTick
     *    a function to schedule an asynchronous operation.
-    * @param {object} async
-    *    more async helpers
     */
-   return function( layoutSettings, layout, view, jqGraph, nextTick, async ) {
+   return function( layoutModel, viewModel, layoutSettings, jqGraph, nextTick ) {
 
       var repaintHandlers = [ adjustCanvasSize ];
 
       return {
          repaint: repaint,
          addRepaintHandler: addRepaintHandler,
+         centerEdge: centerEdge,
+         pingEdge: pingEdge,
          zoom: zoomController()
       };
 
@@ -33,29 +36,52 @@ define( [ 'jquery' ], function( $ ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function centerCoords( vertexId ) {
-         var vertexLayout = layout.vertices[ vertexId ];
-         var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
-         return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+      function repaint() {
+         repaintHandlers.forEach( function( _ ) { _(); } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function mean( v1, v2 ) {
-         return [ 0, 1 ].map( function ( i ) {
-            return Math.round( (v1[ i ] + v2[ i ]) / 2 );
+      function pingEdge( id ) {
+         nextTick( function() {
+            visual.pingAnimation( $( '[data-nbe-edge="' + id + '"]' ) );
          } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** Center the given edge between the given nodes. */
+      function centerEdge( id, fromRef, toRef ) {
+         var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
+         layoutModel.edges[ id ] = {
+            left: edgeCenter[ 0 ] - layoutSettings.edgeOffset,
+            top: edgeCenter[ 1 ] - layoutSettings.edgeOffset
+         };
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function centerCoords( vertexId ) {
+            var vertexLayout = layoutModel.vertices[ vertexId ];
+            var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
+            return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function mean( v1, v2 ) {
+            return [ 0, 1 ].map( function( i ) {
+               return Math.round( (v1[ i ] + v2[ i ]) / 2 );
+            } );
+         }
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       /**
-       * The graph drawing canvas must fill the available container.
-       * It also must accommodate all nodes in the graph model.
-       * Third, it needs to take into account the current zoom level when calculating the space needed
-       * by the graph model.
+       * Ensure the following conditions:
        *
-       * In each dimension, pick max( offset container size, content size ) and use it as the canvas size.
+       * - The graph drawing canvas must fill the available container, but leave space for scroll bars.
+       * - The canvas must contain all nodes in the graph model.
        */
       function adjustCanvasSize() {
          var offsetContainer = jqGraph.offsetParent();
@@ -66,7 +92,7 @@ define( [ 'jquery' ], function( $ ) {
          var height = offsetContainer.height() - yScrollbarSpace;
 
          var padding = layoutSettings.graphPadding;
-         $( '.vertex, .edge', jqGraph[ 0 ] ).each( function ( i, domNode ) {
+         $( '.vertex, .edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
             var jqVertex = $( domNode );
             var pos = jqVertex.offset();
             width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );
@@ -78,34 +104,33 @@ define( [ 'jquery' ], function( $ ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function repaint() {
-         repaintHandlers.forEach( function( _ ) { _(); } );
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+      /**
+       * Create a controller to allow zoom-out and zoom-in.
+       *
+       * @returns {{zoomOut: zoomOut, zoomIn: zoomIn}}
+       */
       function zoomController() {
 
          function apply( level ) {
-            var z = view.zoom;
+            var z = viewModel.zoom;
             z.percent = z.levels[ level ];
             z.factor = z.percent / 100;
-            nextTick( function () {
+            nextTick( function() {
                adjustCanvasSize();
                repaint();
             } );
          }
 
          return {
-            zoomOut: function () {
-               var z = view.zoom;
-               if ( z.level > 0 ) {
+            zoomOut: function() {
+               var z = viewModel.zoom;
+               if( z.level > 0 ) {
                   apply( --z.level );
                }
             },
-            zoomIn: function () {
-               var z = view.zoom;
-               if ( z.level < z.levels.length - 1 ) {
+            zoomIn: function() {
+               var z = viewModel.zoom;
+               if( z.level < z.levels.length - 1 ) {
                   apply( ++z.level );
                }
             }

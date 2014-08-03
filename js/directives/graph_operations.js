@@ -3,7 +3,7 @@
  */
 define( [
    '../utilities/operations',
-   '../utilities/visual',
+   '../utilities/visual'
 ], function( operationsModule, visual ) {
    'use strict';
 
@@ -18,17 +18,25 @@ define( [
     *    a controller for the edges' and vertices' view model
     * @param {object} linksController
     *    a controller for the links' view model
+    * @param {Object} idGenerator
+    *    to provide an id generator for newly formed edges
     * @param {Function} nextTick
     *    a helper to apply functions asynchronously
     */
-   return function graphOperations( model, types, ops, linksController, layoutController, nextTick ) {
+   return function( model, typesModel, ops, linksController, layoutController, idGenerator ) {
 
-      var generateEdgeId;
+      var generateEdgeId = idGenerator.create(
+         Object.keys( typesModel ).map( function( _ ) {
+            return _.toLocaleLowerCase() + ' ';
+         } ),
+         model.edges
+      );
 
       return {
          connect: makeConnectOp,
          disconnect: makeDisconnectOp,
          deleteVertex: makeDeleteVertexOp,
+         deleteEdge: makeDeleteEdgeOp,
          cut: makeCutOp
       };
 
@@ -47,18 +55,11 @@ define( [
          fromRef.port.edgeId = id;
          toRef.port.edgeId = id;
 
-         if ( types[ type ].simple ) {
+         if( typesModel[ type ].simple ) {
             linksController.create( fromRef, toRef );
          }
          else {
-            // :TODO: this should become
-            // layoutController.centerEdge( id, fromRef, toRef );
-            var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
-            layout.edges[ id ] = {
-               left: edgeCenter[ 0 ] - layoutSettings.edgeOffset,
-               top: edgeCenter[ 1 ] - layoutSettings.edgeOffset
-            };
-
+            layoutController.centerEdge( id, fromRef, toRef );
             linksController.create( fromRef, edgeRef );
             linksController.create( edgeRef, toRef );
          }
@@ -72,10 +73,10 @@ define( [
          Object.freeze( fromRef );
          Object.freeze( toRef );
 
-         if ( !toRef.port ) {
+         if( !toRef.port ) {
             return makeConnectPortToEdgeOp( fromRef, toRef.nodeId );
          }
-         else if ( !fromRef.port ) {
+         else if( !fromRef.port ) {
             return makeConnectPortToEdgeOp( toRef, fromRef.nodeId );
          }
          else {
@@ -86,14 +87,14 @@ define( [
 
          function makeConnectPortToEdgeOp( vertexRef, toEdgeId ) {
             var type = vertexRef.port.type;
-            if ( type !== model.edges[ toEdgeId ].type ) {
+            if( type !== model.edges[ toEdgeId ].type ) {
                return operationsModule.noOp;
             }
 
             var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
             var edgeRef = { nodeId: toEdgeId };
 
-            var connectPortToEdgeOp = function () {
+            var connectPortToEdgeOp = function() {
                vertexRef.port.edgeId = toEdgeId;
                var link = linksController.create( vertexRef, edgeRef );
                connectPortToEdgeOp.undo = makeCutOp( link );
@@ -107,19 +108,19 @@ define( [
          /** If mandated by the edge type, delete one link to this edge (allowing to form a new link). */
          function makeEnforceCardinalityOp( edgeId, type, portDirection ) {
             var restrictDests = portDirection === 'in';
-            var limit = types[ type ] && types[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
-            if ( limit === undefined ) {
+            var limit = typesModel[ type ] && typesModel[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
+            if( limit === undefined ) {
                return operationsModule.noOp;
             }
 
             var disconnectOps = [];
             var counter = 0;
             var links = linksController.byEdge( edgeId );
-            Object.keys( links ).forEach( function ( linkId ) {
+            Object.keys( links ).forEach( function( linkId ) {
                var link = links[ linkId ];
-               if ( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
+               if( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
                   ++counter;
-                  if ( counter >= limit ) {
+                  if( counter >= limit ) {
                      disconnectOps.push( makeDisconnectOp( link[ restrictDests ? 'dest' : 'source' ] ) );
                   }
                }
@@ -130,23 +131,23 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function makeConnectPortToPortOp( fromRef, toRef ) {
-            if ( fromRef.port.type !== toRef.port.type ||
+            if( fromRef.port.type !== toRef.port.type ||
                fromRef.port.direction === toRef.port.direction ) {
                return operationsModule.noOp;
             }
 
             var ops = [];
-            [ fromRef, toRef ].forEach( function ( ref ) {
+            [ fromRef, toRef ].forEach( function( ref ) {
                var isDest = isInput( ref.port );
-               var typeDef = types[ ref.port.type ];
-               if ( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
+               var typeDef = typesModel[ ref.port.type ];
+               if( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
                   ops.push( makeDisconnectOp( ref ) );
                }
             } );
 
             function connectPortToPortOp() {
                var edgeId = fromRef.port.edgeId || toRef.port.edgeId;
-               if ( !edgeId ) {
+               if( !edgeId ) {
                   // collection forms an edge (completely new or has disconnected previous edges)
                   edgeId = createEdge( fromRef, toRef );
                   connectPortToPortOp.undo = makeDeleteEdgeOp( edgeId );
@@ -158,11 +159,7 @@ define( [
                   connectPortToPortOp.undo = makeCutOp( link );
                }
 
-               nextTick( function () {
-                  // :TODO: this should become
-                  // layoutController.pingEdge( id );
-                  visual.pingAnimation( $( '[data-nbe-edge="' + edgeId + '"]' ) );
-               } );
+               layoutController.pingEdge( edgeId );
             }
 
             ops.push( connectPortToPortOp );
@@ -176,27 +173,27 @@ define( [
          var edgeId = ( link.source.port || link.dest.port ).edgeId;
          var edge = model.edges[ edgeId ];
 
-         var cutLink = function () {
+         var cutLink = function() {
             linksController.destroy( link );
-            [ link.source, link.dest ].forEach( function ( ref ) {
+            [ link.source, link.dest ].forEach( function( ref ) {
                var port = ref.port;
-               if ( port && linksController.byPort( ref.nodeId, port ).length === 0 ) {
+               if( port && linksController.byPort( ref.nodeId, port ).length === 0 ) {
                   port.edgeId = null;
                }
             } );
             var remaining = Object.keys( linksController.byEdge( edgeId ) );
-            if ( remaining.length === 0 ) {
+            if( remaining.length === 0 ) {
                delete model.edges[ edgeId ];
                cutLink.undo = operationsModule.compose( [
-                  function () {
+                  function() {
                      model.edges[ edgeId ] = edge;
                   }, cutLink.undo
                ] );
             }
          };
-         cutLink.undo = function () {
-            [ link.source, link.dest ].forEach( function ( ref ) {
-               if ( ref.port ) {
+         cutLink.undo = function() {
+            [ link.source, link.dest ].forEach( function( ref ) {
+               if( ref.port ) {
                   ref.port.edgeId = edgeId;
                }
             } );
@@ -210,10 +207,10 @@ define( [
       function makeDisconnectOp( ref ) {
          Object.freeze( ref );
          var portLinks = linksController.byPort( ref.nodeId, ref.port );
-         if ( portLinks.length === 0 ) {
+         if( portLinks.length === 0 ) {
             return operationsModule.noOp;
          }
-         return operationsModule.compose( portLinks.map( function ( link ) {
+         return operationsModule.compose( portLinks.map( function( link ) {
             return makeCutOp( link );
          } ) );
       }
@@ -223,7 +220,7 @@ define( [
       function makeDeleteEdgeOp( edgeId ) {
          var links = linksController.byEdge( edgeId );
          var linkIds = Object.keys( links );
-         return operationsModule.compose( linkIds.map( function ( linkId ) {
+         return operationsModule.compose( linkIds.map( function( linkId ) {
             return makeCutOp( links[ linkId ] );
          } ) );
       }
@@ -233,7 +230,7 @@ define( [
       function makeDeleteVertexOp( vertexId ) {
          var steps = [];
          var vertex = model.vertices[ vertexId ];
-         vertex.ports.forEach( function ( port ) {
+         vertex.ports.forEach( function( port ) {
             steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
          } );
          function deleteVertexOp() {

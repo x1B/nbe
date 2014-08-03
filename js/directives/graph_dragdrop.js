@@ -24,7 +24,7 @@ define( [], function() {
       }
 
       return Object.freeze( {
-         start: function ( ref, cancel ) {
+         start: function( ref, cancel ) {
             onCancel = cancel;
             transaction = ops.startTransaction();
             dragRef = { nodeId: ref.nodeId, port: ref.port };
@@ -33,27 +33,27 @@ define( [], function() {
             return transaction;
          },
 
-         dropRef: function () {
+         dropRef: function() {
             return dropRef;
          },
 
-         transaction: function () {
+         transaction: function() {
             return transaction;
          },
 
-         setDropRef: function ( ref ) {
+         setDropRef: function( ref ) {
             dropRef = ref;
          },
 
-         finish: function () {
-            if ( transaction ) {
+         finish: function() {
+            if( transaction ) {
                transaction.commit();
                clear();
             }
          },
 
-         cancel: function () {
-            if ( transaction ) {
+         cancel: function() {
+            if( transaction ) {
                transaction.rollBack();
                clear();
                onCancel();

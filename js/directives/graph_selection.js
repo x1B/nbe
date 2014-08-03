@@ -1,85 +1,96 @@
-/** Manages the view model for a selection of nodes. */
-define( [ 'angular' ], function( ng ) {
+/**
+ * Manages the view model for a selection of nodes.
+ */
+define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
    'use strict';
 
    /**
-    * @param {Object} view
+    * @param {Object} viewModel
     *    the graph view model
-    * @param {Object} graphOperations
+    * @param {Object} ops
+    *    the operations stack which coordinates undo/redo for all operations on the graph
+    * @param {Object} operationsController
     *    the graph operations controller, to apply selection operations to the graph
     */
-   return function graphSelectionController( view, graphOperations ) {
+   return function( model, viewModel, layoutModel, ops, operationsController, linksController, jqGraph, $document ) {
 
-      jqGraph[ 0 ].addEventListener( 'mousedown', self.selection.start );
+      var selection = viewModel.selection;
       var anchor;
 
+      jqGraph[ 0 ].addEventListener( 'mousedown', start );
+
       return {
+         // :TODO: move these two ops to canvasController? (they write to layoutModel)
+         setAnchor: setAnchor,
+         followAnchor: followAnchor,
+
+         start: start,
          isEmpty: isEmpty,
          selectVertex: selectVertex,
          selectEdge: selectEdge,
-         setAnchor: setAnchor,
-         followAnchor: followAnchor,
          clearAnchor: clearAnchor,
-         start: start,
          handleDelete: handleDelete,
          clear: clear
       };
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function handleDelete() {
          var operations = [];
-         Object.keys( view.selection.edges ).forEach( function ( eId ) {
-            operations.push( makeDeleteEdgeOp( eId ) );
+         Object.keys( selection.edges ).forEach( function( eId ) {
+            operations.push( operationsController.deleteEdge( eId ) );
          } );
-         Object.keys( view.selection.vertices ).forEach( function ( vId ) {
-            operations.push( makeDeleteVertexOp( vId ) );
+         Object.keys( selection.vertices ).forEach( function( vId ) {
+            operations.push( operationsController.deleteVertex( vId ) );
          } );
          clear();
-         ops.perform( operationsModule.compose( operations ) );
-         $scope.$digest();
+         ops.perform( ops.compose( operations ) );
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function isEmpty() {
-         return !Object.keys( view.selection.vertices ).length && !Object.keys( view.selection.edges ).length;
+         return !Object.keys( selection.vertices ).length && !Object.keys( selection.edges ).length;
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function clear() {
-         view.selection = { vertices: {}, edges: {}, links: {} };
+         viewModel.selection = selection = { vertices: {}, edges: {}, links: {} };
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function selectEdge( edgeId, extend ) {
-         if ( !extend ) {
+         if( !extend ) {
             clear();
          }
-         var selected = view.selection.edges[ edgeId ];
-         view.selection.edges[ edgeId ] = !selected;
+         var selected = selection.edges[ edgeId ];
+         selection.edges[ edgeId ] = !selected;
          updateLinks();
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function selectVertex( vertexId, extend ) {
-         if ( !extend ) {
+         if( !extend ) {
             clear();
          }
-         var selected = view.selection.vertices[ vertexId ];
-         view.selection.vertices[ vertexId ] = !selected;
+         var selected = selection.vertices[ vertexId ];
+         selection.vertices[ vertexId ] = !selected;
          updateLinks();
       }
 
-      /////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function start( event ) {
-         if ( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
+         if( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
             return;
          }
 
-         var jqSelection = $( '.selection', $element );
+         $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
+
+         var jqSelection = $( '.selection', jqGraph );
          var selection = jqSelection[ 0 ];
          var referenceX = event.pageX;
          var referenceY = event.pageY;
@@ -87,7 +98,8 @@ define( [ 'angular' ], function( ng ) {
          var fromY = event.offsetY || event.layerY;
          updateSelection( event );
          jqSelection.show();
-         $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function updateSelection( event ) {
             var dx = event.pageX - referenceX;
@@ -98,16 +110,16 @@ define( [ 'angular' ], function( ng ) {
             selection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
 
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
-            [ 'vertex', 'edge' ].forEach( function ( nodeType ) {
-               var selectionModel = view.selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
+            [ 'vertex', 'edge' ].forEach( function( nodeType ) {
+               var selectionModel = selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
                var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
                var tmpBox = {};
-               $( '.' + nodeType, jqGraph[ 0 ] ).each( function ( _, domNode ) {
+               $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
                   var jqNode = $( domNode );
                   visual.boundingBox( jqNode, jqGraph, tmpBox );
                   var selected = doesIntersect( tmpBox, selectionBox );
                   var id = domNode.dataset[ identity ];
-                  if ( selected ) {
+                  if( selected ) {
                      selectionModel[ id ] = true;
                   }
                   else {
@@ -120,22 +132,22 @@ define( [ 'angular' ], function( ng ) {
             updateLinks();
          }
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          function finish() {
-            $scope.$apply( function () {
-               $document.off( 'mousemove', updateSelection ).off( 'mouseup', finish );
-               jqSelection.hide();
-            } );
+            $document.off( 'mousemove', updateSelection ).off( 'mouseup', finish );
+            jqSelection.hide();
          }
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          function doesIntersect( box, selectionBox ) {
-            return !(
-               selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
-               selectionBox.right < box.left || selectionBox.left > box.right
-               );
+            return !( selectionBox.bottom < box.top || selectionBox.top > box.bottom ||
+                      selectionBox.right < box.left || selectionBox.left > box.right );
          }
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function setAnchor( domNode ) {
          var pos = $( domNode ).position();
@@ -148,66 +160,66 @@ define( [ 'angular' ], function( ng ) {
          };
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function followAnchor() {
-         if ( !anchor ) {
+         if( !anchor ) {
             return;
          }
-         var zoomFactor = view.zoom.factor;
+         var zoomFactor = viewModel.zoom.factor;
          var newPos = $( anchor.domNode ).position();
          var dx = newPos.left - anchor.left;
          var dy = newPos.top - anchor.top;
-         anchor.followers.each( function ( _, domNode ) {
+         anchor.followers.each( function( _, domNode ) {
             var nodeLayout = domNode.dataset.nbeVertex ?
-               $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
-               $scope.layout.edges[ domNode.dataset.nbeEdge ];
+               layoutModel.vertices[ domNode.dataset.nbeVertex ] :
+               layoutModel.edges[ domNode.dataset.nbeEdge ];
             domNode.style.left = nodeLayout.left * zoomFactor + dx + 'px';
             domNode.style.top = nodeLayout.top * zoomFactor + dy + 'px';
          } );
-         self.links.repaint();
+         linksController.repaint();
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function clearAnchor() {
-         var zoomFactor = view.zoom.factor;
-         anchor.followers.each( function ( _, domNode ) {
+         var zoomFactor = viewModel.zoom.factor;
+         anchor.followers.each( function( _, domNode ) {
             var nodeLayout = domNode.dataset.nbeVertex ?
-               $scope.layout.vertices[ domNode.dataset.nbeVertex ] :
-               $scope.layout.edges[ domNode.dataset.nbeEdge ];
+               layoutModel.vertices[ domNode.dataset.nbeVertex ] :
+               layoutModel.edges[ domNode.dataset.nbeEdge ];
             nodeLayout.left = parseInt( domNode.style.left, 10 ) / zoomFactor;
             nodeLayout.top = parseInt( domNode.style.top, 10 ) / zoomFactor;
          } );
          anchor = null;
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function updateLinks() {
          var linksState = { };
-         Object.keys( model.edges ).forEach( function ( edgeId ) {
-            var edgeState = view.selection.edges[ edgeId ];
-            Object.keys( self.links.byEdge( edgeId ) ).forEach( function ( linkId ) {
+         Object.keys( model.edges ).forEach( function( edgeId ) {
+            var edgeState = selection.edges[ edgeId ];
+            Object.keys( linksController.byEdge( edgeId ) ).forEach( function( linkId ) {
                linksState[ linkId ] = edgeState || linksState[ linkId ];
             } );
          } );
 
-         Object.keys( model.vertices ).forEach( function ( vertexId ) {
-            var vertexState = view.selection.vertices[ vertexId ];
-            Object.keys( self.links.byVertex( vertexId ) ).forEach( function ( linkId ) {
+         Object.keys( model.vertices ).forEach( function( vertexId ) {
+            var vertexState = selection.vertices[ vertexId ];
+            Object.keys( linksController.byVertex( vertexId ) ).forEach( function( linkId ) {
                linksState[ linkId ] = vertexState || linksState[ linkId ];
             } );
          } );
 
-         var linkControllers = self.links.controllersById();
-         Object.keys( linkControllers ).forEach( function ( linkId ) {
+         var linkControllers = linksController.controllersById();
+         Object.keys( linkControllers ).forEach( function( linkId ) {
             linkControllers[ linkId ].toggleSelect( linksState[ linkId ] || false );
          } );
-         view.selection.links = linksState;
+         selection.links = linksState;
       }
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    };
 
