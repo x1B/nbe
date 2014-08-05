@@ -1,20 +1,34 @@
-<div data-ng-controller="LogicDemoController" data-ng-cloak>
-    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-    <button data-ng-click="nbeController.zoom.zoomOut()">-</button
-   ><button data-ng-click="nbeController.zoom.zoomIn()">+</button>
-    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-    <button data-ng-click="run()">Run Simulation</button>
-    Add Gate:
-    <button data-ng-click="addGate( 'AND' )">AND</button>
-    <button data-ng-click="addGate( 'OR' )">OR</button>
-    <button data-ng-click="addGate( 'NOT' )">NOT</button>
-    <button data-ng-click="addGate( 'TRUE' )">TRUE</button>
-    <button data-ng-click="addGate( 'FALSE' )">FALSE</button>
-    Add Interface:
-    <button data-ng-click="addGate( 'LOG' )">LOG</button>
-    <button data-ng-click="addGate( 'PROBE' )">PROBE</button>
+<h2>NBE: Logic Circuit Editor Demo</h2>
 
-    <div style="overflow: auto; position: relative; width: 100%; height: 400px; min-height: 200px;"
+<p>
+ Compose a logic circuit from basic gates, and calculate its output using a simple discrete event simulation.
+ The node-based editor is implemented using <a href="http://github.com/x1b/nbe" title="NBE on GitHub">NBE</a>.
+</p>
+
+<div data-ng-controller="LogicDemoController" data-ng-cloak>
+    <button data-ng-click="run()">Run Simulation</button>
+
+    &nbsp;
+    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+    <button data-ng-disabled="!nbeController.zoom.canZoomOut"
+            data-ng-click="nbeController.zoom.zoomOut()">-</button
+   ><button data-ng-disabled="!nbeController.zoom.canZoomIn"
+            data-ng-click="nbeController.zoom.zoomIn()">+</button>
+
+    &nbsp;signals:
+    <button data-ng-click="addGate( 'TRUE' )">+ TRUE</button>
+    <button data-ng-click="addGate( 'FALSE' )">+ FALSE</button>
+
+    &nbsp;gates:
+    <button data-ng-click="addGate( 'AND' )">+ AND</button>
+    <button data-ng-click="addGate( 'OR' )">+ OR</button>
+    <button data-ng-click="addGate( 'NOT' )">+ NOT</button>
+
+    &nbsp;interfaces:
+    <button data-ng-click="addGate( 'LOG' )">+ LOG</button>
+    <button data-ng-click="addProbe()">+ PROBE</button>
+
+    <div style="overflow: auto; position: relative; width: 100%; height: 600px; min-height: 200px;"
 
          class="graph-container logic-app">
 
@@ -32,6 +46,5 @@
              data-nbe-graph-controller="nbeController">
         </div>
     </div>
-
 
 </div>

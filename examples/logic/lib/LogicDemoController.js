@@ -39,8 +39,16 @@ define( [
       var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.circuit.vertices );
       $scope.addGate = function( gateType ) {
          var id = gateIdGenerator();
-         var gate = ng.copy( templates.model[ gateType  ] );
-         $scope.circuit.vertices[ id ] = gate;
+         $scope.circuit.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
+         $scope.layout.vertices[ id ] = ng.copy( templates.layout );
+      };
+
+      var probeIdGenerator = nbeIdGenerator.create( [ 'PROBE ' ], $scope.circuit.vertices );
+      $scope.addProbe = function() {
+         var id = probeIdGenerator();
+         var probeVertex = ng.copy( templates.model.PROBE );
+         probeVertex.label = id;
+         $scope.circuit.vertices[ id ] = probeVertex;
          $scope.layout.vertices[ id ] = ng.copy( templates.layout );
       };
    }
@@ -178,16 +186,6 @@ define( [
             }
          },
 
-         PROBE: function probe( wire, debugChannel ) {
-            if( wire && debugChannel ) {
-               wire.onChange( function() {
-                  sim.schedule( settings.probeDelay )( function() {
-                     debugChannel.send( '@' + sim.now() + ': ' + wire.id + ' becomes ' + wire.get() );
-                  } );
-               } );
-            }
-         },
-
          NOT: function inverter( inputWire, outputWire ) {
             if( inputWire && outputWire ) {
                inputWire.onChange( function() {
@@ -241,6 +239,16 @@ define( [
             if( inputChannel ) {
                inputChannel.onMessage( log );
             }
+         },
+
+         PROBE: function probe( label, wire, debugChannel ) {
+            if( wire && debugChannel ) {
+               wire.onChange( function() {
+                  sim.schedule( settings.probeDelay )( function() {
+                     debugChannel.send( '@' + sim.now() + ': ' + label + ' becomes ' + wire.get() );
+                  } );
+               } );
+            }
          }
       };
 
@@ -260,6 +268,11 @@ define( [
             var wOut = activePorts.filter( isOutput ).filter( isWire ).map( connectionAt );
             var cIn = activePorts.filter( isInput ).filter( isChannel ).map( connectionAt );
             var cOut = activePorts.filter( isOutput ).filter( isChannel ).map( connectionAt );
+
+            if( vertex.label.indexOf( 'PROBE ' ) === 0 ) {
+               gateBuilders.PROBE.apply( this, [ vertex.label ].concat( wIn ).concat( cOut ) );
+               return;
+            }
             gateBuilders[ vertex.label ].apply( this, wIn.concat( wOut ).concat( cIn ).concat( cOut ) );
          } );
 

@@ -5,6 +5,6 @@ define( [
 ], function start( ng ) {
    'use strict';
 
-   ng.bootstrap( document, ['NukeDemoApp'] );
+   ng.bootstrap( document, [ 'NukeDemoApp' ] );
 
 } );

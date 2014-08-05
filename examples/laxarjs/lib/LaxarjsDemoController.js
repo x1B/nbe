@@ -1,8 +1,8 @@
 define( [
    '../../../bower_components/jquery/dist/jquery',
    'angular',
-   'json!./dummy_model.json',
-   'json!./dummy_layout.json'
+   'json!./data/dummy_model.json',
+   'json!./data/dummy_layout.json'
 ],
 function (
    $,
