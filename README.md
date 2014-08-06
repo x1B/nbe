@@ -28,19 +28,21 @@ New features and bugfixes are tracked in the CHANGELOG.md file.
 - edges (links between vertices) can be created and destroyed
 - undo/redo of structural operations using the keyboard
 - changes to the model (triggered by the host application) are observed by the editor
-- automatic layout using the [https://github.com/cpettitt/dagre](dagre library)
+- automatic layout using the [dagre library](https://github.com/cpettitt/dagre)
 - edges can be simple (1:n, n:1) or complex (_hyperedges_/n:m)
 - hyper-edges have multiple incoming and outgoing links, and are represented by circles
 
 #### Known Bugs
 - rendering needs to be fixed for MSIE11+ (issue #14)
 - SVG rendering in Safari seems to be broken, not sure what is the reason (issue #35)
-- [https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Abug](more bugs)
+- [more bugs](https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
 #### Planned Features
 - undo/redo of layout operations
+- cut/copy/paste of nodes
 - specs and spec-tests for the graph controller operations which are exposed as an API
-- [https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement](more planned features)
+- vertex types, to destinguish between different classes of vertices
+- [more planned features](https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
 
 
 ## Getting Started
@@ -85,5 +87,5 @@ Each edge type gets its own color defined in the `css`.
 It is strongly recommended to use `compass` to generate edge-type CSS for a given application as illustrated in the example under `scss/`.
 The edge types are configured as an object, where each edge types has a name (the key) and three properties (the value, an object):
  * the property `simple` (boolean) determines if an edge is just a 1:n (or n:1) edge (`true`), or an n:m _hyperedge_ (`false`, default)
- * the property `maxSources` (number) puts a maximum on the number of incoming edges
- * the property `maxDestinations` (number) puts a maximum on the number of outgoing edges
+ * the property `maxSources` (number) puts a maximum on the number of incoming links for each edge
+ * the property `maxDestinations` (number) puts a maximum on the number of outgoing links for each edge
