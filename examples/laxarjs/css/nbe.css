@@ -7,6 +7,11 @@ body {
   color: #e0e0e0;
 }
 
+a {
+  color: #626ca8;
+  text-decoration: none;
+}
+
 [data-ng-cloak] {
   display: none !important;
 }

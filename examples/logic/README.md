@@ -14,4 +14,4 @@ Afterwards, the optimized JavaScript for this demo application (used by the inde
 
 To rebuild the CSS, edit the SCSS files and use `compass compile`.
 
-For more information on [NBE](http://github.com/x1b/nbe), refer to the [README.md](../README.md) of the containing NBE project.
+For more information on [NBE](http://github.com/x1b/nbe), refer to the [README.md](../../README.md) of the containing NBE project.

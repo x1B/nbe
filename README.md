@@ -1,4 +1,4 @@
-# NBE: Node Based Editing
+# NBE: Node-Based Editing
 
 A node-based-editing control based on web technologies
 
@@ -13,15 +13,15 @@ Applications speak to NBE by binding its graph model (see below) and potentially
 
 The model of NBE is a directed (hyper-)graph consisting of vertices and typed edges:
 
-- Each vertex may have an arbitrary number of labeled and typed input and output ports
-- Each port may be connected to 0..1 edges of matching type
-- Each edge may be connected to any number of inputs or outputs (1:n, n:m or n:1 depending on the edge type)
+- Each vertex may have an arbitrary number of labeled and typed input and output ports.
+- Each port may be connected to 0..1 edges of matching type.
+- Each edge may be connected to any number of inputs or outputs (1:n, n:m or n:1 depending on the edge type).
 
 
 ## Current Status
 
 The project is still relatively immature, but already has a couple of nice features that might justify having a closer look.
-New features and bugfixes are tracked in the CHANGELOG.md file.
+New features and bugfixes are tracked in the [CHANGELOG](CHANGELOG.md).
 
 #### What NBE can do
 - models can be displayed
@@ -48,7 +48,7 @@ New features and bugfixes are tracked in the CHANGELOG.md file.
 
 ## Getting Started
 
-Included with the project are several examples that show how to integrate NBE into project that are using _[Bower](http://bower.io/)_ and _[RequireJS](http://requirejs.org/)_.  
+Included are several examples showing how to integrate NBE into projects whichare using _[Bower](http://bower.io/)_ and _[RequireJS](http://requirejs.org/)_.  
 
 ### Setup
 
@@ -71,7 +71,7 @@ cd examples/logic
 npm install
 ```
 
-### Usage
+### Using the Node-Based Editor
 
 Try adding logical signals and gates to the demo setup, and connect them by dragging wires between the nodes.
 Hit _'Run Simulation'_ to log state changes of the probed wires as the discrete clock drives the simulation.
@@ -94,8 +94,8 @@ As the example shows in file `lib/data/dummy_model.json`, edges and vertices are
 Edges have the string properties `type` and `label`, while vertices have a `label` as well as a list of `ports`.
 Each port is an object with a `label`, an `id` (unique within the vertex), an optional `direction` which is either `"out"` or `"in`" (default), and an optional `edgeId` referencing the edge a port is connected to (if any). 
 
-Applications instantiate a node based editor using the AngularJS directive `nbeGraph`, which should be set as `data-nbe-graph`.
-Have a look at the file `lib/logic_demo.html` for an example of an nbe embedding.
+Applications instantiate a node-based editor using the AngularJS directive `nbeGraph`, which should be referenced as `data-nbe-graph`.
+Have a look at the file `lib/logic_demo.html` for an example of an NBE embedding.
 For styling to work, it is recommended to put the `nbeGraph` onto a DIV, and to put that DIV inside another block-level element with fixed dimensions and CSS class `graph-container`.
 The directive takes an AngularJS binding expression that must evaluate to a graph-model as described above.
 

@@ -6,6 +6,11 @@ body {
    color: $textColor;
 }
 
+a {
+   color: $paletteC;
+   text-decoration: none;
+}
+
 [data-ng-cloak] {
    display: none !important;
 }
