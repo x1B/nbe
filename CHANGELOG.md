@@ -3,6 +3,9 @@
 
 ## Last Changes
 
+
+## v0.1.0
+
 - [#40](https://github.com/x1B/nbe/issues/40): prepared codebase for release v0.1.0
 
 - [#39](https://github.com/x1B/nbe/issues/39): fixed port dragging and double click
