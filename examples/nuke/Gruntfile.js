@@ -6,7 +6,11 @@ module.exports = function( grunt ) {
    var src = {
       gruntfile: 'Gruntfile.js',
       require: 'require_config.js',
-      'nbe_examples_nuke': ['nbe_examples_nuke.js', 'lib/**/*.js', 'lib/data/*.json']
+      'nbe_examples_nuke': [
+         'nbe_examples_nuke.js',
+         'lib/**/*.js',
+         'lib/data/*.json'
+      ]
    };
 
    grunt.initConfig( {
@@ -29,6 +33,6 @@ module.exports = function( grunt ) {
 
    grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
 
-   grunt.registerTask( 'build', ['requirejs'] );
-   grunt.registerTask( 'default', ['build'] );
+   grunt.registerTask( 'build', [ 'requirejs' ] );
+   grunt.registerTask( 'default', [ 'build' ] );
 };

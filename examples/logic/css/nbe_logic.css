@@ -137,6 +137,9 @@
   font-size: 12px;
   border-radius: 10px;
 }
+.graph.zoom-100 .graph-contents {
+  background-size: 50px 50px;
+}
 .graph.zoom-100 .port {
   line-height: 16px;
   font-size: 11px;
@@ -173,6 +176,9 @@
 .graph.zoom-75 {
   font-size: 9px;
   border-radius: 8px;
+}
+.graph.zoom-75 .graph-contents {
+  background-size: 38px 38px;
 }
 .graph.zoom-75 .port {
   line-height: 12px;
@@ -211,6 +217,9 @@
   font-size: 6px;
   border-radius: 5px;
 }
+.graph.zoom-50 .graph-contents {
+  background-size: 25px 25px;
+}
 .graph.zoom-50 .port {
   line-height: 8px;
   font-size: 6px;
@@ -248,6 +257,9 @@
   font-size: 3px;
   border-radius: 3px;
 }
+.graph.zoom-25 .graph-contents {
+  background-size: 13px 13px;
+}
 .graph.zoom-25 .port {
   line-height: 4px;
   font-size: 3px;
@@ -278,43 +290,6 @@
   font-size: 3px;
 }
 .graph.zoom-25 .link {
-  stroke-width: 1.5;
-}
-
-.graph.zoom-10 {
-  font-size: 1px;
-  border-radius: 1px;
-}
-.graph.zoom-10 .port {
-  line-height: 1.6px;
-  font-size: 1px;
-}
-.graph.zoom-10 .port i {
-  width: 1.1px;
-  height: 1.1px;
-  border-radius: 0.6px;
-  border-width: 0px;
-  margin: 0.3px 0.5px -0.3px 0.5px;
-}
-.graph.zoom-10 header {
-  height: 1.8px;
-  padding: 0.2px 0.5px 0.1px 0.5px;
-  font-size: 1px;
-}
-.graph.zoom-10 .edge {
-  width: 2px;
-  height: 2px;
-  border-radius: 2px;
-  box-shadow: 0.4px 0.4px 0.4px #202020;
-}
-.graph.zoom-10 .edge label {
-  width: 10px;
-  left: -4px;
-  text-shadow: 0.4px 0.4px 0.4px #202020;
-  top: 2.2px;
-  font-size: 1px;
-}
-.graph.zoom-10 .link {
   stroke-width: 1.5;
 }
 

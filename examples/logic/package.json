@@ -1,7 +1,7 @@
 {
    "name": "nbe_examples_logic",
    "version": "0.1.0-pre",
-   "description": "Simple circuit-editor based on nbe.",
+   "description": "A simple node-based circuit-editor and simulator",
    "authors": [],
    "license": "MIT",
    "repository": {

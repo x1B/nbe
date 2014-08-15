@@ -121,20 +121,27 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             } );
          }
 
-         return {
+         var api = {
+            canZoomIn: false,
+            canZoomOut: true,
             zoomOut: function() {
-               var z = viewModel.zoom;
-               if( z.level > 0 ) {
-                  apply( --z.level );
+               if( api.canZoomOut ) {
+                  apply( --viewModel.zoom.level );
+                  api.canZoomIn = true;
                }
+               api.canZoomOut = viewModel.zoom.level > 0;
             },
             zoomIn: function() {
                var z = viewModel.zoom;
-               if( z.level < z.levels.length - 1 ) {
+               if( api.canZoomIn ) {
                   apply( ++z.level );
+                  api.canZoomOut = true;
                }
+               api.canZoomIn = z.level < z.levels.length - 1;
             }
          };
+
+         return api;
       }
 
    };

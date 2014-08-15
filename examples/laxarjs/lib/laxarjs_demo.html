@@ -1,9 +1,17 @@
+<h2>NBE: LaxarJS Reactive UI Mock Demo</h2>
+<p>
+    Concept mockup of a basic page editor for the <a href="http://laxarjs.org">LaxarJS</a> reactive web application framework.
+    The node-based editor is implemented using <a href="http://github.com/x1b/nbe" title="NBE on GitHub">NBE</a>.
+</p>
+
 <div data-ng-controller="LaxarjsDemoController"
      data-ng-cloak>
 
 <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-<button data-ng-click="nbeController.zoom.zoomOut()">-</button
-><button data-ng-click="nbeController.zoom.zoomIn()">+</button>
+<button data-ng-disabled="!nbeController.zoom.canZoomOut"
+        data-ng-click="nbeController.zoom.zoomOut()">-</button
+        ><button data-ng-disabled="!nbeController.zoom.canZoomIn"
+                 data-ng-click="nbeController.zoom.zoomIn()">+</button>
 
 <label data-ng-repeat="(typeName, type) in types">
     <input type="checkbox"

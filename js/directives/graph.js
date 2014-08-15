@@ -123,7 +123,7 @@ define( [
                zoom: {
                   factor: 1,
                   percent: 100,
-                  levels: [ 10, 25, 50, 75, 100 ],
+                  levels: [ 25, 50, 75, 100 ],
                   level: 3
                }
             };
