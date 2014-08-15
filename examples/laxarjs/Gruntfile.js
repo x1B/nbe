@@ -6,8 +6,8 @@ module.exports = function( grunt ) {
    var src = {
       gruntfile: 'Gruntfile.js',
       require: 'require_config.js',
-      'nbe_examples_nuke': [
-         'nbe_examples_nuke.js',
+      'nbe_examples_logic': [
+         'nbe_examples_laxarjs.js',
          'lib/**/*.js',
          'lib/data/*.json'
       ]
@@ -15,7 +15,7 @@ module.exports = function( grunt ) {
 
    grunt.initConfig( {
       requirejs: {
-         'nbe_examples_nuke': {
+         'nbe_examples_laxarjs': {
             options: {
                baseUrl: './',
                mainConfigFile: src.require,
@@ -33,6 +33,6 @@ module.exports = function( grunt ) {
 
    grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
 
-   grunt.registerTask( 'build', [  'requirejs' ] );
-   grunt.registerTask( 'default', [ 'build' ] );
+   grunt.registerTask( 'build', ['requirejs'] );
+   grunt.registerTask( 'default', ['build'] );
 };
