@@ -48,7 +48,7 @@ New features and bugfixes are tracked in the [CHANGELOG](CHANGELOG.md).
 
 ## Getting Started
 
-Included are several examples showing how to integrate NBE into projects whichare using _[Bower](http://bower.io/)_ and _[RequireJS](http://requirejs.org/)_.  
+Included are several examples showing how to integrate NBE into projects which are using _[Bower](http://bower.io/)_ and _[RequireJS](http://requirejs.org/)_.  
 
 ### Setup
 
@@ -73,8 +73,8 @@ npm install
 
 ### Using the Node-Based Editor
 
-Try adding logical signals and gates to the demo setup, and connect them by dragging wires between the nodes.
-Hit _'Run Simulation'_ to log state changes of the probed wires as the discrete clock drives the simulation.
+Try adding logic signals and gates to the demo circuit, and connect them by dragging wires between the nodes.
+Hit _'Run Simulation'_ to view state changes of the probed wires as the discrete clock drives the simulation.
 The boxes represent vertices in the hypergraph, and the curved lines (_link_) make up the edges.
 Hit _'Auto Layout'_ to tidy up the graph.
 In this example, each _wire_ edge may have one source and multiple outgoing links (1:n), while log _channels_ are n:m hyperedges, which may (for the sake of demonstration) have multiple sinks.
@@ -89,8 +89,8 @@ Here is a quick walk-through of the API based on the `logic` example application
 
 #### The Graph
 
-The graph model is a JavaScript object which contains two maps, `edges` and `vertices`.
-As the example shows in file `lib/data/dummy_model.json`, edges and vertices are stored under their respective IDs which occupy separate namespaces.
+The graph model is a JavaScript object containing two maps, `edges` and `vertices`.
+As the example shows (in file `lib/data/dummy_model.json`), edges and vertices are stored under their respective IDs, occupying separate namespaces.
 Edges have the string properties `type` and `label`, while vertices have a `label` as well as a list of `ports`.
 Each port is an object with a `label`, an `id` (unique within the vertex), an optional `direction` which is either `"out"` or `"in`" (default), and an optional `edgeId` referencing the edge a port is connected to (if any). 
 
