@@ -26,25 +26,26 @@ define( [
          }
 
          var dagreResult = dagre.layout().nodeSep( 60 ).rankSep( 90 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
-         return layoutFromDagreResult( dagreResult, offset );
+         return layoutFromDagreResult( dagreResult, offset, model.edgesToLayout );
       }
 
       this.calculate = calculate;
 
       ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function layoutFromDagreResult( dagreResult, offset ) {
+      function layoutFromDagreResult( dagreResult, offset, edgesToLayout ) {
          var left = offset.left;
          var top = offset.top;
          var layout = { vertices: {}, edges: {} };
          dagreResult.eachNode( function( dagreNodeId, properties ) {
+            var nodeId = dagreNodeId.substring( 2 );
             if( dagreNodeId.charAt( 0 ) === 'V' ) {
-               var vertexLayout = layout.vertices[ dagreNodeId.substring( 2 ) ] = {};
+               var vertexLayout = layout.vertices[ nodeId ] = {};
                vertexLayout.left = round( properties.x - properties.width / 2 + graphPadding + left );
                vertexLayout.top = round( properties.y - properties.height / 2 + graphPadding + top );
             }
-            else {
-               var edgeLayout = layout.edges[ dagreNodeId.substring( 2 ) ] = {};
+            else if( !edgesToLayout || edgesToLayout[ nodeId ] ) {
+               var edgeLayout = layout.edges[ nodeId ] = {};
                edgeLayout.left = round( properties.x - properties.width / 2 + graphPadding + left );
                edgeLayout.top = round( properties.y - properties.height / 2 + graphPadding + top );
             }

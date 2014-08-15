@@ -78,9 +78,9 @@ define( [
                      input = $scope.model;
                   }
                   else {
-                     input = { edges: {}, vertices: {} };
+                     input = { edges: $scope.model.edges, vertices: {}, edgesToLayout: {} };
                      Object.keys( self.selection.edges() ).forEach( function( edgeId ) {
-                        input.edges[ edgeId ] = $scope.model.edges[ edgeId ];
+                        input.edgesToLayout[ edgeId ] = true;
                      } );
                      Object.keys( self.selection.vertices() ).forEach( function( vertexId ) {
                         input.vertices[ vertexId ] = $scope.model.vertices[ vertexId ];
@@ -132,30 +132,34 @@ define( [
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function setupControllers( $scope, self ) {
-            var ops = self.operations = operationsModule.create( $scope );
+            var ops = operationsModule.create( $scope );
 
             var jqGraph = self.jqGraph;
 
-            var canvas = self.canvas = createCanvasController(
+            var canvas = createCanvasController(
                $scope.layout, $scope.view, layoutSettings, jqGraph, $timeout );
 
-            var links = self.links = createLinksController(
-               $scope.view, $scope.types, canvas, idGenerator );
+            var links = createLinksController( $scope.view, $scope.types, canvas, idGenerator );
 
-            var updates = createUpdatesController(
-               $scope.types, canvas, links, jqGraph, $timeout );
+            var updates = createUpdatesController( $scope.types, canvas, links, jqGraph, $timeout );
 
-            var dragDrop = self.dragDrop = createDragDropController(
-               ops, jqGraph );
+            var dragDrop = createDragDropController( ops, jqGraph );
 
-            var selection = self.selection = createSelectionController(
+            var selection = createSelectionController(
                $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
 
-            var operations = self.operations = createGraphOperationsController(
+            var operations = createGraphOperationsController(
                $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
 
             createKeysController( $document, ops, operations, dragDrop );
 
+            // controller API:
+            self.dragDrop = dragDrop;
+            self.links = links;
+            self.operations = ops;
+            self.selection = selection;
+            self.canvas = canvas;
+            self.operations = operations;
             self.zoom = canvas.zoom;
 
             canvas.repaint();

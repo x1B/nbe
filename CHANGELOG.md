@@ -1,7 +1,8 @@
 # Changelog
 
-
 ## Last Changes
+
+- [#41](https://github.com/x1B/nbe/issues/41): fixed layout of simple edges in selection
 
 
 ## v0.1.0
