@@ -1,8 +1,15 @@
+<h2>NBE Nuke Visualization Demo</h2>
+<p>
+    Simple NBE visualization of an existing <em>theFoundry nuke</em> project.
+</p>
+
 <div data-ng-controller="NukeDemoController" data-ng-cloak>
 
 <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
-<button data-ng-click="nbeController.zoom.zoomOut()">-</button
-><button data-ng-click="nbeController.zoom.zoomIn()">+</button>
+<button data-ng-disabled="!nbeController.zoom.canZoomOut"
+        data-ng-click="nbeController.zoom.zoomOut()">-</button
+        ><button data-ng-disabled="!nbeController.zoom.canZoomIn"
+                 data-ng-click="nbeController.zoom.zoomIn()">+</button>
 
 <div style="overflow: auto; position: relative; width: 1100px; height: 740px;"
      class="graph-container nuke-app">

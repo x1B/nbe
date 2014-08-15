@@ -60,6 +60,10 @@ $fontSizePort: 11px!default;
       font-size: round( $fontSizeLabel * $f );
       border-radius: round( $graphBorderRadius * $f );
 
+      .graph-contents {
+         background-size: round(50px * $f) round(50px * $f);
+      }
+
       .port {
          line-height: $portHeight*$f;
          font-size: round( $fontSizePort*$f );

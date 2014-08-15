@@ -269,6 +269,9 @@
   font-size: 12px;
   border-radius: 10px;
 }
+.graph.zoom-100 .graph-contents {
+  background-size: 50px 50px;
+}
 .graph.zoom-100 .port {
   line-height: 16px;
   font-size: 11px;
@@ -305,6 +308,9 @@
 .graph.zoom-75 {
   font-size: 9px;
   border-radius: 8px;
+}
+.graph.zoom-75 .graph-contents {
+  background-size: 38px 38px;
 }
 .graph.zoom-75 .port {
   line-height: 12px;
@@ -343,6 +349,9 @@
   font-size: 6px;
   border-radius: 5px;
 }
+.graph.zoom-50 .graph-contents {
+  background-size: 25px 25px;
+}
 .graph.zoom-50 .port {
   line-height: 8px;
   font-size: 6px;
@@ -380,6 +389,9 @@
   font-size: 3px;
   border-radius: 3px;
 }
+.graph.zoom-25 .graph-contents {
+  background-size: 13px 13px;
+}
 .graph.zoom-25 .port {
   line-height: 4px;
   font-size: 3px;
@@ -416,6 +428,9 @@
 .graph.zoom-10 {
   font-size: 1px;
   border-radius: 1px;
+}
+.graph.zoom-10 .graph-contents {
+  background-size: 5px 5px;
 }
 .graph.zoom-10 .port {
   line-height: 1.6px;

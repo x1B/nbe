@@ -39,8 +39,7 @@ define( [
       var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.circuit.vertices );
       $scope.addGate = function( gateType ) {
          var id = gateIdGenerator();
-         var gate = ng.copy( templates.model[ gateType  ] );
-         $scope.circuit.vertices[ id ] = gate;
+         $scope.circuit.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
          $scope.layout.vertices[ id ] = ng.copy( templates.layout );
       };
    }
