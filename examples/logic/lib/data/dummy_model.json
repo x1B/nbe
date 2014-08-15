@@ -36,15 +36,15 @@
             { "id": "z", "label": "x⊻y", "type": "WIRE", "edgeId": "wire 4" }
          ]
       },
-      "v5": {
-         "label": "PROBE",
+      "PROBE 0": {
+         "label": "PROBE 0",
          "ports": [
             { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 4" },
             { "id": "log", "label": "log", "type": "CHANNEL", "edgeId": "channel 0" }
          ]
       },
-      "v6": {
-         "label": "PROBE",
+      "PROBE 1": {
+         "label": "PROBE 1",
          "ports": [
             { "id": "x", "label": "x", "type": "WIRE", "direction": "in", "edgeId": "wire 3" },
             { "id": "log", "label": "log", "type": "CHANNEL", "edgeId": "channel 0" }
