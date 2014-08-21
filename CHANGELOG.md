@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#42](https://github.com/x1B/nbe/issues/42): partition ports into inbound and outbound subset
+
 - [#41](https://github.com/x1B/nbe/issues/41): fixed layout of simple edges in selection
 
 

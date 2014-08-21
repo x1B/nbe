@@ -31,7 +31,9 @@ define( [
          restrict: 'A',
          controller: [ '$scope', '$element', function LinkController( $scope, $element ) {
 
-            $scope.controller.links.registerController( $scope.link.id, this );
+            var self = this;
+
+            $scope.controller.links.registerController( $scope.link.id, self );
             var jqGraph = $scope.controller.jqGraph;
 
             // Cache information that frequently accessed when repainting (during drag/drop):
@@ -39,8 +41,8 @@ define( [
             var jqDestNode, jqDestHandle;
 
             // API to be called when attached edges or vertices have been moved:
-            var repaint = this.repaint = pathUpdater();
-            this.toggleSelect = function toggleSelect( state ) {
+            self.repaint = function(){};
+            self.toggleSelect = function toggleSelect( state ) {
                $element.toggleClass( 'selected', state );
             };
 
@@ -127,7 +129,8 @@ define( [
                   }
                }
 
-               repaint();
+               self.repaint = pathUpdater();
+               self.repaint();
                return true;
 
                ///////////////////////////////////////////////////////////////////////////////////////////////

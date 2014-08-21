@@ -57,7 +57,7 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
                   var contextRef = { nodeId: vId, port: port, direction: direction };
                   if( !linksController.byPort( vId, port ).length ) {
                      if( typesModel[ port.type ].simple ) {
-                        var isInput = direction === 'in';
+                        var isInput = direction === IN;
                         var table = isInput ? outputRefsByEdge : inputRefsByEdge;
                         ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
                            linksController.create( isInput ? ref : contextRef, isInput ? contextRef : ref );

@@ -78,13 +78,13 @@ a {
   position: relative;
 }
 .graph .port i:hover {
-  opacity: 0.5;
+  border-color: #f9f9f9;
 }
-.graph.highlight-in .ports.out .port i {
-  background: #646464;
+.graph.highlight-inbound .ports.outbound .port i {
+  background-color: #646464;
 }
-.graph.highlight-out .ports.in .port i {
-  background: #646464;
+.graph.highlight-outbound .ports.inbound .port i {
+  background-color: #646464;
 }
 .graph .node {
   position: absolute;
@@ -124,18 +124,18 @@ a {
   -webkit-flex-flow: column;
   -webkit-justify-content: stretch;
 }
-.graph .node.vertex .ports.in {
+.graph .node.vertex .ports.inbound {
   border-right: 1px solid #a0a0a0;
   -webkit-align-items: flex-start;
 }
-.graph .node.vertex .ports.in .port {
+.graph .node.vertex .ports.inbound .port {
   text-align: left;
   padding-right: 9px;
 }
-.graph .node.vertex .ports.out {
+.graph .node.vertex .ports.outbound {
   -webkit-align-items: flex-end;
 }
-.graph .node.vertex .ports.out .port {
+.graph .node.vertex .ports.outbound .port {
   text-align: right;
   padding-left: 9px;
 }
