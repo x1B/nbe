@@ -1,0 +1,190 @@
+{
+   "AND": {
+      "label": "AND",
+      "ports": {
+         "inbound": [
+            {
+               "id": "x",
+               "label": "x",
+               "type": "WIRE"
+            },
+            {
+               "id": "y",
+               "label": "y",
+               "type": "WIRE"
+            }
+         ],
+         "outbound": [
+            {
+               "id": "z",
+               "label": "x∧y",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "OR": {
+      "label": "OR",
+      "ports": {
+         "inbound": [
+            {
+               "id": "x",
+               "label": "x",
+               "type": "WIRE"
+            },
+            {
+               "id": "y",
+               "label": "y",
+               "type": "WIRE"
+            }
+         ],
+         "outbound": [
+            {
+               "id": "z",
+               "label": "x∨y",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "NOT": {
+      "label": "NOT",
+      "ports": {
+         "inbound": [
+            {
+               "id": "x",
+               "label": "x",
+               "type": "WIRE"
+            }
+         ],
+         "outbound": [
+            {
+               "id": "z",
+               "label": "¬x",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "TRUE": {
+      "label": "TRUE",
+      "ports": {
+         "inbound": [
+         ],
+         "outbound": [
+            {
+               "id": "x",
+               "label": "1",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "FALSE": {
+      "label": "FALSE",
+      "ports": {
+         "inbound": [
+         ],
+         "outbound": [
+            {
+               "id": "x",
+               "label": "0",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "4BIT": {
+      "label": "4BIT",
+      "ports": {
+         "inbound": [
+         ],
+         "outbound": [
+            {
+               "id": "b0",
+               "label": "b0",
+               "type": "WIRE"
+            },
+            {
+               "id": "b1",
+               "label": "b1",
+               "type": "WIRE"
+            },
+            {
+               "id": "b2",
+               "label": "b2",
+               "type": "WIRE"
+            },
+            {
+               "id": "b3",
+               "label": "b3",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
+   "PROBE": {
+      "label": "PROBE",
+      "classes": "monitoring",
+      "ports": {
+         "inbound": [
+            {
+               "id": "x",
+               "label": "x",
+               "type": "WIRE"
+            }
+         ],
+         "outbound": [
+            {
+               "id": "log",
+               "label": "log",
+               "type": "CHANNEL"
+            }
+         ]
+      }
+   },
+   "LOG": {
+      "label": "LOG",
+      "classes": "monitoring",
+      "frozen": true,
+      "ports": {
+         "inbound": [
+            {
+               "id": "messages",
+               "label": "messages",
+               "type": "CHANNEL"
+            }
+         ],
+         "outbound": [
+         ]
+      }
+   },
+   "COMPONENT": {
+      "edges": {},
+      "vertices": {
+         "INPUT": {
+            "classes": "interface",
+            "frozen": true,
+            "label": "INPUT",
+            "ports": {
+               "inbound": [],
+               "outbound": [
+                  { "id": "x0", "type": "WIRE" },
+                  { "id": "x1", "type": "WIRE" }
+               ]
+            }
+         },
+         "OUTPUT": {
+            "classes": "interface",
+            "frozen": true,
+            "label": "OUTPUT",
+            "ports": {
+               "inbound": [
+                  { "id": "y0", "type": "WIRE" }
+               ],
+               "outbound": []
+            }
+         }
+      }
+   }
+}

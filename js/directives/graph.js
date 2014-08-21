@@ -63,11 +63,11 @@ define( [
             /** Provide access to the jQuery handle to the graph canvas element */
             self.jqGraph = $( $element[ 0 ] );
 
+            self.calculateLayout = calculateLayout;
+
             setupModel( $scope, self );
 
             setupControllers( $scope, self );
-
-            self.calculateLayout = calculateLayout;
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 

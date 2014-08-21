@@ -1,8 +1,8 @@
 <div data-ng-style="{ left: (layout.vertices[ vertexId ].left * view.zoom.factor) + 'px',
                       top: (layout.vertices[ vertexId ].top * view.zoom.factor) + 'px' }"
      data-ng-click="handleVertexClick( $event )"
-     data-ng-class="{ selected: view.selection.vertices[ vertexId ], 'zoom-100': vertex.over }"
-     class="node vertex">
+     data-ng-class="{ 'selected': view.selection.vertices[ vertexId ], 'zoom-100': vertex.over }"
+     class="node vertex {{vertex.classes}}">
    <div class="header">{{ vertex.label }}</div>
    <div class="port-group">
       <div class="ports inbound">

@@ -1,62 +1,177 @@
 {
-   "vertices": {
-      "s1": {
-         "left": 40,
-         "top": 86
+   "components": {
+
+      "4MUX": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 46,
+               "top": 116
+            },
+            "OUTPUT": {
+               "left": 688,
+               "top": 305
+            },
+            "COMPONENT0": {
+               "left": 272,
+               "top": 83
+            },
+            "COMPONENT1": {
+               "left": 270,
+               "top": 184
+            },
+            "COMPONENT2": {
+               "left": 481,
+               "top": 254
+            }
+         }
       },
-      "s2": {
-         "left": 40,
-         "top": 210
+
+      "2MUX": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 75,
+               "top": 104
+            },
+            "OUTPUT": {
+               "left": 790,
+               "top": 80
+            },
+            "GATE0": {
+               "left": 352,
+               "top": 47
+            },
+            "GATE1": {
+               "left": 469,
+               "top": 214
+            },
+            "GATE2": {
+               "left": 340,
+               "top": 232
+            },
+            "GATE3": {
+               "left": 635,
+               "top": 81
+            }
+         }
       },
-      "v2": {
-         "left": 275,
-         "top": 60
+
+      "NAND": {
+         "vertices": {
+            "and": {
+               "left": 170,
+               "top": 56
+            },
+            "INPUT": {
+               "left": 42,
+               "top": 43
+            },
+            "not": {
+               "left": 309,
+               "top": 81
+            },
+            "OUTPUT": {
+               "left": 443,
+               "top": 73
+            }
+         },
+         "edges": {}
       },
-      "v3": {
-         "left": 405,
-         "top": 220
+
+      "NOR": {
+         "vertices": {
+            "or": {
+               "left": 170,
+               "top": 56
+            },
+            "INPUT": {
+               "left": 42,
+               "top": 43
+            },
+            "not": {
+               "left": 309,
+               "top": 81
+            },
+            "OUTPUT": {
+               "left": 443,
+               "top": 73
+            }
+         },
+         "edges": {}
       },
-      "v4": {
-         "left": 552,
-         "top": 130
-      },
-      "PROBE 0": {
-         "left": 827,
-         "top": 150
-      },
-      "PROBE 1": {
-         "left": 827,
-         "top": 270
-      },
-      "v7": {
-         "left": 1050,
-         "top": 200
+
+      "XOR": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 42,
+               "top": 40
+            },
+            "OUTPUT": {
+               "left": 536,
+               "top": 114
+            },
+            "GATE0": {
+               "left": 413,
+               "top": 86
+            },
+            "GATE1": {
+               "left": 182,
+               "top": 35
+            },
+            "GATE2": {
+               "left": 268,
+               "top": 69
+            },
+            "GATE3": {
+               "left": 218,
+               "top": 175
+            }
+         }
       }
    },
-   "edges": {
-      "wire 0": {
-         "left": 170,
-         "top": 90
+
+   "main": {
+      "vertices": {
+         "s1": {
+            "left": 40,
+            "top": 86
+         },
+         "s2": {
+            "left": 40,
+            "top": 210
+         },
+         "v2": {
+            "left": 275,
+            "top": 60
+         },
+         "v3": {
+            "left": 405,
+            "top": 220
+         },
+         "v4": {
+            "left": 552,
+            "top": 130
+         },
+         "PROBE 0": {
+            "left": 827,
+            "top": 150
+         },
+         "PROBE 1": {
+            "left": 827,
+            "top": 270
+         },
+         "v7": {
+            "left": 1050,
+            "top": 200
+         }
       },
-      "wire 1": {
-         "left": 170,
-         "top": 220
-      },
-      "wire 2": {
-         "left": 445,
-         "top": 70
-      },
-      "wire 3": {
-         "left": 607,
-         "top": 270
-      },
-      "wire 4": {
-         "left": 829,
-         "top": 60
-      },
-      "channel 0": {
-         "left": 980,
-         "top": 220
+      "edges": {
+         "channel 0": {
+            "left": 980,
+            "top": 220
+         }
       }
    }
 }
