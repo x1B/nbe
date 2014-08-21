@@ -59,7 +59,7 @@ define( [ 'angular' ], function( ng ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function createLink( refA, refB, optionalId ) {
-         var reverse = isInput( refA.port ) || isOutput( refB.port );
+         var reverse = isInput( refA ) || isOutput( refB );
          var fromRef = reverse ? refB : refA;
          var toRef = reverse ? refA : refB;
 
@@ -167,14 +167,14 @@ define( [ 'angular' ], function( ng ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function isInput( port ) {
-         return port && port.direction === 'in';
+      function isInput( ref ) {
+         return ref.port && ref.direction === 'inbound';
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function isOutput( port ) {
-         return port && port.direction !== 'in';
+      function isOutput( ref ) {
+         return ref.port && ref.direction === 'outbound';
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

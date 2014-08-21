@@ -109,7 +109,7 @@ define( [
 
    return {
       define: function( module ) {
-         module.directive( DIRECTIVE_NAME, ['nbeAsync', createEdgeDirective] );
+         module.directive( DIRECTIVE_NAME, [ 'nbeAsync', createEdgeDirective ] );
       }
    };
 

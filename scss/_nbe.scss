@@ -92,19 +92,19 @@ a {
          position: relative;
       }
       i:hover {
-         opacity: 0.5;
+         border-color: $gray7;
       }
    }
 
-   &.highlight-in {
-      .ports.out .port i {
-         background: $unHighlightColor;
+   &.highlight-inbound {
+      .ports.outbound .port i {
+         background-color: $unHighlightColor;
       }
    }
 
-   &.highlight-out {
-      .ports.in .port i {
-         background: $unHighlightColor;
+   &.highlight-outbound {
+      .ports.inbound .port i {
+         background-color: $unHighlightColor;
       }
    }
 
@@ -156,13 +156,13 @@ a {
             -webkit-flex-flow: column;
             -webkit-justify-content: stretch;
 
-            &.in {
+            &.inbound {
                border-right: 1px solid $gray4;
                -webkit-align-items: flex-start;
                .port { text-align: left; padding-right: 9px; }
             }
 
-            &.out {
+            &.outbound {
                -webkit-align-items: flex-end;
                .port { text-align: right; padding-left: 9px; }
             }

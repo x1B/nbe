@@ -177,20 +177,6 @@ define( [
    return {
       define: function( module ) {
          module.directive( DIRECTIVE_NAME, createGraphDirective );
-         module.filter( 'nbeInputPorts', function() {
-            return function( ports ) {
-               return ports.filter( function( _ ) {
-                  return _.direction === 'in';
-               } );
-            };
-         } );
-         module.filter( 'nbeOutputPorts', function() {
-            return function( ports ) {
-               return ports.filter( function( _ ) {
-                  return _.direction !== 'in';
-               } );
-            };
-         } );
       }
    };
 

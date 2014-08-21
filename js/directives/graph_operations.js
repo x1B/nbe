@@ -4,6 +4,9 @@
 define( [], function() {
    'use strict';
 
+   var IN = 'inbound', OUT = 'outbound';
+   var DIRECTIONS = [ IN, OUT ];
+
    /**
     * @param {object} model
     *    the graph model to operate on
@@ -103,7 +106,7 @@ define( [], function() {
                return ops.noOp;
             }
 
-            var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.port.direction );
+            var enforceCardinalityOp = makeEnforceCardinalityOp( toEdgeId, type, vertexRef.direction );
             var edgeRef = { nodeId: toEdgeId };
 
             var connectPortToEdgeOp = function() {
@@ -119,8 +122,8 @@ define( [], function() {
 
          /** If mandated by the edge type, delete one link to this edge (allowing to form a new link). */
          function makeEnforceCardinalityOp( edgeId, type, portDirection ) {
-            var restrictDests = portDirection === 'in';
-            var limit = typesModel[ type ] && typesModel[ type ][ restrictDests ? 'maxDestinations' : 'maxSources' ];
+            var portInbound = portDirection === IN;
+            var limit = typesModel[ type ] && typesModel[ type ][ portInbound ? 'maxDestinations' : 'maxSources' ];
             if( limit === undefined ) {
                return ops.noOp;
             }
@@ -130,10 +133,10 @@ define( [], function() {
             var links = linksController.byEdge( edgeId );
             Object.keys( links ).forEach( function( linkId ) {
                var link = links[ linkId ];
-               if( link[ restrictDests ? 'source' : 'dest' ].nodeId === edgeId ) {
+               if( link[ portInbound ? 'source' : 'dest' ].nodeId === edgeId ) {
                   ++counter;
                   if( counter >= limit ) {
-                     disconnectOps.push( makeDisconnectOp( link[ restrictDests ? 'dest' : 'source' ] ) );
+                     disconnectOps.push( makeDisconnectOp( link[ portInbound ? 'dest' : 'source' ] ) );
                   }
                }
             } );
@@ -144,15 +147,15 @@ define( [], function() {
 
          function makeConnectPortToPortOp( fromRef, toRef ) {
             if( fromRef.port.type !== toRef.port.type ||
-               fromRef.port.direction === toRef.port.direction ) {
+               fromRef.direction === toRef.direction ) {
                return ops.noOp;
             }
 
             var sequence = [];
             [ fromRef, toRef ].forEach( function( ref ) {
-               var isDest = isInput( ref.port );
                var typeDef = typesModel[ ref.port.type ];
-               if( !( typeDef.simple && 1 === (isDest ? typeDef.maxDestinations : typeDef.maxSources) ) ) {
+               var limit = typeDef[ ref.direction === IN ? 'maxDestinations' : 'maxSources' ];
+               if( !( typeDef.simple && limit === 1 ) ) {
                   sequence.push( makeDisconnectOp( ref ) );
                }
             } );
@@ -241,8 +244,10 @@ define( [], function() {
       function makeDeleteVertexOp( vertexId ) {
          var steps = [];
          var vertex = model.vertices[ vertexId ];
-         vertex.ports.forEach( function( port ) {
-            steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
+         DIRECTIONS.forEach( function( direction ) {
+            vertex.ports[ direction ].forEach( function( port ) {
+               steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
+            } );
          } );
          function deleteVertexOp() {
             delete model.vertices[ vertexId ];
@@ -256,11 +261,5 @@ define( [], function() {
       }
 
    };
-
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   function isInput( port ) {
-      return port && port.direction === 'in';
-   }
 
 } );

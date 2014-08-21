@@ -5,15 +5,19 @@
      class="node vertex">
    <div class="header">{{ vertex.label }}</div>
    <div class="port-group">
-      <div class="ports in">
-         <div data-ng-repeat="port in vertex.ports | nbeInputPorts"
+      <div class="ports inbound">
+         <div data-ng-repeat="port in vertex.ports.inbound track by port.id"
+              class="port"
+              data-ng-class="port.type"
               data-nbe-port="{{ port.id }}"
-              data-nbe-port-group="in"></div>
+              data-nbe-port-direction="inbound"><i></i>{{ port.label || port.id }}</div>
       </div>
-      <div class="ports out">
-         <div data-ng-repeat="port in vertex.ports | nbeOutputPorts"
-              data-nbe-port-group="out"
-              data-nbe-port="{{ port.id }}"></div>
+      <div class="ports outbound">
+         <div data-ng-repeat="port in vertex.ports.outbound track by port.id"
+              class="port"
+              data-ng-class="port.type"
+              data-nbe-port="{{ port.id }}"
+              data-nbe-port-direction="outbound">{{ port.label || port.id }}<i></i></div>
       </div>
    </div>
 </div>

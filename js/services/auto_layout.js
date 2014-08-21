@@ -8,6 +8,11 @@ define( [
 ], function( dagre, $ ) {
    'use strict';
 
+   var IN = 'inbound', OUT = 'outbound';
+   var DIRECTIONS = [ IN, OUT ];
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    function AutoLayout( nbeLayoutSettings ) {
       var round = Math.round,
           min = Math.min;
@@ -25,13 +30,14 @@ define( [
             return { vertices: {}, edges: {} };
          }
 
-         var dagreResult = dagre.layout().nodeSep( 60 ).rankSep( 90 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
+         var dagreResult =
+                dagre.layout().nodeSep( 60 ).rankSep( 90 ).edgeSep( 0 ).rankDir( 'LR' ).run( dagreGraph );
          return layoutFromDagreResult( dagreResult, offset, model.edgesToLayout );
       }
 
       this.calculate = calculate;
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function layoutFromDagreResult( dagreResult, offset, edgesToLayout ) {
          var left = offset.left;
@@ -53,7 +59,7 @@ define( [
          return layout;
       }
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function createDagreGraph( jqVertices, jqEdges, zoomFactor, model, types, offset ) {
          var dagreGraph = new dagre.Digraph();
@@ -65,17 +71,18 @@ define( [
             if( vertex ) {
                var dagreNodeId = 'V:' + id;
                var jqVertex = $( domVertex );
-               var dagreNode = { width: jqVertex.width() / zoomFactor, height: jqVertex.height() / zoomFactor };
+               var dagreNode = {
+                  width: jqVertex.width() / zoomFactor,
+                  height: jqVertex.height() / zoomFactor
+               };
                var pos = jqVertex.position();
                offset.left = min( parseInt( pos.left ), offset.left );
                offset.top = min( parseInt( pos.top ), offset.top );
                dagreGraph.addNode( dagreNodeId, dagreNode );
 
-               vertex.ports.forEach( function( port ) {
-                  if( port.edgeId && port.direction !== 'in' ) {
-                     inputRefsByEdge[ port.edgeId ] = inputRefsByEdge[ port.edgeId ] || [];
-                     inputRefsByEdge[ port.edgeId ].push( { nodeId: id, port: port } );
-                  }
+               vertex.ports.outbound.filter( isConnected ).forEach( function( port ) {
+                  inputRefsByEdge[ port.edgeId ] = inputRefsByEdge[ port.edgeId ] || [];
+                  inputRefsByEdge[ port.edgeId ].push( { nodeId: id, port: port } );
                } );
             }
          } );
@@ -97,38 +104,45 @@ define( [
          var vertices = model.vertices;
          Object.keys( vertices ).forEach( function( vertexId ) {
             var dagreVertexId = 'V:' + vertexId;
-            vertices[ vertexId ].ports.forEach( function( port ) {
-               var edgeId = port.edgeId;
-               if( !edgeId || !model.edges[ edgeId ] ) {
-                  return;
-               }
-
-               var typeDef = types[ port.type ];
-               if( typeDef.simple ) {
-                  if( !typeDef.hidden && port.direction === 'in' ) {
-                     ( inputRefsByEdge[ edgeId ] || [] ).forEach( function( ref ) {
-                        dagreGraph.addEdge( null, 'V:' + ref.nodeId, dagreVertexId );
-                     } );
+            var vertex = vertices[ vertexId ];
+            DIRECTIONS.forEach( function( direction ) {
+               vertex.ports[ direction ].filter( isConnected ).forEach( function( port ) {
+                  var edgeId = port.edgeId;
+                  if ( !model.edges[ edgeId ] ) {
+                     return;
                   }
-               }
-               else {
-                  var dagreEdgeId = 'E:' + port.edgeId;
-                  if( port.direction === 'in' ) {
-                     // ignore incoming edges of hidden type.
-                     if( !typeDef.hidden ) {
-                        dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+
+                  var typeDef = types[ port.type ];
+                  if( typeDef.simple ) {
+                     if( !typeDef.hidden && direction === IN ) {
+                        ( inputRefsByEdge[ edgeId ] || [] ).forEach( function ( ref ) {
+                           dagreGraph.addEdge( null, 'V:' + ref.nodeId, dagreVertexId );
+                        } );
                      }
                   }
                   else {
-                     dagreGraph.addEdge( null, dagreVertexId, dagreEdgeId );
+                     var dagreEdgeId = 'E:' + port.edgeId;
+                     if( direction === IN ) {
+                        // ignore incoming edges of hidden type.
+                        if( !typeDef.hidden ) {
+                           dagreGraph.addEdge( null, dagreEdgeId, dagreVertexId );
+                        }
+                     }
+                     else {
+                        dagreGraph.addEdge( null, dagreVertexId, dagreEdgeId );
+                     }
                   }
-               }
+               } );
             } );
          } );
 
          return dagreGraph;
       }
    }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function isConnected( port ) { return !!port.edgeId; }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

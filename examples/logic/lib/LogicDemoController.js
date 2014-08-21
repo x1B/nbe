@@ -263,11 +263,10 @@ define( [
 
          Object.keys( model.vertices ).forEach( function( vertexId ) {
             var vertex = model.vertices[ vertexId ];
-            var activePorts = vertex.ports.filter( isConnected );
-            var wIn = activePorts.filter( isInput ).filter( isWire ).map( connectionAt );
-            var wOut = activePorts.filter( isOutput ).filter( isWire ).map( connectionAt );
-            var cIn = activePorts.filter( isInput ).filter( isChannel ).map( connectionAt );
-            var cOut = activePorts.filter( isOutput ).filter( isChannel ).map( connectionAt );
+            var wIn = vertex.ports.inbound.filter( isConnected ).filter( isWire ).map( connectionAt );
+            var wOut = vertex.ports.outbound.filter( isConnected ).filter( isWire ).map( connectionAt );
+            var cIn = vertex.ports.inbound.filter( isConnected ).filter( isChannel ).map( connectionAt );
+            var cOut = vertex.ports.outbound.filter( isConnected ).filter( isChannel ).map( connectionAt );
 
             if( vertex.label.indexOf( 'PROBE ' ) === 0 ) {
                gateBuilders.PROBE.apply( this, [ vertex.label ].concat( wIn ).concat( cOut ) );

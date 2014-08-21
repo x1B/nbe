@@ -52,6 +52,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
 
       /** Center the given edge between the given nodes. */
       function centerEdge( id, fromRef, toRef ) {
+         console.log( 'center', id, fromRef, toRef );
          var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
          layoutModel.edges[ id ] = {
             left: edgeCenter[ 0 ] - layoutSettings.edgeOffset,
@@ -62,7 +63,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
 
          function centerCoords( vertexId ) {
             var vertexLayout = layoutModel.vertices[ vertexId ];
-            var jqVertex = $( '[data-nbe-vertex=' + vertexId + ']', jqGraph );
+            var jqVertex = $( '[data-nbe-vertex="' + vertexId + '"]', jqGraph );
             return [ vertexLayout.left + jqVertex.width() / 2, vertexLayout.top + jqVertex.height() / 2 ];
          }
 

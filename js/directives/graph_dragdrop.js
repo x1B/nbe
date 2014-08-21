@@ -1,6 +1,8 @@
 define( [], function() {
    'use strict';
 
+   var IN = 'inbound', OUT = 'outbound';
+
    /**
     * Manages drag/drop of ports to create links or even new edges.
     *
@@ -24,7 +26,7 @@ define( [], function() {
 
       function clear() {
          jqGraph.removeClass( 'highlight-' + dragRef.port.type );
-         jqGraph.removeClass( 'highlight-' + ( dragRef.port.direction === 'in' ? 'out' : 'in' ) );
+         jqGraph.removeClass( 'highlight-' + (dragRef.direction === IN ? OUT : IN) );
          dropRef = dragRef = transaction = null;
       }
 
@@ -32,9 +34,9 @@ define( [], function() {
          start: function( ref, cancel ) {
             onCancel = cancel;
             transaction = ops.startTransaction();
-            dragRef = { nodeId: ref.nodeId, port: ref.port };
+            dragRef = { nodeId: ref.nodeId, port: ref.port, direction: ref.direction };
             jqGraph.addClass( 'highlight-' + ref.port.type );
-            jqGraph.addClass( 'highlight-' + ( ref.port.direction === 'in' ? 'out' : 'in' ) );
+            jqGraph.addClass( 'highlight-' + (ref.direction === IN ? OUT : IN) );
             return transaction;
          },
 

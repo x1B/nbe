@@ -4,6 +4,9 @@
 define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual ) {
    'use strict';
 
+   var IN = 'inbound', OUT = 'outbound';
+   var DIRECTIONS = [ IN, OUT ];
+
    return function( typesModel, canvasController, linksController, jqGraph, nextTick ) {
 
       return {
@@ -24,6 +27,7 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** Update the view model when nodes have been added/removed */
       function updateVertices( newVertices, previousVertices ) {
          if( newVertices == null ) {
             return;
@@ -32,10 +36,12 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
          var outputRefsByEdge = { };
          var inputRefsByEdge = { };
          ng.forEach( newVertices, function( vertex, vId ) {
-            vertex.ports.filter( connected ).forEach( function( port ) {
-               var table = port.direction === 'in' ? inputRefsByEdge : outputRefsByEdge;
-               table[ port.edgeId ] = table[ port.edgeId ] || [];
-               table[ port.edgeId ].push( { nodeId: vId, port: port } );
+            DIRECTIONS.forEach( function( direction ) {
+               vertex.ports[ direction ].filter( connected ).forEach( function ( port ) {
+                  var table = direction === IN ? inputRefsByEdge : outputRefsByEdge;
+                  table[ port.edgeId ] = table[ port.edgeId ] || [];
+                  table[ port.edgeId ].push( { nodeId: vId, port: port, direction: direction } );
+               } );
             } );
          } );
 
@@ -46,27 +52,30 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
                   visual.pingAnimation( jqNew );
                } );
             }
-            vertex.ports.filter( connected ).forEach( function( port ) {
-               var contextRef = { nodeId: vId, port: port };
-               if( !linksController.byPort( vId, port ).length ) {
-                  if( typesModel[ port.type ].simple ) {
-                     var isInput = port.direction === 'in';
-                     var table = isInput ? outputRefsByEdge : inputRefsByEdge;
-                     ( table[ port.edgeId ] || [] ).forEach( function( ref ) {
-                        linksController.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
-                     } );
+            DIRECTIONS.forEach( function( direction ) {
+               vertex.ports[ direction ].filter( connected ).forEach( function( port ) {
+                  var contextRef = { nodeId: vId, port: port, direction: direction };
+                  if( !linksController.byPort( vId, port ).length ) {
+                     if( typesModel[ port.type ].simple ) {
+                        var isInput = direction === IN;
+                        var table = isInput ? outputRefsByEdge : inputRefsByEdge;
+                        ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
+                           linksController.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
+                        } );
+                     }
+                     else {
+                        var edgeRef = { nodeId: port.edgeId, direction: direction, port: null };
+                        linksController.create( contextRef, edgeRef );
+                     }
                   }
-                  else {
-                     var edgeRef = { nodeId: port.edgeId, port: null };
-                     linksController.create( contextRef, edgeRef );
-                  }
-               }
+               } );
             } );
          } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** Update the view model when edges have been added/removed */
       function updateEdges( newEdges, previousEdges ) {
          if( newEdges == null ) {
             return;
