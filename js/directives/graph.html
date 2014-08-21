@@ -4,19 +4,19 @@
 
    <div class="graph-contents">
 
-      <div data-ng-repeat="(vertexId, vertex) in model.vertices"
+      <div data-ng-repeat="(vertexId, vertex) in model.vertices track by vertexId"
            data-nbe-vertex="{{ vertexId }}">
       </div>
 
       <div class="port GHOST" style="display: none;"><i></i></div>
       <div class="selection" style="display: none;"></div>
 
-      <div data-ng-repeat="(edgeId, edge) in model.edges"
+      <div data-ng-repeat="(edgeId, edge) in model.edges track by edgeId"
            data-ng-if="!types[ edge.type ].simple"
            data-nbe-edge="{{ edgeId }}"></div>
 
       <svg class="links" xmlns="http://www.w3.org/2000/svg" version="1.1">
-         <path data-ng-repeat="(id, link) in view.links"
+         <path data-ng-repeat="(id, link) in view.links track by id"
                data-nbe-link
                stroke-linejoin="round"
                class="link {{ link.type }} {{ view.selection.links[ id ] && 'selected' }}"

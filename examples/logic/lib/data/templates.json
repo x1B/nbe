@@ -2,51 +2,79 @@
    "model": {
       "AND":{
          "label": "AND",
-         "ports": [
-            { "id": "x", "label": "x", "type": "WIRE", "direction": "in" },
-            { "id": "y", "label": "y", "type": "WIRE", "direction": "in" },
-            { "id": "z", "label": "x∧y", "type": "WIRE" }
-         ]
+         "ports": {
+            "inbound": [
+               { "id": "x", "label": "x", "type": "WIRE" },
+               { "id": "y", "label": "y", "type": "WIRE" }
+            ],
+            "outbound": [
+               { "id": "z", "label": "x∧y", "type": "WIRE" }
+            ]
+         }
       },
       "OR": {
          "label": "OR",
-         "ports": [
-            { "id": "x", "label": "x", "type": "WIRE", "direction": "in" },
-            { "id": "y", "label": "y", "type": "WIRE", "direction": "in" },
-            { "id": "z", "label": "x∨y", "type": "WIRE" }
-         ]
+         "ports": {
+            "inbound": [
+               { "id": "x", "label": "x", "type": "WIRE" },
+               { "id": "y", "label": "y", "type": "WIRE" }
+            ],
+            "outbound": [
+               { "id": "z", "label": "x∨y", "type": "WIRE" }
+            ]
+         }
       },
       "NOT": {
          "label": "NOT",
-         "ports": [
-            { "id": "x", "label": "x", "type": "WIRE", "direction": "in" },
-            { "id": "z", "label": "¬x", "type": "WIRE" }
-         ]
+         "ports": {
+            "inbound": [
+               { "id": "x", "label": "x", "type": "WIRE" }
+            ],
+            "outbound": [
+               { "id": "z", "label": "¬x", "type": "WIRE" }
+            ]
+         }
       },
       "TRUE": {
          "label": "TRUE",
-         "ports": [
-            { "id": "x", "label": "1", "type": "WIRE" }
-         ]
+         "ports": {
+            "inbound": [
+            ],
+            "outbound": [
+               { "id": "x", "label": "1", "type": "WIRE" }
+            ]
+         }
       },
       "FALSE": {
          "label": "FALSE",
-         "ports": [
-            { "id": "x", "label": "0", "type": "WIRE" }
-         ]
+         "ports": {
+            "inbound": [
+            ],
+            "outbound": [
+               { "id": "x", "label": "0", "type": "WIRE" }
+            ]
+         }
       },
       "PROBE": {
          "label": "PROBE",
-         "ports": [
-            { "id": "x", "label": "x", "type": "WIRE", "direction": "in" },
-            { "id": "log", "label": "log", "type": "CHANNEL" }
-         ]
+         "ports": {
+            "inbound": [
+               { "id": "x", "label": "x", "type": "WIRE" }
+            ],
+            "outbound": [
+               { "id": "log", "label": "log", "type": "CHANNEL" }
+            ]
+         }
       },
       "LOG": {
          "label": "LOG",
-         "ports": [
-            { "id": "messages", "label": "messages", "type": "CHANNEL", "direction": "in" }
-         ]
+         "ports": {
+            "inbound": [
+               { "id": "messages", "label": "messages", "type": "CHANNEL" }
+            ],
+            "outbound": [
+            ]
+         }
       }
    },
    "layout": {
