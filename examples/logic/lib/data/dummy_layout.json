@@ -1,62 +1,87 @@
 {
-   "vertices": {
-      "s1": {
-         "left": 40,
-         "top": 86
-      },
-      "s2": {
-         "left": 40,
-         "top": 210
-      },
-      "v2": {
-         "left": 275,
-         "top": 60
-      },
-      "v3": {
-         "left": 405,
-         "top": 220
-      },
-      "v4": {
-         "left": 552,
-         "top": 130
-      },
-      "PROBE 0": {
-         "left": 827,
-         "top": 150
-      },
-      "PROBE 1": {
-         "left": 827,
-         "top": 270
-      },
-      "v7": {
-         "left": 1050,
-         "top": 200
+   "components": {
+      "NAND": {
+         "vertices": {
+            "and": {
+               "left": 200,
+               "top": 152
+            },
+            "input": {
+               "left": 10,
+               "top": 20
+            },
+            "not": {
+               "left": 203,
+               "top": 40
+            },
+            "output": {
+               "left": 339,
+               "top": 169
+            }
+         },
+         "edges": {}
       }
    },
-   "edges": {
-      "wire 0": {
-         "left": 170,
-         "top": 90
+   "main": {
+      "vertices": {
+         "s1": {
+            "left": 40,
+            "top": 86
+         },
+         "s2": {
+            "left": 40,
+            "top": 210
+         },
+         "v2": {
+            "left": 275,
+            "top": 60
+         },
+         "v3": {
+            "left": 405,
+            "top": 220
+         },
+         "v4": {
+            "left": 552,
+            "top": 130
+         },
+         "PROBE 0": {
+            "left": 827,
+            "top": 150
+         },
+         "PROBE 1": {
+            "left": 827,
+            "top": 270
+         },
+         "v7": {
+            "left": 1050,
+            "top": 200
+         }
       },
-      "wire 1": {
-         "left": 170,
-         "top": 220
-      },
-      "wire 2": {
-         "left": 445,
-         "top": 70
-      },
-      "wire 3": {
-         "left": 607,
-         "top": 270
-      },
-      "wire 4": {
-         "left": 829,
-         "top": 60
-      },
-      "channel 0": {
-         "left": 980,
-         "top": 220
+      "edges": {
+         "wire 0": {
+            "left": 170,
+            "top": 90
+         },
+         "wire 1": {
+            "left": 170,
+            "top": 220
+         },
+         "wire 2": {
+            "left": 445,
+            "top": 70
+         },
+         "wire 3": {
+            "left": 607,
+            "top": 270
+         },
+         "wire 4": {
+            "left": 829,
+            "top": 60
+         },
+         "channel 0": {
+            "left": 980,
+            "top": 220
+         }
       }
    }
 }

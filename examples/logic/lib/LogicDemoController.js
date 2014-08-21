@@ -12,8 +12,9 @@ define( [
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function LogicDemoController( $scope, nbeIdGenerator ) {
-      $scope.circuit = dummyModel;
-      $scope.layout = dummyLayout;
+
+      $scope.main = dummyModel.components.NAND;
+      $scope.layout = dummyLayout.components.NAND;
       $scope.messages = [];
 
       var settings = {
@@ -32,25 +33,28 @@ define( [
          $scope.messages.splice( 0, $scope.messages.length );
          var sim = circuitSimulator( instantTimeSimulator(), settings, log );
          $scope.$evalAsync( function() {
-            sim.run( $scope.circuit );
+            sim.run( $scope.main );
          } );
       };
 
-      var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.circuit.vertices );
+      var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.main.vertices );
       $scope.addGate = function( gateType ) {
          var id = gateIdGenerator();
-         $scope.circuit.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
+         $scope.main.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
          $scope.layout.vertices[ id ] = ng.copy( templates.layout );
       };
 
-      var probeIdGenerator = nbeIdGenerator.create( [ 'PROBE ' ], $scope.circuit.vertices );
+      var probeIdGenerator = nbeIdGenerator.create( [ 'PROBE ' ], $scope.main.vertices );
       $scope.addProbe = function() {
          var id = probeIdGenerator();
          var probeVertex = ng.copy( templates.model.PROBE );
          probeVertex.label = id;
-         $scope.circuit.vertices[ id ] = probeVertex;
+         $scope.main.vertices[ id ] = probeVertex;
          $scope.layout.vertices[ id ] = ng.copy( templates.layout );
       };
+
+      var componentIdGenerator = nbeIdGenerator.create( [ 'circuit' ], $scope.main.vertices );
+
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,14 +289,6 @@ define( [
 
          function isChannel( port ) {
             return port.type === 'CHANNEL';
-         }
-
-         function isInput( port ) {
-            return port.direction === 'in';
-         }
-
-         function isOutput( port ) {
-            return port.direction !== 'in';
          }
 
          function isConnected( port ) {
