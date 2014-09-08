@@ -1,20 +1,21 @@
 define( [
    'jquery',
    'angular',
-   'json!./data/templates.json',
+   './logic_circuit_editor',
    'json!./data/dummy_model.json',
    'json!./data/dummy_layout.json'
-], function( $, ng, templates, dummyModel, dummyLayout ) {
+], function( $, ng, logicCircuitEditorDirective, dummyModel, dummyLayout ) {
    'use strict';
 
    var module = ng.module( 'LogicDemoApp', [ 'nbe' ] );
+   logicCircuitEditorDirective.define( module );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function LogicDemoController( $scope, nbeIdGenerator ) {
 
-      $scope.main = dummyModel.components.NAND;
-      $scope.layout = dummyLayout.components.NAND;
+      $scope.model = dummyModel;
+      $scope.layout = dummyLayout;
       $scope.messages = [];
 
       var settings = {
@@ -25,6 +26,44 @@ define( [
          orGateDelay: 5
       };
 
+      $scope.$watch( 'view.currentComponentId', function( newId ) {
+         if( !newId ) {
+            $scope.view.editorOpen = false;
+         }
+      } );
+
+      $scope.view = {
+         currentComponentId: null,
+         newComponentId: null
+      };
+
+
+      $scope.openEditor = function() {
+         $scope.view.editorOpen = true;
+      };
+
+      $scope.closeEditor = function() {
+         $scope.view.editorOpen = false;
+
+         console.log(
+            'Closing editor, component:',
+            $scope.view.currentComponentId,
+            '\n Model:',
+            $scope.model.components[ $scope.view.currentComponentId ],
+            '\n Layout:',
+            $scope.layout.components[ $scope.view.currentComponentId ] );
+      };
+
+      $scope.createComponent = function() {
+         $scope.model.components[ $scope.view.newComponentId ] = {};
+      };
+
+
+      $scope.addToCircuit = function() {
+
+      };
+
+
       function log( msg ) {
          $scope.messages.push( msg );
       }
@@ -33,27 +72,12 @@ define( [
          $scope.messages.splice( 0, $scope.messages.length );
          var sim = circuitSimulator( instantTimeSimulator(), settings, log );
          $scope.$evalAsync( function() {
-            sim.run( $scope.main );
+            sim.run( $scope.model.main );
          } );
       };
 
-      var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.main.vertices );
-      $scope.addGate = function( gateType ) {
-         var id = gateIdGenerator();
-         $scope.main.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
-         $scope.layout.vertices[ id ] = ng.copy( templates.layout );
-      };
 
-      var probeIdGenerator = nbeIdGenerator.create( [ 'PROBE ' ], $scope.main.vertices );
-      $scope.addProbe = function() {
-         var id = probeIdGenerator();
-         var probeVertex = ng.copy( templates.model.PROBE );
-         probeVertex.label = id;
-         $scope.main.vertices[ id ] = probeVertex;
-         $scope.layout.vertices[ id ] = ng.copy( templates.layout );
-      };
-
-      var componentIdGenerator = nbeIdGenerator.create( [ 'circuit' ], $scope.main.vertices );
+      var componentInstanceIdGenerator = nbeIdGenerator.create( [ 'circuit' ], $scope.model.main.vertices );
 
    }
 
@@ -217,19 +241,6 @@ define( [
             function react() {
                sim.schedule( settings.orGateDelay )( function() {
                   outputWire.set( aWire.get() || bWire.get() );
-               } );
-            }
-
-            if( aWire && bWire && outputWire ) {
-               aWire.onChange( react );
-               bWire.onChange( react );
-            }
-         },
-
-         XOR: function xorGate( aWire, bWire, outputWire ) {
-            function react() {
-               sim.schedule( settings.xorGateDelay )( function() {
-                  outputWire.set( aWire.get() ? !bWire.get() : bWire.get() );
                } );
             }
 

@@ -1,0 +1,36 @@
+<div>
+    <p>
+    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
+    <button data-ng-disabled="!nbeController.zoom.canZoomOut"
+            data-ng-click="nbeController.zoom.zoomOut()">-</button
+            ><button data-ng-disabled="!nbeController.zoom.canZoomIn"
+                     data-ng-click="nbeController.zoom.zoomIn()">+</button>
+
+    &nbsp;signals:
+    <button data-ng-click="addGate( 'TRUE' )">+ TRUE</button>
+    <button data-ng-click="addGate( 'FALSE' )">+ FALSE</button>
+
+    &nbsp;gates:
+    <button data-ng-click="addGate( 'AND' )">+ AND</button>
+    <button data-ng-click="addGate( 'OR' )">+ OR</button>
+    <button data-ng-click="addGate( 'NOT' )">+ NOT</button>
+
+    &nbsp;interfaces:
+    <button data-ng-click="addGate( 'LOG' )">+ LOG</button>
+    <button data-ng-click="addProbe()">+ PROBE</button>
+
+    <div data-ng-transclude></div>
+    </p>
+
+    <div style="overflow: auto; position: relative; width: 100%; height: 400px; min-height: 200px;"
+
+         class="graph-container logic-app">
+
+        <div class="logic-app"
+             data-nbe-graph="model"
+             data-nbe-graph-layout="layout"
+             data-nbe-graph-types="{ WIRE: { maxSources: 1, simple: true }, CHANNEL: {} }"
+             data-nbe-graph-controller="nbeController">
+        </div>
+    </div>
+</div>

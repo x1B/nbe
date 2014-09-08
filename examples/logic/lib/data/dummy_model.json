@@ -5,7 +5,7 @@
          "vertices": {
             "input": {
                "label": "Input",
-               "class": "adapter",
+               "classes": "adapter",
                "ports": {
                   "inbound": [],
                   "outbound": [
@@ -16,7 +16,7 @@
             },
             "output": {
                "label": "Output",
-               "class": "adapter",
+               "classes": "adapter",
                "ports": {
                   "inbound": [
                      { "id": "z", "type": "WIRE", "edgeId": "wZ" }
@@ -43,7 +43,7 @@
                      { "id": "y", "label": "y", "type": "WIRE", "edgeId": "wY" }
                   ],
                   "outbound": [
-                     { "id": "xor", "label": "x∧y", "type": "WIRE", "edgeId": "wZ" }
+                     { "id": "and", "label": "x∧y", "type": "WIRE", "edgeId": "wZ" }
                   ]
                }
             }
@@ -88,7 +88,7 @@
                   { "id": "y", "label": "y", "type": "WIRE", "edgeId": "wire 1" }
                ],
                "outbound": [
-                  { "id": "xor", "label": "x∧y", "type": "WIRE", "edgeId": "wire 2" }
+                  { "id": "and", "label": "x∧y", "type": "WIRE", "edgeId": "wire 2" }
                ]
             }
          },
@@ -110,7 +110,7 @@
             }
          },
          "v4": {
-            "label": "XOR",
+            "label": "AND",
             "ports": {
                "inbound": [
                   {
@@ -129,7 +129,7 @@
                "outbound": [
                   {
                      "id": "z",
-                     "label": "x⊻y",
+                     "label": "x∧y",
                      "type": "WIRE",
                      "edgeId": "wire 4"
                   }
