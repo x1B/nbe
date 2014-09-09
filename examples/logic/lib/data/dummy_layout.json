@@ -3,20 +3,41 @@
       "NAND": {
          "vertices": {
             "and": {
-               "left": 200,
-               "top": 152
+               "left": 170,
+               "top": 56
             },
-            "input": {
-               "left": 10,
-               "top": 20
+            "INPUT": {
+               "left": 42,
+               "top": 43
             },
             "not": {
-               "left": 203,
-               "top": 40
+               "left": 309,
+               "top": 81
             },
-            "output": {
-               "left": 339,
-               "top": 169
+            "OUTPUT": {
+               "left": 443,
+               "top": 73
+            }
+         },
+         "edges": {}
+      },
+      "NOR": {
+         "vertices": {
+            "or": {
+               "left": 170,
+               "top": 56
+            },
+            "INPUT": {
+               "left": 42,
+               "top": 43
+            },
+            "not": {
+               "left": 309,
+               "top": 81
+            },
+            "OUTPUT": {
+               "left": 443,
+               "top": 73
             }
          },
          "edges": {}

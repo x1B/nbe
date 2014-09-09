@@ -2,9 +2,10 @@ define( [
    'jquery',
    'angular',
    './logic_circuit_editor',
+   'json!./data/primitives.json',
    'json!./data/dummy_model.json',
    'json!./data/dummy_layout.json'
-], function( $, ng, logicCircuitEditorDirective, dummyModel, dummyLayout ) {
+], function( $, ng, logicCircuitEditorDirective, primitives, dummyModel, dummyLayout ) {
    'use strict';
 
    var module = ng.module( 'LogicDemoApp', [ 'nbe' ] );
@@ -12,8 +13,9 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function LogicDemoController( $scope, nbeIdGenerator ) {
+   function LogicDemoController( $scope ) {
 
+      $scope.primitives = primitives;
       $scope.model = dummyModel;
       $scope.layout = dummyLayout;
       $scope.messages = [];
@@ -49,18 +51,23 @@ define( [
             'Closing editor, component:',
             $scope.view.currentComponentId,
             '\n Model:',
-            $scope.model.components[ $scope.view.currentComponentId ],
+            JSON.stringify( $scope.model.components[ $scope.view.currentComponentId ] ),
             '\n Layout:',
-            $scope.layout.components[ $scope.view.currentComponentId ] );
+            JSON.stringify( $scope.layout.components[ $scope.view.currentComponentId ] ) );
       };
 
       $scope.createComponent = function() {
-         $scope.model.components[ $scope.view.newComponentId ] = {};
-      };
-
-
-      $scope.addToCircuit = function() {
-
+         $scope.model.components[ $scope.view.newComponentId ] = {
+            edges: {},
+            vertices: {
+               INPUT: {
+                  classes: 'adapter'
+               },
+               OUTPUT: {
+                  classes: 'adapter'
+               }
+            }
+         };
       };
 
 
@@ -75,9 +82,6 @@ define( [
             sim.run( $scope.model.main );
          } );
       };
-
-
-      var componentInstanceIdGenerator = nbeIdGenerator.create( [ 'circuit' ], $scope.model.main.vertices );
 
    }
 

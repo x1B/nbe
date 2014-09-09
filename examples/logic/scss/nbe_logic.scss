@@ -28,21 +28,34 @@
          font-size: $fontSizePort;
       }
    }
+
+   .node.vertex.adapter {
+      background: $typeColor2;
+   }
 }
 
 
 
 // demo-specific styles that are not directly related to nbe:
 
-h2 {
+h2, h3 {
    font-family: $fontFamilyLabel;
-   font-size: 36px;
    line-height: 36px;
    margin-top: 36px;
-   background: #f5c680;
+   margin-bottom: 18px;
    color: #444444;
    padding-left: 32px;
    margin-left: -32px;
+}
+
+h2 {
+   background: #f5c680;
+   font-size: 36px;
+}
+
+h3 {
+   background: #666;
+   font-size: 24px;
 }
 
 button {

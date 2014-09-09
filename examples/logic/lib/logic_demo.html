@@ -1,7 +1,7 @@
 <h1>NBE: Logic Circuit Editor Demo</h1>
 
 <p>
- Compose a logic circuit from simple gates and user-defined components, and calculate its output using a simple discrete event simulation.
+ Compose a logic circuit from simple gates and user-defined components, and calculate its output using a simple discrete event simulation.<br>
  The node-based editor is implemented using <a href="http://github.com/x1b/nbe" title="NBE on GitHub">NBE</a>.
 </p>
 
@@ -11,10 +11,12 @@
 
     <h2>Main Circuit</h2>
     <div data-logic-circuit-editor="model.main"
+         data-logic-circuit-editor-components="model.components"
          data-logic-circuit-editor-layout="layout.main"></div>
 
-    <h2>Simulation</h2>
-    <button data-ng-click="run()">Run Simulation</button>
+
+    <h3>Simulation</h3>
+    <p><button data-ng-click="run()">Run Simulation</button></p>
     <div class="log" data-ng-if="messages.length">
         <h4>Simulation Log</h4>
         <ul>
@@ -23,29 +25,32 @@
     </div>
 
 
-    <h2>Reusable Components</h2>
+    <h2>Component Library</h2>
     <p>
-
     <label>Available Components:
         <select data-ng-model="view.currentComponentId"
                 data-ng-options="key as key for (key, value) in model.components">
             <option></option>
         </select>
     </label>
-    <button data-ng-if="view.currentComponentId" data-ng-click="add()">add to circuit</button>
-    <button data-ng-if="!view.editorOpen && view.currentComponentId" data-ng-click="openEditor()">edit {{ view.currentComponentId }}</button>
-    <button data-ng-if="view.editorOpen" data-ng-click="closeEditor()">close component editor</button>
-    <h2 data-ng-if="view.editorOpen">Edit Component <em>{{ view.currentComponentId }}</em></h2>
-    <div data-ng-if="view.editorOpen"
-         data-logic-circuit-editor="model.components[ view.currentComponentId ]"
-         data-logic-circuit-editor-layout="layout.components[ view.currentComponentId ]"></div>
+    <button data-ng-if="view.currentComponentId" data-ng-click="view.currentComponentId = null">Close Component Editor</button>
     </p>
 
+    <h3 data-ng-if="view.currentComponentId">Component: <em>{{ view.currentComponentId }}</em></h3>
+    <div data-ng-if="view.currentComponentId"
+         data-logic-circuit-editor="model.components[ view.currentComponentId ]"
+         data-logic-circuit-editor-components="model.components"
+         data-logic-circuit-editor-layout="layout.components[ view.currentComponentId ]"></div>
+
     <p>
-    <label>New Component:
-        <input type="text" data-ng-model="view.newComponentId" placeholder="choose ID (alphanumeric)"/>
+    <label>Create New Component:
+        <input type="text"
+               data-ng-pattern="/^[a-zA-Z0-9]+$/"
+               data-ng-model="view.newComponentId"
+               placeholder="Choose ID (alphanumeric)"/>
     </label>
-    <button data-ng-if="view.newComponentId" data-ng-click="createComponent()">close component editor</button>
+    <button data-ng-if="view.newComponentId && !model.components[ view.newComponentId ] && !primitives[ view.newComponentId ]"
+            data-ng-click="createComponent()">Create Component</button>
     </p>
 
 </div>

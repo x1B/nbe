@@ -1,25 +1,37 @@
 {
    "components": {
 
-      "NAND": {
+      "NOR": {
          "vertices": {
-            "input": {
+            "INPUT": {
                "label": "Input",
                "classes": "adapter",
                "ports": {
                   "inbound": [],
                   "outbound": [
-                     { "id": "x", "type": "WIRE", "edgeId": "wX" },
-                     { "id": "y", "type": "WIRE", "edgeId": "wY" }
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
                   ]
                }
             },
-            "output": {
+            "OUTPUT": {
                "label": "Output",
                "classes": "adapter",
                "ports": {
                   "inbound": [
-                     { "id": "z", "type": "WIRE", "edgeId": "wZ" }
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
                   ],
                   "outbound": []
                }
@@ -28,10 +40,152 @@
                "label": "NOT",
                "ports": {
                   "inbound": [
-                     { "id": "x", "label": "x", "type": "WIRE", "edgeId": "wX" }
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     }
                   ],
                   "outbound": [
-                     { "id": "z", "label": "¬x", "type": "WIRE", "edgeId": "WNotX" }
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ]
+               }
+            },
+            "or": {
+               "label": "OR",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∨y",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     }
+                  ]
+               }
+            }
+         },
+         "edges": {
+            "wX": {
+               "label": "wire 0",
+               "type": "WIRE"
+            },
+            "wY": {
+               "label": "wire 1",
+               "type": "WIRE"
+            },
+            "wNotX": {
+               "label": "wire 2",
+               "type": "WIRE"
+            },
+            "wZ": {
+               "label": "wire 3",
+               "type": "WIRE"
+            },
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            },
+            "wire 4": {
+               "type": "WIRE",
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            },
+            "wire 6": {
+               "type": "WIRE",
+               "label": "wire 6"
+            }
+         }
+      },
+
+      "NAND": {
+         "vertices": {
+            "INPUT": {
+               "label": "Input",
+               "classes": "adapter",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wNotX"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "label": "Output",
+               "classes": "adapter",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "not": {
+               "label": "NOT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wZ"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
                   ]
                }
             },
@@ -39,22 +193,66 @@
                "label": "AND",
                "ports": {
                   "inbound": [
-                     { "id": "x", "label": "x", "type": "WIRE", "edgeId": "wNotX" },
-                     { "id": "y", "label": "y", "type": "WIRE", "edgeId": "wY" }
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wNotX"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
                   ],
                   "outbound": [
-                     { "id": "and", "label": "x∧y", "type": "WIRE", "edgeId": "wZ" }
+                     {
+                        "id": "and",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wZ"
+                     }
                   ]
                }
             }
          },
          "edges": {
-            "wX": { "label": "wire 0", "type": "WIRE" },
-            "wY": { "label": "wire 1", "type": "WIRE" },
-            "wNotX": { "label": "wire 2", "type": "WIRE" },
-            "wZ": { "label": "wire 3", "type": "WIRE" }
+            "wX": {
+               "label": "wire 0",
+               "type": "WIRE"
+            },
+            "wY": {
+               "label": "wire 1",
+               "type": "WIRE"
+            },
+            "wNotX": {
+               "label": "wire 2",
+               "type": "WIRE"
+            },
+            "wZ": {
+               "label": "wire 3",
+               "type": "WIRE"
+            },
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            }
          }
       }
+
 
    },
 
@@ -81,7 +279,8 @@
             }
          },
          "v2": {
-            "label": "AND",
+            "label": "NAND",
+            "class": "component",
             "ports": {
                "inbound": [
                   { "id": "x", "label": "x", "type": "WIRE", "edgeId": "wire 0" },

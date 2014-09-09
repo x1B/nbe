@@ -7,8 +7,8 @@ define( [
    'jquery',
    'angular',
    'text!./logic_circuit_editor.html',
-   'json!./data/templates.json'
-], function( $, ng, htmlTemplate, templates ) {
+   'json!./data/primitives.json'
+], function( $, ng, htmlTemplate, primitives ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,33 +19,82 @@ define( [
 
    function createCircuitEditorDirective() {
 
+      var counter = 0;
+
       return {
          template: htmlTemplate,
          replace: true,
          restrict: 'A',
          scope: {
             model: '=' + DIRECTIVE_NAME,
+            components: '=' + DIRECTIVE_NAME + 'Components',
             layout: '=' + DIRECTIVE_NAME + 'Layout'
          },
          transclude: true,
          controller: [ '$scope', 'nbeIdGenerator', LogicCircuitEditorController ]
       };
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function nextLayout() {
+         ++counter;
+         var place = 50 + (counter%10)*10;
+         return { left: place, top: place };
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function LogicCircuitEditorController( $scope, nbeIdGenerator ) {
-         var gateIdGenerator = nbeIdGenerator.create( [ 'v' ], $scope.model.vertices );
+         $scope.view = { componentToAdd: null };
+
+         var nextGateId = nbeIdGenerator.create( [ 'GATE' ], $scope.model.vertices );
          $scope.addGate = function( gateType ) {
-            var id = gateIdGenerator();
-            $scope.model.vertices[ id ] = ng.copy( templates.model[ gateType  ] );
-            $scope.layout.vertices[ id ] = ng.copy( templates.layout );
+            var id = nextGateId();
+            $scope.model.vertices[ id ] = ng.copy( primitives[ gateType  ] );
+            $scope.layout.vertices[ id ] = nextLayout();
          };
 
-         var probeIdGenerator = nbeIdGenerator.create( [ 'PROBE ' ], $scope.model.vertices );
+         var nextProbeId = nbeIdGenerator.create( [ 'PROBE ' ], $scope.model.vertices );
          $scope.addProbe = function() {
-            var id = probeIdGenerator();
-            var probeVertex = ng.copy( templates.model.PROBE );
+            var id = nextProbeId();
+            var probeVertex = ng.copy( primitives.PROBE );
             probeVertex.label = id;
             $scope.model.vertices[ id ] = probeVertex;
-            $scope.layout.vertices[ id ] = ng.copy( templates.layout );
+            $scope.layout.vertices[ id ] = nextLayout();
+         };
+
+         var nextInstanceId = nbeIdGenerator.create( [ 'COMPONENT' ], $scope.model.vertices );
+         $scope.addComponent = function() {
+            var id = nextInstanceId();
+            var component = $scope.components[ $scope.view.componentToAdd ];
+
+            $scope.model.vertices[ id ] = {
+               label: $scope.view.componentToAdd,
+               ports: {
+                  inbound: component.vertices.INPUT.ports.outbound.map( function( port ) {
+                     return { id: port.id, type: port.type };
+                  } ),
+                  outbound: component.vertices.OUTPUT.ports.inbound.map( function( port ) {
+                     return { id: port.id, type: port.type };
+                  } )
+               }
+            };
+            $scope.layout.vertices[ id ] = nextLayout();
+         };
+
+         // For editing components:
+         $scope.addIo = function( adapter ) {
+            var direction = adapter === 'INPUT' ? 'outbound' : 'inbound';
+            var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
+            var idPrefix = adapter === 'INPUT' ? 'x' : 'y';
+            var id = idPrefix + portGroup.length;
+            console.log( 'id', id );
+         };
+
+         $scope.removeIo = function( adapter ) {
+            var direction = adapter === 'INPUT' ? 'outbound' : 'inbound';
+            var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
+            portGroup.pop();
          };
       }
 

@@ -1,29 +1,50 @@
 <div>
+
+    <p data-ng-if="model.vertices.INPUT">
+    <span>
+        inputs:
+        <button data-ng-disabled="model.vertices.INPUT.ports.outbound.length <= 1"
+                data-ng-click="removeIo('INPUT')">-</button><!--
+     --><button data-ng-click="addIo('INPUT')">+</button>
+    </span>
+    <span>
+        outputs:
+        <button data-ng-disabled="model.vertices.OUTPUT.ports.inbound.length <= 1"
+                data-ng-click="removeIo('OUTPUT')">-</button><!--
+     --><button data-ng-click="addIo('OUTPUT')">+</button>
+    </span>
+    </p>
+
     <p>
-    <button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
     <button data-ng-disabled="!nbeController.zoom.canZoomOut"
-            data-ng-click="nbeController.zoom.zoomOut()">-</button
-            ><button data-ng-disabled="!nbeController.zoom.canZoomIn"
-                     data-ng-click="nbeController.zoom.zoomIn()">+</button>
+                data-ng-click="nbeController.zoom.zoomOut()">-</button><!--
+ --><button data-ng-disabled="!nbeController.zoom.canZoomIn"
+            data-ng-click="nbeController.zoom.zoomIn()">+</button><!--
+ --><button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
 
     &nbsp;signals:
-    <button data-ng-click="addGate( 'TRUE' )">+ TRUE</button>
-    <button data-ng-click="addGate( 'FALSE' )">+ FALSE</button>
+    <button data-ng-click="addGate( 'FALSE' )">0</button><!--
+ --><button data-ng-click="addGate( 'TRUE' )">1</button>
 
     &nbsp;gates:
-    <button data-ng-click="addGate( 'AND' )">+ AND</button>
-    <button data-ng-click="addGate( 'OR' )">+ OR</button>
-    <button data-ng-click="addGate( 'NOT' )">+ NOT</button>
+    <button data-ng-click="addGate( 'AND' )">AND</button><!--
+ --><button data-ng-click="addGate( 'OR' )">OR</button><!--
+ --><button data-ng-click="addGate( 'NOT' )">NOT</button>
 
     &nbsp;interfaces:
-    <button data-ng-click="addGate( 'LOG' )">+ LOG</button>
-    <button data-ng-click="addProbe()">+ PROBE</button>
+    <button data-ng-click="addProbe()">PROBE</button>
 
-    <div data-ng-transclude></div>
+    &nbsp;
+    <label>components:
+        <select data-ng-model="view.componentToAdd"
+                data-ng-options="key as key for (key, value) in components">
+            <option></option>
+        </select>
+    </label>
+    <button data-ng-if="view.componentToAdd" data-ng-click="addComponent()">Add</button>
     </p>
 
     <div style="overflow: auto; position: relative; width: 100%; height: 400px; min-height: 200px;"
-
          class="graph-container logic-app">
 
         <div class="logic-app"
@@ -33,4 +54,5 @@
              data-nbe-graph-controller="nbeController">
         </div>
     </div>
+
 </div>
