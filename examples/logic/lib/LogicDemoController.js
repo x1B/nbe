@@ -77,7 +77,7 @@ define( [
 
       $scope.run = function() {
          $scope.messages.splice( 0, $scope.messages.length );
-         var sim = circuitSimulator( instantTimeSimulator(), settings, log );
+         var sim = circuitSimulator( instantTimeSimulator(), settings, log, $scope.model.components );
          $scope.$evalAsync( function() {
             sim.run( $scope.model.main );
          } );
@@ -136,7 +136,7 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function circuitSimulator( sim, settings, log ) {
+   function circuitSimulator( sim, settings, log, components ) {
 
       var connectionBuilders = {
 
@@ -273,14 +273,20 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function run( model ) {
+      function run( model, components ) {
          var connections = {};
 
          Object.keys( model.edges ).forEach( function( edgeId ) {
             connections[ edgeId ] = connectionBuilders[ model.edges[ edgeId ].type ]( edgeId );
          } );
 
-         Object.keys( model.vertices ).forEach( function( vertexId ) {
+         Object.keys( model.vertices ).forEach( instantiateVertex );
+
+         sim.run();
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function instantiateVertex( vertexId ) {
             var vertex = model.vertices[ vertexId ];
             var wIn = vertex.ports.inbound.filter( isConnected ).filter( isWire ).map( connectionAt );
             var wOut = vertex.ports.outbound.filter( isConnected ).filter( isWire ).map( connectionAt );
@@ -288,13 +294,25 @@ define( [
             var cOut = vertex.ports.outbound.filter( isConnected ).filter( isChannel ).map( connectionAt );
 
             if( vertex.label.indexOf( 'PROBE ' ) === 0 ) {
-               gateBuilders.PROBE.apply( this, [ vertex.label ].concat( wIn ).concat( cOut ) );
-               return;
+               gateBuilders.PROBE.apply( null, [ vertex.label ].concat( wIn ).concat( cOut ) );
             }
-            gateBuilders[ vertex.label ].apply( this, wIn.concat( wOut ).concat( cIn ).concat( cOut ) );
-         } );
+            else if( vertex.label in gateBuilders ) {
+               gateBuilders[ vertex.label ].apply( null, wIn.concat( wOut ).concat( cIn ).concat( cOut ) );
+            }
+            else {
 
-         sim.run();
+            }
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function instantiateComponent( vertex, inputWires, outputWires ) {
+            // map edges to the connecting wires in the parent graph
+
+            // instantiate internal edges
+
+            // instantiate internal components
+         }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 

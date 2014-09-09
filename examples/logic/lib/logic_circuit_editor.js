@@ -88,13 +88,13 @@ define( [
             var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
             var idPrefix = adapter === 'INPUT' ? 'x' : 'y';
             var id = idPrefix + portGroup.length;
-            console.log( 'id', id );
+            portGroup.push( { id: id, type: 'WIRE' } );
          };
 
          $scope.removeIo = function( adapter ) {
             var direction = adapter === 'INPUT' ? 'outbound' : 'inbound';
             var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
-            portGroup.pop();
+            var port = portGroup.pop();
          };
       }
 

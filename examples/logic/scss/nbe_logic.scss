@@ -30,7 +30,7 @@
    }
 
    .node.vertex.adapter {
-      background: $typeColor2;
+      background: desaturate( $typeColor2, 20 );
    }
 }
 
