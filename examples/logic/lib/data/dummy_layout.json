@@ -1,5 +1,34 @@
 {
    "components": {
+      "2MUX": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 75,
+               "top": 104
+            },
+            "OUTPUT": {
+               "left": 790,
+               "top": 80
+            },
+            "GATE0": {
+               "left": 352,
+               "top": 47
+            },
+            "GATE1": {
+               "left": 469,
+               "top": 214
+            },
+            "GATE2": {
+               "left": 340,
+               "top": 232
+            },
+            "GATE3": {
+               "left": 635,
+               "top": 81
+            }
+         }
+      },
       "NAND": {
          "vertices": {
             "and": {
@@ -41,6 +70,35 @@
             }
          },
          "edges": {}
+      },
+      "XOR": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 42,
+               "top": 40
+            },
+            "OUTPUT": {
+               "left": 536,
+               "top": 114
+            },
+            "GATE0": {
+               "left": 413,
+               "top": 86
+            },
+            "GATE1": {
+               "left": 182,
+               "top": 35
+            },
+            "GATE2": {
+               "left": 268,
+               "top": 69
+            },
+            "GATE3": {
+               "left": 218,
+               "top": 175
+            }
+         }
       }
    },
    "main": {

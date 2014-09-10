@@ -86,7 +86,6 @@ define( [
             $scope.layout.vertices[ id ] = nextLayout();
          };
 
-         // For editing components:
          $scope.addIo = function( iface ) {
             var isInput = iface === 'INPUT';
             var direction = isInput ? 'outbound' : 'inbound';

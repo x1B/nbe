@@ -31,30 +31,32 @@
 
 
     <h2>Component Library</h2>
+
     <p>
-    <label>Available Components:
+        <label>Create New Component:
+            <input type="text"
+                   data-ng-pattern="/^[a-zA-Z0-9]+$/"
+                   data-ng-model="view.newComponentId"
+                   placeholder="Choose ID (alphanumeric)"/>
+        </label>
+        <button data-ng-if="view.newComponentId && !model.components[ view.newComponentId ] && !primitives[ view.newComponentId ]"
+                data-ng-click="createComponent()">Create Component</button>
+    </p>
+
+    <p>
+    <label>Edit Component:
         <select data-ng-model="view.currentComponentId"
                 data-ng-options="key as key for (key, value) in model.components">
             <option></option>
         </select>
     </label>
-    <button data-ng-if="view.currentComponentId" data-ng-click="view.currentComponentId = null">Close Component Editor</button>
+    <button data-ng-if="view.currentComponentId" data-ng-click="closeEditor();">Close Component Editor</button>
     </p>
 
     <h3 data-ng-if="view.currentComponentId">Component: <em>{{ view.currentComponentId }}</em></h3>
     <div data-ng-if="view.currentComponentId"
          data-logic-circuit-editor="model.components[ view.currentComponentId ]"
-         data-logic-circuit-editor-components="model.components"></div>
-
-    <p>
-    <label>Create New Component:
-        <input type="text"
-               data-ng-pattern="/^[a-zA-Z0-9]+$/"
-               data-ng-model="view.newComponentId"
-               placeholder="Choose ID (alphanumeric)"/>
-    </label>
-    <button data-ng-if="view.newComponentId && !model.components[ view.newComponentId ] && !primitives[ view.newComponentId ]"
-            data-ng-click="createComponent()">Create Component</button>
-    </p>
+         data-logic-circuit-editor-components="model.components"
+         data-logic-circuit-editor-layout="layout.components[ view.currentComponentId ]"></div>
 
 </div>

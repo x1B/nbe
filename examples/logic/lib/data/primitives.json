@@ -126,5 +126,31 @@
          "outbound": [
          ]
       }
+   },
+   "COMPONENT": {
+      "edges": {},
+      "vertices": {
+         "INPUT": {
+            "classes": "interface",
+            "label": "INPUT",
+            "ports": {
+               "inbound": [],
+               "outbound": [
+                  { "id": "x0", "type": "WIRE" },
+                  { "id": "x1", "type": "WIRE" }
+               ]
+            }
+         },
+         "OUTPUT": {
+            "classes": "interface",
+            "label": "OUTPUT",
+            "ports": {
+               "inbound": [
+                  { "id": "y0", "type": "WIRE" }
+               ],
+               "outbound": []
+            }
+         }
+      }
    }
 }
