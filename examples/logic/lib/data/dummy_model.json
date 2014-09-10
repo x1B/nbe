@@ -4,8 +4,8 @@
       "NOR": {
          "vertices": {
             "INPUT": {
-               "label": "Input",
-               "classes": "adapter",
+               "label": "INPUT",
+               "classes": "interface",
                "ports": {
                   "inbound": [],
                   "outbound": [
@@ -23,8 +23,8 @@
                }
             },
             "OUTPUT": {
-               "label": "Output",
-               "classes": "adapter",
+               "label": "OUTPUT",
+               "classes": "interface",
                "ports": {
                   "inbound": [
                      {
@@ -136,8 +136,8 @@
       "NAND": {
          "vertices": {
             "INPUT": {
-               "label": "Input",
-               "classes": "adapter",
+               "label": "INPUT",
+               "classes": "interface",
                "ports": {
                   "inbound": [],
                   "outbound": [
@@ -155,8 +155,8 @@
                }
             },
             "OUTPUT": {
-               "label": "Output",
-               "classes": "adapter",
+               "label": "OUTPUT",
+               "classes": "interface",
                "ports": {
                   "inbound": [
                      {
@@ -280,14 +280,14 @@
          },
          "v2": {
             "label": "NAND",
-            "class": "component",
+            "classes": "component",
             "ports": {
                "inbound": [
-                  { "id": "x", "label": "x", "type": "WIRE", "edgeId": "wire 0" },
-                  { "id": "y", "label": "y", "type": "WIRE", "edgeId": "wire 1" }
+                  { "id": "x0", "label": "x0", "type": "WIRE", "edgeId": "wire 0" },
+                  { "id": "x1", "label": "x1", "type": "WIRE", "edgeId": "wire 1" }
                ],
                "outbound": [
-                  { "id": "and", "label": "x∧y", "type": "WIRE", "edgeId": "wire 2" }
+                  { "id": "y0", "label": "y0", "type": "WIRE", "edgeId": "wire 2" }
                ]
             }
          },

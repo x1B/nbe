@@ -29,8 +29,12 @@
       }
    }
 
-   .node.vertex.adapter {
+   .node.vertex.interface {
       background: desaturate( $typeColor2, 20 );
+   }
+
+   .node.vertex.component {
+      background: desaturate( $typeColor3, 20 );
    }
 }
 

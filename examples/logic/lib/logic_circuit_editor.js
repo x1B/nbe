@@ -45,16 +45,20 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function LogicCircuitEditorController( $scope, nbeIdGenerator ) {
-         $scope.view = { componentToAdd: null };
+         $scope.view = {
+            componentToAdd: Object.keys( $scope.components )[ 0 ]
+         };
 
          var nextGateId = nbeIdGenerator.create( [ 'GATE' ], $scope.model.vertices );
+         var nextProbeId = nbeIdGenerator.create( [ 'PROBE ' ], $scope.model.vertices );
+         var nextInstanceId = nbeIdGenerator.create( [ 'COMPONENT' ], $scope.model.vertices );
+
          $scope.addGate = function( gateType ) {
             var id = nextGateId();
             $scope.model.vertices[ id ] = ng.copy( primitives[ gateType  ] );
             $scope.layout.vertices[ id ] = nextLayout();
          };
 
-         var nextProbeId = nbeIdGenerator.create( [ 'PROBE ' ], $scope.model.vertices );
          $scope.addProbe = function() {
             var id = nextProbeId();
             var probeVertex = ng.copy( primitives.PROBE );
@@ -63,13 +67,13 @@ define( [
             $scope.layout.vertices[ id ] = nextLayout();
          };
 
-         var nextInstanceId = nbeIdGenerator.create( [ 'COMPONENT' ], $scope.model.vertices );
          $scope.addComponent = function() {
             var id = nextInstanceId();
             var component = $scope.components[ $scope.view.componentToAdd ];
 
             $scope.model.vertices[ id ] = {
                label: $scope.view.componentToAdd,
+               classes: 'component',
                ports: {
                   inbound: component.vertices.INPUT.ports.outbound.map( function( port ) {
                      return { id: port.id, type: port.type };
@@ -83,18 +87,19 @@ define( [
          };
 
          // For editing components:
-         $scope.addIo = function( adapter ) {
-            var direction = adapter === 'INPUT' ? 'outbound' : 'inbound';
-            var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
-            var idPrefix = adapter === 'INPUT' ? 'x' : 'y';
-            var id = idPrefix + portGroup.length;
+         $scope.addIo = function( iface ) {
+            var isInput = iface === 'INPUT';
+            var direction = isInput ? 'outbound' : 'inbound';
+            var portGroup = $scope.model.vertices[ iface ].ports[ direction ];
+            var id = ( isInput ? 'x' : 'y' ) + portGroup.length;
             portGroup.push( { id: id, type: 'WIRE' } );
          };
 
-         $scope.removeIo = function( adapter ) {
-            var direction = adapter === 'INPUT' ? 'outbound' : 'inbound';
-            var portGroup = $scope.model.vertices[ adapter ].ports[ direction ];
+         $scope.removeIo = function( face ) {
+            var direction = face === 'INPUT' ? 'outbound' : 'inbound';
+            var portGroup = $scope.model.vertices[ face ].ports[ direction ];
             var port = portGroup.pop();
+            // :TODO: remove corresponding connections in main model
          };
       }
 

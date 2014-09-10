@@ -8,6 +8,8 @@ define( [
 ], function( $, ng, logicCircuitEditorDirective, primitives, dummyModel, dummyLayout ) {
    'use strict';
 
+   var keys = Object.keys;
+
    var module = ng.module( 'LogicDemoApp', [ 'nbe' ] );
    logicCircuitEditorDirective.define( module );
 
@@ -22,9 +24,9 @@ define( [
 
       var settings = {
          probeDelay: 0,
+         bridgeDelay: 0,
          inverterDelay: 1,
          andGateDelay: 3,
-         xorGateDelay: 4,
          orGateDelay: 5
       };
 
@@ -36,7 +38,11 @@ define( [
 
       $scope.view = {
          currentComponentId: null,
-         newComponentId: null
+         newComponentId: null,
+         flattened: {
+            model: {},
+            layout: {}
+         }
       };
 
 
@@ -61,10 +67,20 @@ define( [
             edges: {},
             vertices: {
                INPUT: {
-                  classes: 'adapter'
+                  classes: 'interface',
+                  label: 'INPUT',
+                  ports: {
+                     inbound: [],
+                     outbound: []
+                  }
                },
                OUTPUT: {
-                  classes: 'adapter'
+                  classes: 'interface',
+                  label: 'OUTPUT',
+                  ports: {
+                     inbound: [],
+                     outbound: []
+                  }
                }
             }
          };
@@ -76,12 +92,83 @@ define( [
       }
 
       $scope.run = function() {
+         var flatModel = $scope.view.flattened.model = { vertices: {}, edges: {} };
+         flattenTo( flatModel, $scope.model.main, [] );
+         console.log( 'flatModel: ', flatModel );
+
          $scope.messages.splice( 0, $scope.messages.length );
          var sim = circuitSimulator( instantTimeSimulator(), settings, log, $scope.model.components );
          $scope.$evalAsync( function() {
-            sim.run( $scope.model.main );
+            sim.run( flatModel );
          } );
       };
+
+
+      function flattenTo( result, circuit, ancestors ) {
+
+         keys( circuit.edges ).forEach( function( edgeId ) {
+            result.edges[ qualify( edgeId ) ] = ng.copy( circuit.edges[ edgeId ] );
+         } );
+
+         // connect internal interface edges to their external edges:
+         if( ancestors.length ) {
+            var placeholder = ancestors[ ancestors.length - 1 ].vertex;
+            [ 'INPUT', 'OUTPUT' ].forEach( function( iface ) {
+               var bridge = ng.copy( circuit.vertices[ iface ] );
+               bridge.label = 'BRIDGE';
+               bridge.classes = 'interface';
+               var internal = iface === 'INPUT' ? 'inbound' : 'outbound';
+               var external = iface === 'INPUT' ? 'outbound' : 'inbound';
+               bridge.ports[ internal ] = ng.copy( placeholder.ports[ external ] );
+               qualifyPorts( bridge.ports[ internal ] );
+               result.vertices[ qualify( iface ) ] = bridge;
+            } );
+         }
+
+         keys( circuit.vertices ).forEach( function( vertexId ) {
+            var sourceVertex = circuit.vertices[ vertexId ];
+            var stackEntry = { vertex: sourceVertex, id: vertexId };
+            var component = componentOf( sourceVertex );
+            if( component && !ancestors.some( sameComponent( sourceVertex ) ) ) {
+               flattenTo( result, component, ancestors.concat( [ stackEntry ] ) );
+            }
+            else if( sourceVertex.label !== 'INPUT' && sourceVertex.label !== 'OUTPUT' ) {
+               // vertex represents a primitive (gate or signal):
+               var copy = ng.copy( sourceVertex );
+               qualifyPorts( copy.ports.inbound );
+               qualifyPorts( copy.ports.outbound );
+               result.vertices[ qualify( vertexId ) ] = copy;
+            }
+         } );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function qualify( id ) {
+            return ancestors.map( function( _ ) { return _.id; } ).concat( [ id ] ).join( '/' );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function qualifyPorts( portGroup ) {
+            portGroup.forEach( function( port ) {
+               port.edgeId = qualify( port.edgeId );
+            } );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function sameComponent( vertex ) {
+            return function( stackEntry ) {
+               return stackEntry.vertex.label === vertex.label;
+            };
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function componentOf( vertex ) {
+            return $scope.model.components[ vertex.label ];
+         }
+      }
 
    }
 
@@ -228,6 +315,16 @@ define( [
             }
          },
 
+         BRIDGE: function bridge( inputWire, outputWire ) {
+            if( inputWire && outputWire ) {
+               inputWire.onChange( function() {
+                  sim.schedule( settings.bridgeDelay )( function() {
+                     outputWire.set( inputWire.get() );
+                  } );
+               } );
+            }
+         },
+
          AND: function andGate( aWire, bWire, outputWire ) {
             function react() {
                sim.schedule( settings.andGateDelay )( function() {
@@ -269,20 +366,23 @@ define( [
                } );
             }
          }
+
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function run( model, components ) {
+      function run( model ) {
+
          var connections = {};
-
-         Object.keys( model.edges ).forEach( function( edgeId ) {
-            connections[ edgeId ] = connectionBuilders[ model.edges[ edgeId ].type ]( edgeId );
-         } );
-
-         Object.keys( model.vertices ).forEach( instantiateVertex );
-
+         keys( model.edges ).forEach( instantiateEdge );
+         keys( model.vertices ).forEach( instantiateVertex );
          sim.run();
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function instantiateEdge( edgeId ) {
+            connections[ edgeId ] = connectionBuilders[ model.edges[ edgeId ].type ]( edgeId );
+         }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -296,22 +396,20 @@ define( [
             if( vertex.label.indexOf( 'PROBE ' ) === 0 ) {
                gateBuilders.PROBE.apply( null, [ vertex.label ].concat( wIn ).concat( cOut ) );
             }
+            else if( vertex.label === 'BRIDGE' ) {
+               vertex.ports.inbound.forEach( function( inPort, i ) {
+                  var outPort = vertex.ports.outbound[ i ];
+                  if( isConnected( inPort ) && isConnected( outPort )  ) {
+                     gateBuilders.BRIDGE( connectionAt( inPort ), connectionAt( outPort ) );
+                  }
+               } );
+            }
             else if( vertex.label in gateBuilders ) {
                gateBuilders[ vertex.label ].apply( null, wIn.concat( wOut ).concat( cIn ).concat( cOut ) );
             }
             else {
-
+               window.console.error( 'Unknown circuit vertex: %s (id=%s)', vertex.label, vertexId );
             }
-         }
-
-         /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         function instantiateComponent( vertex, inputWires, outputWires ) {
-            // map edges to the connecting wires in the parent graph
-
-            // instantiate internal edges
-
-            // instantiate internal components
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////

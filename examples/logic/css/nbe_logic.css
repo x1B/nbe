@@ -310,8 +310,11 @@
   margin: 0;
   font-size: 11px;
 }
-.logic-app .node.vertex.adapter {
+.logic-app .node.vertex.interface {
   background: #bcd588;
+}
+.logic-app .node.vertex.component {
+  background: #7a7d90;
 }
 
 h2, h3 {

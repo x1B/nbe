@@ -38,7 +38,6 @@
     <label>components:
         <select data-ng-model="view.componentToAdd"
                 data-ng-options="key as key for (key, value) in components">
-            <option></option>
         </select>
     </label>
     <button data-ng-if="view.componentToAdd" data-ng-click="addComponent()">Add</button>
