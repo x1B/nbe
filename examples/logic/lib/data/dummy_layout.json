@@ -1,5 +1,32 @@
 {
    "components": {
+
+      "4MUX": {
+         "edges": {},
+         "vertices": {
+            "INPUT": {
+               "left": 46,
+               "top": 116
+            },
+            "OUTPUT": {
+               "left": 488,
+               "top": 305
+            },
+            "COMPONENT0": {
+               "left": 272,
+               "top": 83
+            },
+            "COMPONENT1": {
+               "left": 270,
+               "top": 184
+            },
+            "COMPONENT2": {
+               "left": 381,
+               "top": 254
+            }
+         }
+      },
+
       "2MUX": {
          "edges": {},
          "vertices": {

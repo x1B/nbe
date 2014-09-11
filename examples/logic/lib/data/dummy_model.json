@@ -1,5 +1,194 @@
 {
    "components": {
+      "4MUX": {
+         "edges": {
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            },
+            "wire 4": {
+               "type": "WIRE",
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            },
+            "wire 6": {
+               "type": "WIRE",
+               "label": "wire 6"
+            },
+            "wire 7": {
+               "type": "WIRE",
+               "label": "wire 7"
+            },
+            "wire 8": {
+               "type": "WIRE",
+               "label": "wire 8"
+            },
+            "wire 9": {
+               "type": "WIRE",
+               "label": "wire 9"
+            }
+         },
+         "vertices": {
+            "INPUT": {
+               "classes": "interface",
+               "label": "INPUT",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     },
+                     {
+                        "id": "x3",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     },
+                     {
+                        "id": "x4",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "x5",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "classes": "interface",
+               "label": "OUTPUT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "COMPONENT0": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     }
+                  ]
+               }
+            },
+            "COMPONENT1": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     }
+                  ]
+               }
+            },
+            "COMPONENT2": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     }
+                  ]
+               }
+            }
+         }
+      },
       "2MUX": {
          "edges": {
             "wire 0": {

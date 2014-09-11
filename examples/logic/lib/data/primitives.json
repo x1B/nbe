@@ -94,6 +94,35 @@
          ]
       }
    },
+   "4BIT": {
+      "label": "4BIT",
+      "ports": {
+         "inbound": [
+         ],
+         "outbound": [
+            {
+               "id": "b0",
+               "label": "b0",
+               "type": "WIRE"
+            },
+            {
+               "id": "b1",
+               "label": "b1",
+               "type": "WIRE"
+            },
+            {
+               "id": "b2",
+               "label": "b2",
+               "type": "WIRE"
+            },
+            {
+               "id": "b3",
+               "label": "b3",
+               "type": "WIRE"
+            }
+         ]
+      }
+   },
    "PROBE": {
       "label": "PROBE",
       "ports": {
@@ -115,6 +144,7 @@
    },
    "LOG": {
       "label": "LOG",
+      "frozen": true,
       "ports": {
          "inbound": [
             {
@@ -132,6 +162,7 @@
       "vertices": {
          "INPUT": {
             "classes": "interface",
+            "frozen": true,
             "label": "INPUT",
             "ports": {
                "inbound": [],
@@ -143,6 +174,7 @@
          },
          "OUTPUT": {
             "classes": "interface",
+            "frozen": true,
             "label": "OUTPUT",
             "ports": {
                "inbound": [

@@ -23,13 +23,20 @@
  --><button data-ng-click="nbeController.calculateLayout()">Auto Layout</button>
 
     &nbsp;signals:
-    <button data-ng-click="addGate( 'FALSE' )">0</button><!--
- --><button data-ng-click="addGate( 'TRUE' )">1</button>
+    <button data-ng-click="addPrimitive( 'FALSE' )">0</button><!--
+ --><button data-ng-click="addPrimitive( 'TRUE' )">1</button><!--
+ --><label><input type="text"
+                  data-ng-pattern="/^[0-9]+$/"
+                  data-ng-model="view.newByteValue"
+                  maxlength="3"
+                  style="width: 32px;"
+                  placeholder="0—15"/>
+    </label><button data-ng-show="view.newByteValue" data-ng-click="add4Bit( view.newByteValue )">4BIT</button>
 
     &nbsp;gates:
-    <button data-ng-click="addGate( 'AND' )">AND</button><!--
- --><button data-ng-click="addGate( 'OR' )">OR</button><!--
- --><button data-ng-click="addGate( 'NOT' )">NOT</button>
+    <button data-ng-click="addPrimitive( 'AND' )">AND</button><!--
+ --><button data-ng-click="addPrimitive( 'OR' )">OR</button><!--
+ --><button data-ng-click="addPrimitive( 'NOT' )">NOT</button>
 
     &nbsp;interfaces:
     <button data-ng-click="addProbe()">PROBE</button>

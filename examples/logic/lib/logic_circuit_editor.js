@@ -46,16 +46,29 @@ define( [
 
       function LogicCircuitEditorController( $scope, nbeIdGenerator ) {
          $scope.view = {
-            componentToAdd: Object.keys( $scope.components )[ 0 ]
+            componentToAdd: Object.keys( $scope.components )[ 0 ],
+            newByteValue: null
          };
 
          var nextGateId = nbeIdGenerator.create( [ 'GATE' ], $scope.model.vertices );
          var nextProbeId = nbeIdGenerator.create( [ 'PROBE ' ], $scope.model.vertices );
          var nextInstanceId = nbeIdGenerator.create( [ 'COMPONENT' ], $scope.model.vertices );
 
-         $scope.addGate = function( gateType ) {
+         $scope.addPrimitive = function( gateType ) {
             var id = nextGateId();
             $scope.model.vertices[ id ] = ng.copy( primitives[ gateType  ] );
+            $scope.layout.vertices[ id ] = nextLayout();
+         };
+
+         $scope.add4Bit = function( integer ) {
+            if( integer > 15 ) { return; }
+            var id = nextGateId();
+            var vertex = ng.copy( primitives[ '4BIT' ] );
+            for( var b = 0; b < vertex.ports.outbound.length; ++b ) {
+               vertex.ports.outbound[ b ].label = ( 1 << b & integer ) > 0 ? '1' : '0';
+            }
+            vertex.label += ': ' + integer;
+            $scope.model.vertices[ id ] = vertex;
             $scope.layout.vertices[ id ] = nextLayout();
          };
 
