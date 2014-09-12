@@ -28,15 +28,48 @@
          font-size: $fontSizePort;
       }
    }
+
+   .node.vertex.monitoring {
+      background: $gray4;
+   }
+   .node.vertex.interface {
+      background: desaturate( $typeColor2, 10 );
+   }
+
+   .node.vertex.component {
+      background: desaturate( $typeColor3, 10 );
+   }
 }
 
 
 
-// Demo specific styles that are not related to nbe:
+// demo-specific styles that are not directly related to nbe:
+
+h2, h3 {
+   font-family: $fontFamilyLabel;
+   line-height: 36px;
+   margin-top: 36px;
+   margin-bottom: 18px;
+   color: #444444;
+   padding-left: 32px;
+   margin-left: -32px;
+}
 
 h2 {
-   font-family: $fontFamilyLabel;
-   color: $gray5;
+   background: #f5c680;
+   font-size: 36px;
 }
 
+h3 {
+   background: #666;
+   font-size: 24px;
+}
 
+button {
+   border: solid 1px black;
+   border-radius: 2px;
+}
+
+button:focus {
+   outline: 1px dotted #666;
+}

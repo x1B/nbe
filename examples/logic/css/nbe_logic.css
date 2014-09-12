@@ -310,8 +310,41 @@
   margin: 0;
   font-size: 11px;
 }
+.logic-app .node.vertex.monitoring {
+  background: #a0a0a0;
+}
+.logic-app .node.vertex.interface {
+  background: #bfdd80;
+}
+.logic-app .node.vertex.component {
+  background: #6e759c;
+}
+
+h2, h3 {
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  line-height: 36px;
+  margin-top: 36px;
+  margin-bottom: 18px;
+  color: #444444;
+  padding-left: 32px;
+  margin-left: -32px;
+}
 
 h2 {
-  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
-  color: #c8c8c8;
+  background: #f5c680;
+  font-size: 36px;
+}
+
+h3 {
+  background: #666;
+  font-size: 24px;
+}
+
+button {
+  border: solid 1px black;
+  border-radius: 2px;
+}
+
+button:focus {
+  outline: 1px dotted #666;
 }

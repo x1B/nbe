@@ -1,187 +1,995 @@
-{"vertices": {
-   "s1": {
-      "label": "FALSE",
-      "ports": {
-         "inbound": [],
-         "outbound": [
-            {
-               "id": "s",
-               "label": "0",
+{
+   "components": {
+
+      "4MUX": {
+         "edges": {
+            "wire 0": {
                "type": "WIRE",
-               "edgeId": "wire 0"
-            }
-         ]
-      }
-   },
-   "s2": {
-      "label": "TRUE",
-      "ports": {
-         "inbound": [],
-         "outbound": [
-            {
-               "id": "s",
-               "label": "1",
-               "type": "WIRE",
-               "edgeId": "wire 1"
-            }
-         ]
-      }
-   },
-   "v2": {
-      "label": "AND",
-      "ports": {
-         "inbound": [
-            {
-               "id": "x",
-               "label": "x",
-               "type": "WIRE",
-               "edgeId": "wire 0"
+               "label": "wire 0"
             },
-            {
-               "id": "y",
-               "label": "y",
+            "wire 1": {
                "type": "WIRE",
-               "edgeId": "wire 1"
-            }
-         ],
-         "outbound": [
-            {
-               "id": "xor",
-               "label": "x∧y",
-               "type": "WIRE",
-               "edgeId": "wire 2"
-            }
-         ]
-      }
-   },
-   "v3": {
-      "label": "OR",
-      "ports": {
-         "inbound": [
-            {
-               "id": "x",
-               "label": "x",
-               "type": "WIRE",
-               "edgeId": "wire 0"
+               "label": "wire 1"
             },
-            {
-               "id": "y",
-               "label": "y",
+            "wire 2": {
                "type": "WIRE",
-               "edgeId": "wire 1"
-            }
-         ],
-         "outbound": [
-            {
-               "id": "z",
-               "label": "x∨y",
-               "type": "WIRE",
-               "edgeId": "wire 3"
-            }
-         ]
-      }
-   },
-   "v4": {
-      "label": "XOR",
-      "ports": {
-         "inbound": [
-            {
-               "id": "x",
-               "label": "x",
-               "type": "WIRE",
-               "edgeId": "wire 3"
+               "label": "wire 2"
             },
-            {
-               "id": "y",
-               "label": "y",
+            "wire 3": {
                "type": "WIRE",
-               "edgeId": "wire 2"
-            }
-         ],
-         "outbound": [
-            {
-               "id": "z",
-               "label": "x⊻y",
+               "label": "wire 3"
+            },
+            "wire 4": {
                "type": "WIRE",
-               "edgeId": "wire 4"
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            },
+            "wire 6": {
+               "type": "WIRE",
+               "label": "wire 6"
+            },
+            "wire 7": {
+               "type": "WIRE",
+               "label": "wire 7"
+            },
+            "wire 8": {
+               "type": "WIRE",
+               "label": "wire 8"
+            },
+            "wire 9": {
+               "type": "WIRE",
+               "label": "wire 9"
             }
-         ]
+         },
+         "vertices": {
+            "INPUT": {
+               "classes": "interface",
+               "label": "INPUT",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     },
+                     {
+                        "id": "x3",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     },
+                     {
+                        "id": "x4",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "x5",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "classes": "interface",
+               "label": "OUTPUT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "COMPONENT0": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     }
+                  ]
+               }
+            },
+            "COMPONENT1": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     }
+                  ]
+               }
+            },
+            "COMPONENT2": {
+               "label": "2MUX",
+               "classes": "component",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     }
+                  ]
+               }
+            }
+         }
+      },
+
+      "2MUX": {
+         "edges": {
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            },
+            "wire 4": {
+               "type": "WIRE",
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            },
+            "wire 6": {
+               "type": "WIRE",
+               "label": "wire 6"
+            },
+            "wire 7": {
+               "type": "WIRE",
+               "label": "wire 7"
+            },
+            "wire 8": {
+               "type": "WIRE",
+               "label": "wire 8"
+            },
+            "wire 9": {
+               "type": "WIRE",
+               "label": "wire 9"
+            }
+         },
+         "vertices": {
+            "INPUT": {
+               "classes": "interface",
+               "label": "INPUT",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     },
+                     {
+                        "id": "x2",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "classes": "interface",
+               "label": "OUTPUT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "GATE0": {
+               "label": "AND",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     }
+                  ]
+               }
+            },
+            "GATE1": {
+               "label": "AND",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     }
+                  ]
+               }
+            },
+            "GATE2": {
+               "label": "NOT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ]
+               }
+            },
+            "GATE3": {
+               "label": "OR",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 9"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 8"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∨y",
+                        "type": "WIRE",
+                        "edgeId": "wire 7"
+                     }
+                  ]
+               }
+            }
+         }
+      },
+
+      "XOR": {
+         "edges": {
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            },
+            "wire 4": {
+               "type": "WIRE",
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            }
+         },
+         "vertices": {
+            "INPUT": {
+               "classes": "interface",
+               "label": "INPUT",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "classes": "interface",
+               "label": "OUTPUT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "GATE0": {
+               "label": "AND",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
+                  ]
+               }
+            },
+            "GATE1": {
+               "label": "AND",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ]
+               }
+            },
+            "GATE2": {
+               "label": "NOT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     }
+                  ]
+               }
+            },
+            "GATE3": {
+               "label": "OR",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 1"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 2"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∨y",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ]
+               }
+            }
+         }
+      },
+
+      "NOR": {
+         "vertices": {
+            "INPUT": {
+               "label": "INPUT",
+               "classes": "interface",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "label": "OUTPUT",
+               "classes": "interface",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "not": {
+               "label": "NOT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ]
+               }
+            },
+            "or": {
+               "label": "OR",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wire 4"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 5"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "x∨y",
+                        "type": "WIRE",
+                        "edgeId": "wire 6"
+                     }
+                  ]
+               }
+            }
+         },
+         "edges": {
+            "wX": {
+               "label": "wire 0",
+               "type": "WIRE"
+            },
+            "wY": {
+               "label": "wire 1",
+               "type": "WIRE"
+            },
+            "wNotX": {
+               "label": "wire 2",
+               "type": "WIRE"
+            },
+            "wZ": {
+               "label": "wire 3",
+               "type": "WIRE"
+            },
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            },
+            "wire 4": {
+               "type": "WIRE",
+               "label": "wire 4"
+            },
+            "wire 5": {
+               "type": "WIRE",
+               "label": "wire 5"
+            },
+            "wire 6": {
+               "type": "WIRE",
+               "label": "wire 6"
+            }
+         }
+      },
+
+      "NAND": {
+         "vertices": {
+            "INPUT": {
+               "label": "INPUT",
+               "classes": "interface",
+               "ports": {
+                  "inbound": [],
+                  "outbound": [
+                     {
+                        "id": "x0",
+                        "type": "WIRE",
+                        "edgeId": "wNotX"
+                     },
+                     {
+                        "id": "x1",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
+                  ]
+               }
+            },
+            "OUTPUT": {
+               "label": "OUTPUT",
+               "classes": "interface",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "y0",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ],
+                  "outbound": []
+               }
+            },
+            "not": {
+               "label": "NOT",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wZ"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "z",
+                        "label": "¬x",
+                        "type": "WIRE",
+                        "edgeId": "wire 3"
+                     }
+                  ]
+               }
+            },
+            "and": {
+               "label": "AND",
+               "ports": {
+                  "inbound": [
+                     {
+                        "id": "x",
+                        "label": "x",
+                        "type": "WIRE",
+                        "edgeId": "wNotX"
+                     },
+                     {
+                        "id": "y",
+                        "label": "y",
+                        "type": "WIRE",
+                        "edgeId": "wire 0"
+                     }
+                  ],
+                  "outbound": [
+                     {
+                        "id": "and",
+                        "label": "x∧y",
+                        "type": "WIRE",
+                        "edgeId": "wZ"
+                     }
+                  ]
+               }
+            }
+         },
+         "edges": {
+            "wX": {
+               "label": "wire 0",
+               "type": "WIRE"
+            },
+            "wY": {
+               "label": "wire 1",
+               "type": "WIRE"
+            },
+            "wNotX": {
+               "label": "wire 2",
+               "type": "WIRE"
+            },
+            "wZ": {
+               "label": "wire 3",
+               "type": "WIRE"
+            },
+            "wire 0": {
+               "type": "WIRE",
+               "label": "wire 0"
+            },
+            "wire 1": {
+               "type": "WIRE",
+               "label": "wire 1"
+            },
+            "wire 2": {
+               "type": "WIRE",
+               "label": "wire 2"
+            },
+            "wire 3": {
+               "type": "WIRE",
+               "label": "wire 3"
+            }
+         }
       }
    },
-   "PROBE 0": {
-      "label": "PROBE 0",
-      "ports": {
-         "inbound": [
-            {
-               "id": "x",
-               "type": "WIRE",
-               "edgeId": "wire 4"
+
+   "main": {
+      "vertices": {
+         "s1": {
+            "label": "FALSE",
+            "ports": {
+               "inbound": [],
+               "outbound": [
+                  {
+                     "id": "s",
+                     "label": "0",
+                     "type": "WIRE",
+                     "edgeId": "wire 0"
+                  }
+               ]
             }
-         ],
-         "outbound": [
-            {
-               "id": "log",
-               "type": "CHANNEL",
-               "edgeId": "channel 0"
+         },
+         "s2": {
+            "label": "TRUE",
+            "ports": {
+               "inbound": [],
+               "outbound": [
+                  {
+                     "id": "s",
+                     "label": "1",
+                     "type": "WIRE",
+                     "edgeId": "wire 1"
+                  }
+               ]
             }
-         ]
-      }
-   },
-   "PROBE 1": {
-      "label": "PROBE 1",
-      "ports": {
-         "inbound": [
-            {
-               "id": "x",
-               "type": "WIRE",
-               "edgeId": "wire 3"
+         },
+         "v2": {
+            "label": "NAND",
+            "classes": "component",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "x0",
+                     "label": "x0",
+                     "type": "WIRE",
+                     "edgeId": "wire 0"
+                  },
+                  {
+                     "id": "x1",
+                     "label": "x1",
+                     "type": "WIRE",
+                     "edgeId": "wire 1"
+                  }
+               ],
+               "outbound": [
+                  {
+                     "id": "y0",
+                     "label": "y0",
+                     "type": "WIRE",
+                     "edgeId": "wire 2"
+                  }
+               ]
             }
-         ],
-         "outbound": [
-            {
-               "id": "log",
-               "type": "CHANNEL",
-               "edgeId": "channel 0"
+         },
+         "v3": {
+            "label": "OR",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "x",
+                     "label": "x",
+                     "type": "WIRE",
+                     "edgeId": "wire 0"
+                  },
+                  {
+                     "id": "y",
+                     "label": "y",
+                     "type": "WIRE",
+                     "edgeId": "wire 1"
+                  }
+               ],
+               "outbound": [
+                  {
+                     "id": "z",
+                     "label": "x∨y",
+                     "type": "WIRE",
+                     "edgeId": "wire 3"
+                  }
+               ]
             }
-         ]
-      }
-   },
-   "v7": {
-      "label": "LOG",
-      "ports": {
-         "inbound": [
-            {
-               "id": "messages",
-               "type": "CHANNEL",
-               "edgeId": "channel 0"
+         },
+         "v4": {
+            "label": "AND",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "x",
+                     "label": "x",
+                     "type": "WIRE",
+                     "edgeId": "wire 3"
+                  },
+                  {
+                     "id": "y",
+                     "label": "y",
+                     "type": "WIRE",
+                     "edgeId": "wire 2"
+                  }
+               ],
+               "outbound": [
+                  {
+                     "id": "z",
+                     "label": "x∧y",
+                     "type": "WIRE",
+                     "edgeId": "wire 4"
+                  }
+               ]
             }
-         ],
-         "outbound": []
+         },
+         "PROBE 0": {
+            "label": "PROBE 0",
+            "classes": "monitoring",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "x",
+                     "type": "WIRE",
+                     "edgeId": "wire 4"
+                  }
+               ],
+               "outbound": [
+                  {
+                     "id": "log",
+                     "type": "CHANNEL",
+                     "edgeId": "channel 0"
+                  }
+               ]
+            }
+         },
+         "PROBE 1": {
+            "label": "PROBE 1",
+            "classes": "monitoring",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "x",
+                     "type": "WIRE",
+                     "edgeId": "wire 3"
+                  }
+               ],
+               "outbound": [
+                  {
+                     "id": "log",
+                     "type": "CHANNEL",
+                     "edgeId": "channel 0"
+                  }
+               ]
+            }
+         },
+         "v7": {
+            "label": "LOG",
+            "classes": "monitoring",
+            "ports": {
+               "inbound": [
+                  {
+                     "id": "messages",
+                     "type": "CHANNEL",
+                     "edgeId": "channel 0"
+                  }
+               ],
+               "outbound": []
+            }
+         }
+      },
+      "edges": {
+         "wire 0": {
+            "label": "wire 0",
+            "type": "WIRE"
+         },
+         "wire 1": {
+            "label": "wire 1",
+            "type": "WIRE"
+         },
+         "wire 2": {
+            "label": "wire 2",
+            "type": "WIRE"
+         },
+         "wire 3": {
+            "label": "wire 3",
+            "type": "WIRE"
+         },
+         "wire 4": {
+            "label": "wire 4",
+            "type": "WIRE"
+         },
+         "channel 0": {
+            "label": "channel 0",
+            "type": "CHANNEL"
+         }
       }
    }
-}, "edges": {
-   "wire 0": {
-      "label": "wire 0",
-      "type": "WIRE"
-   },
-   "wire 1": {
-      "label": "wire 1",
-      "type": "WIRE"
-   },
-   "wire 2": {
-      "label": "wire 2",
-      "type": "WIRE"
-   },
-   "wire 3": {
-      "label": "wire 3",
-      "type": "WIRE"
-   },
-   "wire 4": {
-      "label": "wire 4",
-      "type": "WIRE"
-   },
-   "channel 0": {
-      "label": "channel 0",
-      "type": "CHANNEL"
-   }
-}}
+
+}
