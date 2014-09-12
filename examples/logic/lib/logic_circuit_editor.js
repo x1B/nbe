@@ -13,7 +13,7 @@ define( [
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   var DIRECTIVE_NAME = 'logicCircuitEditor';
+   var DIRECTIVE_NAME = 'lcEditor';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,7 @@ define( [
             layout: '=' + DIRECTIVE_NAME + 'Layout'
          },
          transclude: true,
-         controller: [ '$scope', 'nbeIdGenerator', LogicCircuitEditorController ]
+         controller: [ '$scope', 'nbeIdGenerator', LcEditorController ]
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function LogicCircuitEditorController( $scope, nbeIdGenerator ) {
+      function LcEditorController( $scope, nbeIdGenerator ) {
          $scope.view = {
             componentToAdd: Object.keys( $scope.components )[ 0 ],
             newByteValue: null
@@ -99,19 +99,21 @@ define( [
             $scope.layout.vertices[ id ] = nextLayout();
          };
 
-         $scope.addIo = function( iface ) {
+         $scope.addInterfacePort = function( iface ) {
             var isInput = iface === 'INPUT';
             var direction = isInput ? 'outbound' : 'inbound';
             var portGroup = $scope.model.vertices[ iface ].ports[ direction ];
             var id = ( isInput ? 'x' : 'y' ) + portGroup.length;
-            portGroup.push( { id: id, type: 'WIRE' } );
+            var port = { id: id, label: id, type: 'WIRE' };
+            portGroup.push( port );
+            $scope.$emit( 'lc.interface.added', iface, port );
          };
 
-         $scope.removeIo = function( face ) {
-            var direction = face === 'INPUT' ? 'outbound' : 'inbound';
-            var portGroup = $scope.model.vertices[ face ].ports[ direction ];
-            var port = portGroup.pop();
-            // :TODO: remove corresponding connections in main model
+         $scope.removeInterfacePort = function( iface ) {
+            var direction = iface === 'INPUT' ? 'outbound' : 'inbound';
+            var portGroup = $scope.model.vertices[ iface ].ports[ direction ];
+            portGroup.pop();
+            $scope.$emit( 'lc.interface.removed', iface );
          };
       }
 

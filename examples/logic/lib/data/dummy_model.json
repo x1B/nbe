@@ -1,5 +1,6 @@
 {
    "components": {
+
       "4MUX": {
          "edges": {
             "wire 0": {
@@ -189,6 +190,7 @@
             }
          }
       },
+
       "2MUX": {
          "edges": {
             "wire 0": {
@@ -793,13 +795,9 @@
             }
          }
       }
-
-
    },
 
-
    "main": {
-
       "vertices": {
          "s1": {
             "label": "FALSE",
@@ -913,6 +911,7 @@
          },
          "PROBE 0": {
             "label": "PROBE 0",
+            "classes": "monitoring",
             "ports": {
                "inbound": [
                   {
@@ -932,6 +931,7 @@
          },
          "PROBE 1": {
             "label": "PROBE 1",
+            "classes": "monitoring",
             "ports": {
                "inbound": [
                   {
@@ -951,6 +951,7 @@
          },
          "v7": {
             "label": "LOG",
+            "classes": "monitoring",
             "ports": {
                "inbound": [
                   {

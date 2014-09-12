@@ -8,11 +8,11 @@ define( [
    'json!./data/primitives.json',
    'json!./data/dummy_model.json',
    'json!./data/dummy_layout.json'
-], function( $, ng, logicCircuitEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout ) {
+], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout ) {
    'use strict';
 
-   var module = ng.module( 'LogicDemoApp', [ 'nbe' ] );
-   logicCircuitEditorDirective.define( module );
+   var module = ng.module( 'logic-circuit', [ 'nbe' ] );
+   lcEditorDirective.define( module );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,14 +41,6 @@ define( [
       };
 
       $scope.closeEditor = function () {
-         console.log(
-            'Closing editor, component:',
-            $scope.view.currentComponentId,
-            '\n Model:',
-            JSON.stringify( $scope.model.components[ $scope.view.currentComponentId ] ),
-            '\n Layout:',
-            JSON.stringify( $scope.layout.components[ $scope.view.currentComponentId ] ) );
-
          $scope.view.currentComponentId = null;
       };
 
@@ -75,7 +67,34 @@ define( [
          }
       };
 
+
+
+      $scope.$on( 'lc.interface.added', function( event, iface, port ) {
+         forEachInstance( $scope.view.currentComponentId, function( instanceVertex ) {
+            instanceVertex.ports[ iface === 'INPUT' ? 'inbound' : 'outbound' ].push( ng.copy( port ) );
+         } );
+      } );
+
+      $scope.$on( 'lc.interface.removed', function( event, iface ) {
+         forEachInstance( $scope.view.currentComponentId, function( instanceVertex ) {
+            instanceVertex.ports[ iface === 'INPUT' ? 'inbound' : 'outbound' ].pop();
+         } );
+      } );
+
+      function forEachInstance( searchId, callback ) {
+         handle( $scope.model.main );
+         ng.forEach( $scope.model.components, handle );
+         function handle( circuit ) {
+            ng.forEach( circuit.vertices, function( vertex, id ) {
+               if( vertex.label === searchId ) {
+                  callback( vertex );
+               }
+            } );
+         }
+      }
+
    }
+
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

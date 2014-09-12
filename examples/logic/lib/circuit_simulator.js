@@ -182,6 +182,13 @@ define( [], function() {
                   }
                } );
             }
+            else if( vertex.label.indexOf( '4BIT' ) === 0 ) {
+               vertex.ports.outbound.forEach( function( outPort ) {
+                  if( isConnected( outPort ) ) {
+                     gateBuilders[ outPort.label === '1' ? 'TRUE' : 'FALSE' ]( connectionAt( outPort ) );
+                  }
+               } );
+            }
             else if( vertex.label in gateBuilders ) {
                gateBuilders[ vertex.label ].apply( null, wIn.concat( wOut ).concat( cIn ).concat( cOut ) );
             }

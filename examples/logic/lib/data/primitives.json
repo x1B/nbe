@@ -125,6 +125,7 @@
    },
    "PROBE": {
       "label": "PROBE",
+      "classes": "monitoring",
       "ports": {
          "inbound": [
             {
@@ -144,6 +145,7 @@
    },
    "LOG": {
       "label": "LOG",
+      "classes": "monitoring",
       "frozen": true,
       "ports": {
          "inbound": [

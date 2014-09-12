@@ -5,6 +5,6 @@ define( [
 ], function start( ng ) {
    'use strict';
 
-   ng.bootstrap( document, [ 'LogicDemoApp' ] );
+   ng.bootstrap( document, [ 'logic-circuit' ] );
 
 } );

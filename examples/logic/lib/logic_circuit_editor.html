@@ -4,14 +4,14 @@
     <span>
         inputs:
         <button data-ng-disabled="model.vertices.INPUT.ports.outbound.length <= 1"
-                data-ng-click="removeIo('INPUT')">-</button><!--
-     --><button data-ng-click="addIo('INPUT')">+</button>
+                data-ng-click="removeInterfacePort('INPUT')">-</button><!--
+     --><button data-ng-click="addInterfacePort('INPUT')">+</button>
     </span>
     <span>
         outputs:
         <button data-ng-disabled="model.vertices.OUTPUT.ports.inbound.length <= 1"
-                data-ng-click="removeIo('OUTPUT')">-</button><!--
-     --><button data-ng-click="addIo('OUTPUT')">+</button>
+                data-ng-click="removeInterfacePort('OUTPUT')">-</button><!--
+     --><button data-ng-click="addInterfacePort('OUTPUT')">+</button>
     </span>
     </p>
 

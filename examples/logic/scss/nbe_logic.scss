@@ -29,12 +29,15 @@
       }
    }
 
+   .node.vertex.monitoring {
+      background: $gray4;
+   }
    .node.vertex.interface {
-      background: desaturate( $typeColor2, 20 );
+      background: desaturate( $typeColor2, 10 );
    }
 
    .node.vertex.component {
-      background: desaturate( $typeColor3, 20 );
+      background: desaturate( $typeColor3, 10 );
    }
 }
 

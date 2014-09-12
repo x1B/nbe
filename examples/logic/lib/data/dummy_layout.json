@@ -9,7 +9,7 @@
                "top": 116
             },
             "OUTPUT": {
-               "left": 488,
+               "left": 688,
                "top": 305
             },
             "COMPONENT0": {
@@ -21,7 +21,7 @@
                "top": 184
             },
             "COMPONENT2": {
-               "left": 381,
+               "left": 481,
                "top": 254
             }
          }
@@ -56,6 +56,7 @@
             }
          }
       },
+
       "NAND": {
          "vertices": {
             "and": {
@@ -77,6 +78,7 @@
          },
          "edges": {}
       },
+
       "NOR": {
          "vertices": {
             "or": {
@@ -98,6 +100,7 @@
          },
          "edges": {}
       },
+
       "XOR": {
          "edges": {},
          "vertices": {
@@ -128,6 +131,7 @@
          }
       }
    },
+
    "main": {
       "vertices": {
          "s1": {
@@ -164,26 +168,6 @@
          }
       },
       "edges": {
-         "wire 0": {
-            "left": 170,
-            "top": 90
-         },
-         "wire 1": {
-            "left": 170,
-            "top": 220
-         },
-         "wire 2": {
-            "left": 445,
-            "top": 70
-         },
-         "wire 3": {
-            "left": 607,
-            "top": 270
-         },
-         "wire 4": {
-            "left": 829,
-            "top": 60
-         },
          "channel 0": {
             "left": 980,
             "top": 220
