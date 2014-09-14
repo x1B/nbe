@@ -29,6 +29,17 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
             return;
          }
 
+         // Handle removed vertice:
+         ng.forEach( previousVertices, function( vertex, vId ) {
+            if( !newVertices[ vId ] ) {
+               vertex.ports.filter( connected ).forEach( function ( port ) {
+                  linksController.byPort( vId, port ).forEach( linksController.destroy );
+               } );
+            }
+         } );
+
+
+         // Handle added vertices:
          var outputRefsByEdge = { };
          var inputRefsByEdge = { };
          ng.forEach( newVertices, function( vertex, vId ) {
@@ -63,6 +74,7 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
                }
             } );
          } );
+
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
