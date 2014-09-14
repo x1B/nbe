@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#45](https://github.com/x1B/nbe/issues/45): fixed removal of vertices from the graph model
+
 - [#41](https://github.com/x1B/nbe/issues/41): fixed layout of simple edges in selection
 
 
