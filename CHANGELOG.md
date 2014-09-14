@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#45](https://github.com/x1B/nbe/issues/45): fixed removal of vertices from the graph model
+
 - [#31](https://github.com/x1B/nbe/issues/31): allow to classify nodes using "classes" attribute
 
 - [#42](https://github.com/x1B/nbe/issues/42): partition ports into inbound and outbound subset
