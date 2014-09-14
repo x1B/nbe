@@ -27,12 +27,25 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      /** Update the view model when nodes have been added/removed */
+      /** Update the view model after nodes have been added/removed */
       function updateVertices( newVertices, previousVertices ) {
          if( newVertices == null ) {
             return;
          }
 
+         // Handle removed vertice:
+         ng.forEach( previousVertices, function( vertex, vId ) {
+            if( !newVertices[ vId ] ) {
+               DIRECTIONS.forEach( function( direction ) {
+                  vertex.ports[ direction ].filter( connected ).forEach( function ( port ) {
+                     linksController.byPort( vId, port ).forEach( linksController.destroy );
+                  } );
+               } );
+            }
+         } );
+
+
+         // Handle added vertices:
          var outputRefsByEdge = { };
          var inputRefsByEdge = { };
          ng.forEach( newVertices, function( vertex, vId ) {
@@ -71,11 +84,12 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
                } );
             } );
          } );
+
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      /** Update the view model when edges have been added/removed */
+      /** Update the view model after edges have been added/removed */
       function updateEdges( newEdges, previousEdges ) {
          if( newEdges == null ) {
             return;
