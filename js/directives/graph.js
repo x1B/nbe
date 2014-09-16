@@ -150,9 +150,9 @@ define( [
                $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
 
             var operations = createGraphOperationsController(
-               $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
+               $scope.model, $scope.layout, $scope.types, ops, canvas, links, selection, idGenerator );
 
-            createKeysController( $scope.view, jqGraph, $document, ops, operations, dragDrop );
+            createKeysController( $scope.view, jqGraph, $document, ops, operations, dragDrop, selection );
 
             // controller API:
             self.dragDrop = dragDrop;

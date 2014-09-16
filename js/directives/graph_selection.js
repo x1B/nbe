@@ -1,7 +1,7 @@
 /**
  * Manages the view model for a selection of nodes.
  */
-define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
+define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual ) {
    'use strict';
 
    /**
@@ -20,7 +20,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       var svgBackground = $( 'svg', jqGraph )[0];
       $document.on( 'mousedown', function( event ) {
          viewModel.hasFocus = jqGraph.is( ':hover' );
-
          if( viewModel.hasFocus && (event.target === svgBackground || event.target === jqGraph[0]) ) {
             start( event );
          }
@@ -39,6 +38,24 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          },
          vertices: function() {
             return selection.vertices;
+         },
+         copy: function() {
+            var subGraph = { vertices: {}, edges: {} };
+            var subLayout = { vertices: {}, edges: {} };
+            [ 'vertices', 'edges' ].forEach( function( collection ) {
+               var graphSource = model[ collection ];
+               var graphDest = subGraph[ collection ];
+               var layoutSource = layoutModel[ collection ];
+               var layoutDest = subLayout[ collection ];
+               Object.keys( selection[ collection ] ).forEach( function( id ) {
+                  layoutDest[ id ] = { left: layoutSource[ id ].left, top: layoutSource[ id ].top };
+                  graphDest[ id ] = ng.copy( graphSource[ id ] );
+               } );
+            } );
+            return {
+               graph: subGraph,
+               layout: subLayout
+            };
          }
       };
 

@@ -1,7 +1,9 @@
 define( [], function() {
    'use strict';
 
-   return function( viewModel, jqGraph, $document, ops, graphOperationsController, dragDropController ) {
+   var fakeClipboard;
+
+   return function( viewModel, jqGraph, $document, ops, graphOpsController, dragDropController, selectionController ) {
 
       var KEY_CODE_DELETE = 46;
       var KEY_CODE_C = 67;
@@ -10,6 +12,10 @@ define( [], function() {
       var KEY_CODE_Y = 89;
       var KEY_CODE_Z = 90;
       var KEY_CODE_ESCAPE = 0x1B;
+
+      var clipboardPrepared = false;
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       jqGraph.on( 'focusin', function() {
          $document.on( 'keydown', handleKeys );
@@ -21,13 +27,51 @@ define( [], function() {
          viewModel.hasFocus = false;
       } );
 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      $document.on( 'copy', function( event ) {
+         if( !clipboardPrepared ) {
+            copySelectionToClipboard();
+         }
+         console.log( 'putting graph to clipboard: ', fakeClipboard );
+         if( event.clipboardData ) {
+            event.clipboardData.setData( 'application/json', fakeClipboard );
+            event.clipboardData.setData( 'text/plain', fakeClipboard );
+            event.preventDefault();
+            clipboardPrepared = false;
+         }
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      $document.on( 'cut', function( event ) {
+         if( !clipboardPrepared ) {
+            copySelectionToClipboard();
+            ops.perform( graphOpsController.deleteSelected() );
+         }
+         if( event.clipboardData ) {
+            event.clipboardData.setData( 'application/json', fakeClipboard );
+            event.clipboardData.setData( 'text/plain', fakeClipboard );
+            event.preventDefault();
+         }
+         clipboardPrepared = false;
+      } );
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       return {};
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function copySelectionToClipboard() {
+         fakeClipboard = JSON.stringify( selectionController.copy() );
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function handleKeys( event ) {
          if( event.keyCode === KEY_CODE_DELETE ) {
-            ops.perform( graphOperationsController.deleteSelected() );
+            ops.perform( graphOpsController.deleteSelected() );
          }
          else if( event.keyCode === KEY_CODE_ESCAPE ) {
             if( dragDropController.transaction() ) {
@@ -47,13 +91,19 @@ define( [], function() {
                ops.redo();
             }
             else if( event.keyCode === KEY_CODE_C ) {
-               console.log( 'TODO: copy' );
+               copySelectionToClipboard();
+               clipboardPrepared = true;
             }
             else if( event.keyCode === KEY_CODE_X ) {
-               console.log( 'TODO: cut' );
+               copySelectionToClipboard();
+               ops.perform( graphOpsController.deleteSelected() );
+               clipboardPrepared = true;
             }
             else if( event.keyCode === KEY_CODE_V ) {
-               console.log( 'TODO: paste' );
+               if( fakeClipboard ) {
+                  console.log( 'pasting', fakeClipboard );
+                  ops.perform( graphOpsController.insert( JSON.parse( fakeClipboard ) ) );
+               }
             }
          }
       }

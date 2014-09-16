@@ -23,7 +23,7 @@ define( [], function() {
     * @param {Function} nextTick
     *    a helper to apply functions asynchronously
     */
-   return function( model, typesModel, ops, canvasController, linksController, selectionController, idGenerator ) {
+   return function( model, layoutModel, typesModel, ops, canvasController, linksController, selectionController, idGenerator ) {
 
       var generateEdgeId = idGenerator.create(
          Object.keys( typesModel ).map( function( _ ) {
@@ -32,12 +32,18 @@ define( [], function() {
          model.edges
       );
 
+      var generateVertexId = idGenerator.create(
+         [ 'node' ],
+         model.vertices
+      );
+
       return {
          perform: ops.perform,
          connect: makeConnectOp,
          disconnect: makeDisconnectOp,
          deleteVertex: makeDeleteVertexOp,
          deleteEdge: makeDeleteEdgeOp,
+         insert: makeInsertOp,
          deleteSelected: deleteSelected
       };
 
@@ -59,7 +65,7 @@ define( [], function() {
 
       function createEdge( fromRef, toRef ) {
          var type = fromRef.port.type;
-         var prefix = type.toLocaleLowerCase() + ' ';
+         var prefix = type.toLowerCase() + ' ';
          var id = generateEdgeId( prefix );
          var edgeRef = { nodeId: id };
          model.edges[ id ] = {
@@ -80,6 +86,43 @@ define( [], function() {
          }
 
          return id;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function makeCreateVertexOp( vertexInfo, layoutInfo ) {
+         function createVertex() {
+            var id = generateVertexId();
+            model.vertices[ id ] = vertexInfo;
+            layoutModel.vertices[ id ] = layoutInfo;
+            createVertex.undo = makeDeleteVertexOp( id );
+            return id;
+         }
+
+         return createVertex;
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      function makeInsertOp( graphInformation ) {
+         var sequence = [];
+
+         // :TODO: handle hyperedges
+
+         var vertices = graphInformation.graph.vertices;
+         var edgeIdMapping = {};
+         Object.keys( vertices ).forEach( function( vertexId ) {
+            var ports = vertices[ vertexId ].ports;
+            ports.inbound.concat( ports.outbound ).forEach( function( port ) {
+               if( port.edgeId ) {
+                  edgeIdMapping[ port.edgeId ] = edgeIdMapping[ port.edgeId ] || generateEdgeId( port.type.toLowerCase() + ' ' );
+                  port.edgeId = edgeIdMapping[ port.edgeId ];
+               }
+            } );
+            sequence.push( makeCreateVertexOp( vertices[ vertexId ], graphInformation.layout.vertices[ vertexId ] ) );
+         } );
+
+         return ops.compose( sequence );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +155,7 @@ define( [], function() {
             var connectPortToEdgeOp = function() {
                vertexRef.port.edgeId = toEdgeId;
                var link = linksController.create( vertexRef, edgeRef );
-               connectPortToEdgeOp.undo = makeCutOp( link );
+               connectPortToEdgeOp.undo = makeSeverOp( link );
             };
 
             return ops.compose( [ enforceCardinalityOp, connectPortToEdgeOp ] );
@@ -171,7 +214,7 @@ define( [], function() {
                   var link = linksController.create( fromRef, toRef );
                   fromRef.port.edgeId = edgeId;
                   toRef.port.edgeId = edgeId;
-                  connectPortToPortOp.undo = makeCutOp( link );
+                  connectPortToPortOp.undo = makeSeverOp( link );
                }
                canvasController.pingEdge( edgeId );
             }
@@ -183,11 +226,11 @@ define( [], function() {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function makeCutOp( link ) {
+      function makeSeverOp( link ) {
          var edgeId = ( link.source.port || link.dest.port ).edgeId;
          var edge = model.edges[ edgeId ];
 
-         var cutLink = function() {
+         var severLink = function() {
             linksController.destroy( link );
             [ link.source, link.dest ].forEach( function( ref ) {
                var port = ref.port;
@@ -198,14 +241,14 @@ define( [], function() {
             var remaining = Object.keys( linksController.byEdge( edgeId ) );
             if( remaining.length === 0 ) {
                delete model.edges[ edgeId ];
-               cutLink.undo = ops.compose( [
+               severLink.undo = ops.compose( [
                   function() {
                      model.edges[ edgeId ] = edge;
-                  }, cutLink.undo
+                  }, severLink.undo
                ] );
             }
          };
-         cutLink.undo = function() {
+         severLink.undo = function() {
             [ link.source, link.dest ].forEach( function( ref ) {
                if( ref.port ) {
                   ref.port.edgeId = edgeId;
@@ -213,7 +256,7 @@ define( [], function() {
             } );
             linksController.create( link.source, link.dest, link.id );
          };
-         return cutLink;
+         return severLink;
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +268,7 @@ define( [], function() {
             return ops.noOp;
          }
          return ops.compose( portLinks.map( function( link ) {
-            return makeCutOp( link );
+            return makeSeverOp( link );
          } ) );
       }
 
@@ -235,7 +278,7 @@ define( [], function() {
          var links = linksController.byEdge( edgeId );
          var linkIds = Object.keys( links );
          return ops.compose( linkIds.map( function( linkId ) {
-            return makeCutOp( links[ linkId ] );
+            return makeSeverOp( links[ linkId ] );
          } ) );
       }
 

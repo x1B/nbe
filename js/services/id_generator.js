@@ -1,6 +1,5 @@
 /**
- * Dagre-based graph layout service.
- * Edges and vertices are fed to dagre layouter as nodes, and links are fed as edges.
+ * Conflict free generation of human readable object-local IDs.
  */
 define( [], function() {
    'use strict';
