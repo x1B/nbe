@@ -1,5 +1,5 @@
 /**
- * Offers operations on the graph model, with undo/redo and model consistency.
+ * Offers operations on the graph model, with undo/redo
  */
 define( [], function() {
    'use strict';

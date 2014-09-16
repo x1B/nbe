@@ -17,12 +17,18 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       var selection = viewModel.selection;
       var anchor;
 
-      jqGraph[ 0 ].addEventListener( 'mousedown', start );
+      var svgBackground = $( 'svg', jqGraph )[0];
+      $document.on( 'mousedown', function( event ) {
+         viewModel.hasFocus = jqGraph.is( ':hover' );
+
+         if( viewModel.hasFocus && (event.target === svgBackground || event.target === jqGraph[0]) ) {
+            start( event );
+         }
+      } );
 
       return {
          setAnchor: setAnchor,
          followAnchor: followAnchor,
-         start: start,
          isEmpty: isEmpty,
          selectVertex: selectVertex,
          selectEdge: selectEdge,
@@ -73,10 +79,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function start( event ) {
-         if( event.target !== jqGraph[ 0 ] && event.target.nodeName !== 'svg' ) {
-            return;
-         }
-
          $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
 
          var jqSelection = $( '.selection', jqGraph );

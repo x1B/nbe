@@ -1,14 +1,25 @@
 define( [], function() {
    'use strict';
 
-   return function( $document, ops, graphOperationsController, dragDropController ) {
+   return function( viewModel, jqGraph, $document, ops, graphOperationsController, dragDropController ) {
 
       var KEY_CODE_DELETE = 46;
+      var KEY_CODE_C = 67;
+      var KEY_CODE_V = 86;
+      var KEY_CODE_X = 88;
       var KEY_CODE_Y = 89;
       var KEY_CODE_Z = 90;
       var KEY_CODE_ESCAPE = 0x1B;
 
-      $document.on( 'keydown', handleKeys );
+      jqGraph.on( 'focusin', function() {
+         $document.on( 'keydown', handleKeys );
+         viewModel.hasFocus = true;
+      } );
+
+      jqGraph.on( 'focusout', function() {
+         $document.off( 'keydown', handleKeys );
+         viewModel.hasFocus = false;
+      } );
 
       return {};
 
@@ -34,6 +45,15 @@ define( [], function() {
             }
             else if( event.keyCode === KEY_CODE_Y ) {
                ops.redo();
+            }
+            else if( event.keyCode === KEY_CODE_C ) {
+               console.log( 'TODO: copy' );
+            }
+            else if( event.keyCode === KEY_CODE_X ) {
+               console.log( 'TODO: cut' );
+            }
+            else if( event.keyCode === KEY_CODE_V ) {
+               console.log( 'TODO: paste' );
             }
          }
       }

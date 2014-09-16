@@ -114,6 +114,7 @@ define( [
                self.calculateLayout();
             }
             $scope.view = {
+               hasFocus: false,
                selection: {
                   vertices: {},
                   edges: {},
@@ -151,7 +152,7 @@ define( [
             var operations = createGraphOperationsController(
                $scope.model, $scope.types, ops, canvas, links, selection, idGenerator );
 
-            createKeysController( $document, ops, operations, dragDrop );
+            createKeysController( $scope.view, jqGraph, $document, ops, operations, dragDrop );
 
             // controller API:
             self.dragDrop = dragDrop;
