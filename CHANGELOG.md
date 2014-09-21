@@ -2,6 +2,14 @@
 
 ## Last Changes
 
+- [#43](https://github.com/x1B/nbe/issues/43): allow to cut/copy/paste nodes and edges from/to the current graph
+    * users can now focus one graph at a time (using the tab key or mouse clicks)
+    * using Ctrl-C/Ctrl-X the current selection of nodes (if any) is copied/moved into a buffer
+    * if supported by the browser, a JSON representation of the selection is put into the global clipboard
+    * using Ctrl-V, the buffer may be pasted into the currently focused graph (which may be different from source)
+    * the nodes that were just pasted become the new graph selection
+    * links between selected nodes are retained when moving to the clipboard, connections to other nodes are lost 
+
 - [#45](https://github.com/x1B/nbe/issues/45): fixed removal of vertices from the graph model
 
 - [#31](https://github.com/x1B/nbe/issues/31): allow to classify nodes using "classes" attribute

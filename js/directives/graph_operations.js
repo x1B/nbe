@@ -107,7 +107,7 @@ define( [], function() {
       function makeInsertOp( graphInformation ) {
          var sequence = [];
 
-         // :TODO: handle hyperedges
+         // :TODO: handle hyperedges (?)
 
          var vertices = graphInformation.graph.vertices;
          var edgeIdMapping = {};

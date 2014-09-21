@@ -1,10 +1,21 @@
 /**
  * Manages the view model for a selection of nodes.
  */
-define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual ) {
+define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( ng, $, _, visual ) {
    'use strict';
 
    /**
+    * Create a selection controller for a given graph.
+    *
+    * There can be up to one selection controller per graph, which may represent an empty selection.
+    * A user can modify the selection by (shift)-clicking nodes (vertices and hyperedges), or by dragging a
+    * rectangle covering such elements.
+    *
+    * Edge nodes within the graph model are part of the selection if either
+    * - their representation node is part of the selection (hyperedges), or
+    * - they are 1:n edges and their source node is part of the selection, or
+    * - they are n:1 edges and their destination node is part of the selection
+    *
     * @param {Object} model
     *    the graph model (edges, vertices)
     * @param {Object} viewModel
@@ -20,6 +31,9 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
       var svgBackground = $( 'svg', jqGraph )[0];
       $document.on( 'mousedown', function( event ) {
          viewModel.hasFocus = jqGraph.is( ':hover' );
+         if( viewModel.hasFocus ) {
+            jqGraph.focus();
+         }
          if( viewModel.hasFocus && (event.target === svgBackground || event.target === jqGraph[0]) ) {
             start( event );
          }
@@ -39,24 +53,7 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
          vertices: function() {
             return selection.vertices;
          },
-         copy: function() {
-            var subGraph = { vertices: {}, edges: {} };
-            var subLayout = { vertices: {}, edges: {} };
-            [ 'vertices', 'edges' ].forEach( function( collection ) {
-               var graphSource = model[ collection ];
-               var graphDest = subGraph[ collection ];
-               var layoutSource = layoutModel[ collection ];
-               var layoutDest = subLayout[ collection ];
-               Object.keys( selection[ collection ] ).forEach( function( id ) {
-                  layoutDest[ id ] = { left: layoutSource[ id ].left, top: layoutSource[ id ].top };
-                  graphDest[ id ] = ng.copy( graphSource[ id ] );
-               } );
-            } );
-            return {
-               graph: subGraph,
-               layout: subLayout
-            };
-         }
+         copy: copy
       };
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +66,40 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
 
       function clear() {
          viewModel.selection = selection = { vertices: {}, edges: {}, links: {} };
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /**
+       * Create a graph that contains all nodes that are part of the current selection (except fixed nodes).
+       * Ports that are connected will only be connected in the copy if their edges are part of the selection.
+       */
+      function copy() {
+         var subGraph = { vertices: {}, edges: {} };
+         var subLayout = { vertices: {}, edges: {} };
+         [ 'edges', 'vertices' ].forEach( function( collection ) {
+            var graphSource = model[ collection ];
+            var graphDest = subGraph[ collection ];
+            var layoutSource = layoutModel[ collection ];
+            var layoutDest = subLayout[ collection ];
+            Object.keys( selection[ collection ] ).forEach( function( id ) {
+               layoutDest[ id ] = { left: layoutSource[ id ].left, top: layoutSource[ id ].top };
+               graphDest[ id ] = ng.copy( graphSource[ id ] );
+               if( collection === 'vertices' ) {
+                  var ports = graphDest[ id ].ports;
+                  ports.inbound.concat( ports.outbound ).forEach( function( port ) {
+                     if( !selection.edges[ port.edgeId ] ) {
+                        port.edgeId = null;
+                     }
+                  } );
+               }
+            } );
+         } );
+         console.log( 'Selection Copy:\n  ', subGraph.vertices, '\n  ', subGraph.edges );
+         return {
+            graph: subGraph,
+            layout: subLayout
+         };
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,56 +126,77 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function start( event ) {
-         $document.on( 'mousemove', updateSelection ).on( 'mouseup', finish );
+      function start( startEvent ) {
+         $document.on( 'mousemove', updateSelectionCoords ).on( 'mouseup', finish );
+
+         var updateHits = _.debounce( updateSelectionContentsNow, 10 );
 
          var jqSelection = $( '.selection', jqGraph );
-         var domSelection = jqSelection[ 0 ];
-         var referenceX = event.pageX;
-         var referenceY = event.pageY;
-         var fromX = event.offsetX || event.layerX;
-         var fromY = event.offsetY || event.layerY;
-         updateSelection( event );
+         var selectionCoords = {};
+         var referenceX = startEvent.pageX;
+         var referenceY = startEvent.pageY;
+         var fromX = startEvent.offsetX || startEvent.layerX;
+         var fromY = startEvent.offsetY || startEvent.layerY;
+         updateSelectionCoords( startEvent );
          jqSelection.show();
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         function updateSelection( event ) {
+         function updateSelectionCoords( event ) {
             var dx = event.pageX - referenceX;
             var dy = event.pageY - referenceY;
-            domSelection.style.width = Math.abs( dx ) + 'px';
-            domSelection.style.height = Math.abs( dy ) + 'px';
-            domSelection.style.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
-            domSelection.style.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
+            selectionCoords.width = Math.abs( dx ) + 'px';
+            selectionCoords.height = Math.abs( dy ) + 'px';
+            selectionCoords.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
+            selectionCoords.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
+            updateHits();
+            window.requestAnimationFrame( updateSelectionBox );
+         }
 
+         function updateSelectionBox() {
+            var domSelection = jqSelection[ 0 ];
+            domSelection.style.width = selectionCoords.width;
+            domSelection.style.height = selectionCoords.height;
+            domSelection.style.left = selectionCoords.left;
+            domSelection.style.top = selectionCoords.top;
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function updateSelectionContentsNow() {
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
-            [ 'vertex', 'edge' ].forEach( function( nodeType ) {
-               var selectionState = selection[ nodeType === 'vertex' ? 'vertices' : 'edges' ];
-               var identity = nodeType === 'vertex' ? 'nbeVertex' : 'nbeEdge';
+            var modificationDetected = false;
+            [ 'vertices', 'edges' ].forEach( function( collection ) {
+               var selectionState = selection[ collection ];
+               var identity = collection === 'vertices' ? 'nbeVertex' : 'nbeEdge';
+               var selector = collection === 'vertices' ? '.vertex' : '.edge';
                var tmpBox = {};
-               $( '.' + nodeType, jqGraph[ 0 ] ).each( function( _, domNode ) {
+               $( selector, jqGraph[ 0 ] ).each( function ( _, domNode ) {
                   var jqNode = $( domNode );
                   visual.boundingBox( jqNode, jqGraph, tmpBox );
                   var selected = doesIntersect( tmpBox, selectionBox );
                   var id = domNode.dataset[ identity ];
                   if( selected ) {
+                     modificationDetected = modificationDetected || !selectionState[ id ];
                      selectionState[ id ] = true;
                   }
                   else {
+                     modificationDetected = modificationDetected || ( id in selectionState );
                      delete selectionState[ id ];
                   }
                } );
             } );
 
-            updateLinks();
-            // :TODO: debounce
-            $scope.$apply();
+            if( modificationDetected ) {
+               updateLinks();
+               $scope.$apply();
+            }
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function finish() {
-            $document.off( 'mousemove', updateSelection ).off( 'mouseup', finish );
+            $document.off( 'mousemove', updateSelectionCoords ).off( 'mouseup', finish );
             jqSelection.hide();
          }
 

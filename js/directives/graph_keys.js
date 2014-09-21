@@ -13,53 +13,59 @@ define( [], function() {
       var KEY_CODE_Z = 90;
       var KEY_CODE_ESCAPE = 0x1B;
 
+      /**
+       * If the user agent supports clipboard events, the cut/copy/paste handlers will be called twice after
+       * the user has pressed Ctrl-X/C/V and only once if the user has used the browser menu. This flag makes
+       * sure that each operation is carried out exactly once.
+       */
       var clipboardPrepared = false;
 
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** Make sure that bindings fire only once. */
+      var focusHandlersInstalled = false;
 
       jqGraph.on( 'focusin', function() {
-         $document.on( 'keydown', handleKeys );
          viewModel.hasFocus = true;
+         if( !focusHandlersInstalled ) {
+            $document.on( 'keydown', handleKeys );
+            $document[0].body.addEventListener( 'copy', handleCopy );
+            $document[0].body.addEventListener( 'cut', handleCut );
+            focusHandlersInstalled = true;
+         }
       } );
 
       jqGraph.on( 'focusout', function() {
          $document.off( 'keydown', handleKeys );
-         viewModel.hasFocus = false;
+         $document[0].body.removeEventListener( 'copy', handleCopy );
+         $document[0].body.removeEventListener( 'cut', handleCut );
+         focusHandlersInstalled = viewModel.hasFocus = false;
       } );
+
+      return {};
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      $document.on( 'copy', function( event ) {
+      function handleCopy( event ) {
          if( !clipboardPrepared ) {
             copySelectionToClipboard();
          }
-         console.log( 'putting graph to clipboard: ', fakeClipboard );
-         if( event.clipboardData ) {
-            event.clipboardData.setData( 'application/json', fakeClipboard );
-            event.clipboardData.setData( 'text/plain', fakeClipboard );
-            event.preventDefault();
-            clipboardPrepared = false;
-         }
-      } );
+         event.clipboardData.setData( 'application/json', fakeClipboard );
+         event.clipboardData.setData( 'text/plain', fakeClipboard );
+         event.preventDefault();
+         clipboardPrepared = false;
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      $document.on( 'cut', function( event ) {
+      function handleCut( event ) {
          if( !clipboardPrepared ) {
             copySelectionToClipboard();
             ops.perform( graphOpsController.deleteSelected() );
          }
-         if( event.clipboardData ) {
-            event.clipboardData.setData( 'application/json', fakeClipboard );
-            event.clipboardData.setData( 'text/plain', fakeClipboard );
-            event.preventDefault();
-         }
+         event.clipboardData.setData( 'application/json', fakeClipboard );
+         event.clipboardData.setData( 'text/plain', fakeClipboard );
+         event.preventDefault();
          clipboardPrepared = false;
-      } );
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      return {};
+      }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +107,6 @@ define( [], function() {
             }
             else if( event.keyCode === KEY_CODE_V ) {
                if( fakeClipboard ) {
-                  console.log( 'pasting', fakeClipboard );
                   ops.perform( graphOpsController.insert( JSON.parse( fakeClipboard ) ) );
                }
             }
