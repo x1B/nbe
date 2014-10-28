@@ -1,11 +1,10 @@
 /**
  * Offers operations on the graph model, with undo/redo
  */
-define( [], function() {
+define( [ 'angular', '../utilities/traverse' ], function( ng, traverse ) {
    'use strict';
 
-   var IN = 'inbound', OUT = 'outbound';
-   var DIRECTIONS = [ IN, OUT ];
+   var IN = 'inbound';
 
    /**
     * @param {object} model
@@ -90,43 +89,93 @@ define( [], function() {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      function makeCreateVertexOp( vertexInfo, layoutInfo ) {
-         function createVertex() {
-            var id = generateVertexId();
-            model.vertices[ id ] = vertexInfo;
-            layoutModel.vertices[ id ] = layoutInfo;
-            createVertex.undo = makeDeleteVertexOp( id );
-            return id;
-         }
-
-         return createVertex;
-      }
-
-      ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+      /**
+       * Create an undoable operation to insert a given (type-compatible) graph into this graph.
+       * The IDs of edges and vertices from the graph to insert are renamed so that they cannot clash with
+       * existing IDs.
+       *
+       * @param {Object} graphInformation
+       *   an object with a model (`graph`) and layout information (`layout`)
+       *
+       * @returns {Function}
+       *   an undoable operation to perform the given insertion
+       */
       function makeInsertOp( graphInformation ) {
-         var sequence = [];
+         var opSequence = [];
+         var edgeIdMap = {};
 
-         // :TODO: handle hyperedges (?)
-
-         var vertices = graphInformation.graph.vertices;
-         var edgeIdMapping = {};
-         Object.keys( vertices ).forEach( function( vertexId ) {
-            var ports = vertices[ vertexId ].ports;
-            ports.inbound.concat( ports.outbound ).forEach( function( port ) {
-               if( port.edgeId ) {
-                  edgeIdMapping[ port.edgeId ] = edgeIdMapping[ port.edgeId ] || generateEdgeId( port.type.toLowerCase() + ' ' );
-                  port.edgeId = edgeIdMapping[ port.edgeId ];
-               }
-            } );
-            sequence.push( makeCreateVertexOp( vertices[ vertexId ], graphInformation.layout.vertices[ vertexId ] ) );
+         ng.forEach( graphInformation.graph.edges, function( edge, edgeId ) {
+            var newEdgeId = safeEdgeId( edgeId, edge.type );
+            opSequence.push( makeCreateEdgeOp( newEdgeId, edge ) );
          } );
 
-         return ops.compose( sequence );
+         ng.forEach( graphInformation.graph.vertices, function( vertex, vertexId ) {
+            traverse.eachPort( vertex, function( port ) {
+               if( port.edgeId ) {
+                  port.edgeId = safeEdgeId( port.edgeId, port.type );
+               }
+            } );
+            opSequence.push( makeCreateVertexOp( vertexId, vertex ) );
+         } );
+
+         return ops.compose( opSequence );
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         function safeEdgeId( edgeId, edgeType ) {
+            if( edgeId in edgeIdMap ) {
+               return edgeIdMap[ edgeId ];
+            }
+            if( !(edgeId in model.edges) ) {
+               return edgeId;
+            }
+            edgeIdMap[ edgeId ] = generateEdgeId( edgeType.toLowerCase() + ' ' );
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /** Create a vertex based on a prototype */
+         function makeCreateVertexOp( id, vertexInfo ) {
+            var layoutInfo = graphInformation.layout.vertices[ id ];
+            function createVertex() {
+               id = id in model.vertices ? generateVertexId() : id;
+               model.vertices[ id ] = vertexInfo;
+               layoutModel.vertices[ id ] = layoutInfo;
+               createVertex.undo = makeDeleteVertexOp( id );
+            }
+            return createVertex;
+         }
+
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         /** Create an edge based on a prototype */
+         function makeCreateEdgeOp( id, edgeInfo ) {
+            var layoutInfo = graphInformation.layout.edges[ id ];
+            function createEdge() {
+               model.edges[ id ] = edgeInfo;
+               if( layoutInfo ) {
+                  layoutModel.edges[ id ] = layoutInfo;
+               }
+               createEdge.undo = makeDeleteEdgeOp( id );
+               return id;
+            }
+            return createEdge;
+         }
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /**
+       * Create an undoable operation that forms a connection between the given refs when executed.
+       *
+       * @param {Object} fromRef
+       *   a ref to begin the new connection at
+       * @param {Object} toRef
+       *   a ref to end the new connection at
+       *
+       * @return {Function}
+       *   an undoable operation that connects the two ref when executed
+       */
       function makeConnectOp( fromRef, toRef ) {
          Object.freeze( fromRef );
          Object.freeze( toRef );
@@ -226,6 +275,15 @@ define( [], function() {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /**
+       * Create an undoable operation that severs the given link when executed.
+       *
+       * @param {Object} link
+       *   a link with source and dest ref
+       *
+       * @return {Function}
+       *   an undoable operation
+       */
       function makeSeverOp( link ) {
          var edgeId = ( link.source.port || link.dest.port ).edgeId;
          var edge = model.edges[ edgeId ];
@@ -287,11 +345,10 @@ define( [], function() {
       function makeDeleteVertexOp( vertexId ) {
          var steps = [];
          var vertex = model.vertices[ vertexId ];
-         DIRECTIONS.forEach( function( direction ) {
-            vertex.ports[ direction ].forEach( function( port ) {
-               steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
-            } );
+         traverse.eachPort( vertex, function( port ) {
+            steps.push( makeDisconnectOp( { nodeId: vertexId, port: port } ) );
          } );
+
          function deleteVertexOp() {
             delete model.vertices[ vertexId ];
             deleteVertexOp.undo = function deleteVertexUndoOp() {

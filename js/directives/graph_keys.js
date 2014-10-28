@@ -1,6 +1,7 @@
 define( [], function() {
    'use strict';
 
+   /** Maintain fake clipboard across instances if no system clipboard is available (use local storage?). */
    var fakeClipboard;
 
    return function( viewModel, jqGraph, $document, ops, graphOpsController, dragDropController, selectionController ) {

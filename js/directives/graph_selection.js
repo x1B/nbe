@@ -1,8 +1,14 @@
 /**
  * Manages the view model for a selection of nodes.
  */
-define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( ng, $, _, visual ) {
+define( [ 'angular', 'jquery', 'underscore', '../utilities/visual', '../utilities/traverse' ],
+   function( ng, $, _, visual, traverse ) {
    'use strict';
+
+   var VERTICES = 'vertices';
+   var EDGES = 'edges';
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
     * Create a selection controller for a given graph.
@@ -23,7 +29,7 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
     * @param {Object} layoutModel
     *    the graph layout model (positions of edges, vertices)
     */
-   return function( model, viewModel, layoutModel, linksController, jqGraph, $document, $scope ) {
+   return function( model, viewModel, layoutModel, edgeTypes, linksController, jqGraph, $document, $scope ) {
 
       var selection = viewModel.selection;
       var anchor;
@@ -77,17 +83,18 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
       function copy() {
          var subGraph = { vertices: {}, edges: {} };
          var subLayout = { vertices: {}, edges: {} };
-         [ 'edges', 'vertices' ].forEach( function( collection ) {
+         [ EDGES, VERTICES ].forEach( function( collection ) {
             var graphSource = model[ collection ];
             var graphDest = subGraph[ collection ];
             var layoutSource = layoutModel[ collection ];
             var layoutDest = subLayout[ collection ];
             Object.keys( selection[ collection ] ).forEach( function( id ) {
-               layoutDest[ id ] = { left: layoutSource[ id ].left, top: layoutSource[ id ].top };
+               if( layoutSource[ id ] ) {
+                  layoutDest[ id ] = { left: layoutSource[ id ].left, top: layoutSource[ id ].top };
+               }
                graphDest[ id ] = ng.copy( graphSource[ id ] );
-               if( collection === 'vertices' ) {
-                  var ports = graphDest[ id ].ports;
-                  ports.inbound.concat( ports.outbound ).forEach( function( port ) {
+               if( collection === VERTICES ) {
+                  traverse.eachPort( graphDest[ id ], function( port ) {
                      if( !selection.edges[ port.edgeId ] ) {
                         port.edgeId = null;
                      }
@@ -95,7 +102,6 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
                }
             } );
          } );
-         console.log( 'Selection Copy:\n  ', subGraph.vertices, '\n  ', subGraph.edges );
          return {
             graph: subGraph,
             layout: subLayout
@@ -153,6 +159,8 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
             window.requestAnimationFrame( updateSelectionBox );
          }
 
+         /////////////////////////////////////////////////////////////////////////////////////////////////////
+
          function updateSelectionBox() {
             var domSelection = jqSelection[ 0 ];
             domSelection.style.width = selectionCoords.width;
@@ -166,12 +174,12 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
          function updateSelectionContentsNow() {
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
             var modificationDetected = false;
-            [ 'vertices', 'edges' ].forEach( function( collection ) {
+            [ VERTICES, EDGES ].forEach( function( collection ) {
                var selectionState = selection[ collection ];
-               var identity = collection === 'vertices' ? 'nbeVertex' : 'nbeEdge';
-               var selector = collection === 'vertices' ? '.vertex' : '.edge';
+               var identity = collection === VERTICES ? 'nbeVertex' : 'nbeEdge';
+               var selector = collection === VERTICES ? '.vertex' : '.edge';
                var tmpBox = {};
-               $( selector, jqGraph[ 0 ] ).each( function ( _, domNode ) {
+               $( selector, jqGraph[ 0 ] ).each( function( _, domNode ) {
                   var jqNode = $( domNode );
                   visual.boundingBox( jqNode, jqGraph, tmpBox );
                   var selected = doesIntersect( tmpBox, selectionBox );
@@ -188,6 +196,7 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
             } );
 
             if( modificationDetected ) {
+               updateImplicitEdges();
                updateLinks();
                $scope.$apply();
             }
@@ -257,8 +266,40 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual' ], function( 
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /**
+       * Make sure that the selection contains 1:n (n:1) edges if their source (dest) vertices are part of
+       * the selecion.
+       */
+      function updateImplicitEdges() {
+         var implicitEdges = {};
+         ng.forEach( selection.vertices, function( _, vertexId ) {
+            var vertex = model.vertices[ vertexId ];
+            traverse.eachPort( vertex, function( port, direction ) {
+               if( !port.edgeId ) { return; }
+               var type = edgeTypes[ port.type ];
+               if( !type.simple ) { return; }
+               var ownerRestriction = direction === 'outbound' ? 'maxSources' : 'maxDestinations';
+               if( type[ ownerRestriction ] === 1 ) {
+                  implicitEdges[ port.edgeId ] = true;
+               }
+            } );
+         } );
+         ng.forEach( selection.edges, function( _, edgeId ) {
+            if( implicitEdges[ edgeId ] ) { return; }
+            var type = edgeTypes[ model.edges[ edgeId ].type ];
+            if( type.simple === true ) {
+               delete selection.edges[ edgeId ];
+            }
+         } );
+         ng.forEach( implicitEdges, function( _, edgeId ) {
+            selection.edges[ edgeId ] = true;
+         } );
+      }
+
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
       function updateLinks() {
-         var linksState = { };
+         var linksState = {};
          Object.keys( model.edges ).forEach( function( edgeId ) {
             var edgeState = selection.edges[ edgeId ];
             Object.keys( linksController.byEdge( edgeId ) ).forEach( function( linkId ) {

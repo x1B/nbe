@@ -1,11 +1,12 @@
 /**
  * Handles external updates to the graph model such as addition of vertices by an application controller.
  */
-define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual ) {
+define( [
+   'angular', 'jquery', '../utilities/visual', '../utilities/traverse'
+], function( ng, $, visual, traverse ) {
    'use strict';
 
-   var IN = 'inbound', OUT = 'outbound';
-   var DIRECTIONS = [ IN, OUT ];
+   var IN = 'inbound';
 
    return function( typesModel, canvasController, linksController, jqGraph, nextTick ) {
 
@@ -33,28 +34,23 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
             return;
          }
 
-         // Handle removed vertice:
+         // Handle removed vertices:
          ng.forEach( previousVertices, function( vertex, vId ) {
             if( !newVertices[ vId ] ) {
-               DIRECTIONS.forEach( function( direction ) {
-                  vertex.ports[ direction ].filter( connected ).forEach( function ( port ) {
-                     linksController.byPort( vId, port ).forEach( linksController.destroy );
-                  } );
+               traverse.eachConnectedPort( vertex, function( port ) {
+                  linksController.byPort( vId, port ).forEach( linksController.destroy );
                } );
             }
          } );
 
-
-         // Handle added vertices:
-         var outputRefsByEdge = { };
-         var inputRefsByEdge = { };
+         // Track added vertices:
+         var outputRefsByEdge = {};
+         var inputRefsByEdge = {};
          ng.forEach( newVertices, function( vertex, vId ) {
-            DIRECTIONS.forEach( function( direction ) {
-               vertex.ports[ direction ].filter( connected ).forEach( function ( port ) {
-                  var table = direction === IN ? inputRefsByEdge : outputRefsByEdge;
-                  table[ port.edgeId ] = table[ port.edgeId ] || [];
-                  table[ port.edgeId ].push( { nodeId: vId, port: port, direction: direction } );
-               } );
+            traverse.eachConnectedPort( vertex, function( port, direction ) {
+               var table = direction === IN ? inputRefsByEdge : outputRefsByEdge;
+               table[ port.edgeId ] = table[ port.edgeId ] || [];
+               table[ port.edgeId ].push( { nodeId: vId, port: port, direction: direction } );
             } );
          } );
 
@@ -65,24 +61,24 @@ define( [ 'angular', 'jquery', '../utilities/visual' ], function( ng, $, visual 
                   visual.pingAnimation( jqNew );
                } );
             }
-            DIRECTIONS.forEach( function( direction ) {
-               vertex.ports[ direction ].filter( connected ).forEach( function( port ) {
-                  var contextRef = { nodeId: vId, port: port, direction: direction };
-                  if( !linksController.byPort( vId, port ).length ) {
-                     if( typesModel[ port.type ].simple ) {
-                        var isInput = direction === IN;
-                        var table = isInput ? outputRefsByEdge : inputRefsByEdge;
-                        ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
-                           linksController.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
-                        } );
-                     }
-                     else {
-                        var edgeRef = { nodeId: port.edgeId, direction: direction, port: null };
-                        linksController.create( contextRef, edgeRef );
-                     }
+
+            traverse.eachConnectedPort( vertex, function( port, direction ) {
+               var contextRef = { nodeId: vId, port: port, direction: direction };
+               if( !linksController.byPort( vId, port ).length ) {
+                  if( typesModel[ port.type ].simple ) {
+                     var isInput = direction === IN;
+                     var table = isInput ? outputRefsByEdge : inputRefsByEdge;
+                     ( table[ port.edgeId ] || [] ).forEach( function ( ref ) {
+                        linksController.create( isInput ? ref : contextRef, isInput ? contextRef : ref );
+                     } );
                   }
-               } );
+                  else {
+                     var edgeRef = { nodeId: port.edgeId, direction: direction, port: null };
+                     linksController.create( contextRef, edgeRef );
+                  }
+               }
             } );
+
          } );
 
       }

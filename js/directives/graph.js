@@ -147,7 +147,7 @@ define( [
             var dragDrop = createDragDropController( ops, jqGraph );
 
             var selection = createSelectionController(
-               $scope.model, $scope.view, $scope.layout, links, jqGraph, $document, $scope );
+               $scope.model, $scope.view, $scope.layout, $scope.types, links, jqGraph, $document, $scope );
 
             var operations = createGraphOperationsController(
                $scope.model, $scope.layout, $scope.types, ops, canvas, links, selection, idGenerator );
