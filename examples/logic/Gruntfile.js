@@ -2,6 +2,8 @@
 module.exports = function( grunt ) {
    'use strict';
 
+   var autoprefixer = require( 'autoprefixer-core' );
+
    var pkg = grunt.file.readJSON( 'package.json' );
    var src = {
       gruntfile: 'Gruntfile.js',
@@ -28,11 +30,31 @@ module.exports = function( grunt ) {
                out: 'dist/' + pkg.name + '.js'
             }
          }
+      },
+      compass: {
+         'nbe_examples_logic': {
+            options: {
+            }
+         }
+      },
+      postcss: {
+         options: {
+            processors: [
+               autoprefixer({ browsers: ['last 2 version'] }).postcss
+            ]
+         },
+         dist: { src: 'css/*.css' }
       }
    } );
 
+
+
+   grunt.loadNpmTasks( 'grunt-postcss' );
+
+   grunt.loadNpmTasks( 'grunt-contrib-compass' );
+
    grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
 
-   grunt.registerTask( 'build', ['requirejs'] );
+   grunt.registerTask( 'build', ['requirejs', 'compass'] );
    grunt.registerTask( 'default', ['build'] );
 };

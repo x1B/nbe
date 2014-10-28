@@ -65,9 +65,10 @@ a {
   height: 100%;
 }
 .graph * {
-  user-select: none;
-  -moz-user-select: none;
   -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   cursor: default;
 }
 .graph .selection {
@@ -101,13 +102,14 @@ a {
 .graph .node.vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 5px;
-  background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 .graph .node.vertex.ping {
-  animation-name: vertex-ping;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
+  -webkit-animation-name: vertex-ping;
+          animation-name: vertex-ping;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
   -webkit-animation-name: vertex-ping;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;

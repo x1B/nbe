@@ -5,13 +5,14 @@
   background: #c3669c;
 }
 .graph.logic-app .node.edge.WIRE {
-  background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
 }
 .graph.logic-app .node.edge.WIRE.ping {
-  animation-name: edge-ping-logic-app-WIRE;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
+  -webkit-animation-name: edge-ping-logic-app-WIRE;
+          animation-name: edge-ping-logic-app-WIRE;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-logic-app-WIRE;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
@@ -71,13 +72,14 @@
   background: #f5c680;
 }
 .graph.logic-app .node.edge.CHANNEL {
-  background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
 }
 .graph.logic-app .node.edge.CHANNEL.ping {
-  animation-name: edge-ping-logic-app-CHANNEL;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
+  -webkit-animation-name: edge-ping-logic-app-CHANNEL;
+          animation-name: edge-ping-logic-app-CHANNEL;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-logic-app-CHANNEL;
   -webkit-animation-duration: 0.4s;
   -webkit-animation-iteration-count: 1;
