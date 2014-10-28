@@ -10,8 +10,8 @@ define( [], function() {
          vertex.ports[ OUT ].forEach( function( port ) { f( port, OUT ); } );
       },
       eachConnectedPort: function forEachConnectedPort( vertex, f ) {
-         vertex.ports[ IN ].forEach( function( port ) { f( port, IN ); } );
-         vertex.ports[ OUT ].forEach( function( port ) { f( port, OUT ); } );
+         vertex.ports[ IN ].forEach( function( port ) { if( !!port.edgeId ) { f( port, IN ); } } );
+         vertex.ports[ OUT ].forEach( function( port ) { if( !!port.edgeId ) { f( port, OUT ); } } );
       }
    };
 

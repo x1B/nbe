@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#47](https://github.com/x1B/nbe/issues/47): utilities/traverse: added missing check to `eachConnectedPort`
+
 - [#43](https://github.com/x1B/nbe/issues/43): allow to cut/copy/paste nodes and edges from/to the current graph
     * users can now focus one graph at a time (using the tab key or mouse clicks)
     * using Ctrl-C/Ctrl-X the current selection of nodes (if any) is copied/moved into a buffer
