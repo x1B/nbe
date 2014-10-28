@@ -44,7 +44,10 @@ a {
 
 
 .graph {
+
    background: $graphBgColor;
+   box-sizing: border-box;
+   margin: 2px;
 
    .graph-contents {
       background:
@@ -60,6 +63,14 @@ a {
                       transparent);
       width: 100%;
       height: 100%;
+
+   }
+
+   &:focus {
+      margin-top: 1px;
+      margin-left: 1px;
+      border: 1px dotted $paletteD;
+      outline: none;
    }
 
    svg {

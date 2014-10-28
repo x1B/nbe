@@ -46,11 +46,19 @@ a {
 
 .graph {
   background: #333333;
+  box-sizing: border-box;
+  margin: 2px;
 }
 .graph .graph-contents {
   background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
   width: 100%;
   height: 100%;
+}
+.graph:focus {
+  margin-top: 1px;
+  margin-left: 1px;
+  border: 1px dotted #f5c680;
+  outline: none;
 }
 .graph svg {
   width: 100%;

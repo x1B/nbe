@@ -58,6 +58,7 @@ define( [ 'angular' ], function( ng ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** Create a link within the view model. */
       function createLink( refA, refB, optionalId ) {
          var reverse = isInput( refA ) || isOutput( refB );
          var fromRef = reverse ? refB : refA;
@@ -93,6 +94,7 @@ define( [ 'angular' ], function( ng ) {
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** Remove a link from the view model. */
       function destroyLink( link ) {
          function remove( map, nodeId, linkId ) {
             delete map[ nodeId ][ linkId ];

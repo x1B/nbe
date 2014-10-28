@@ -52,7 +52,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
 
       /** Center the given edge between the given nodes. */
       function centerEdge( id, fromRef, toRef ) {
-         console.log( 'center', id, fromRef, toRef );
          var edgeCenter = mean( centerCoords( fromRef.nodeId ), centerCoords( toRef.nodeId ) );
          layoutModel.edges[ id ] = {
             left: edgeCenter[ 0 ] - layoutSettings.edgeOffset,

@@ -1,4 +1,4 @@
-<div class="graph" data-ng-class="'zoom-' + view.zoom.percent">
+<div tabindex="0" class="{{ 'graph' }} {{ 'zoom-' + view.zoom.percent }} {{ view.hasFocus && 'has-focus' || '' }}">
 
    <div class="tools"><div ng-transclude></div></div>
 
