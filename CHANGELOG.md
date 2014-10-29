@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#15](https://github.com/x1B/nbe/issues/15): SCSS: removed vendor prefixes, added auto-prefixer to examples
+
 - [#47](https://github.com/x1B/nbe/issues/47): utilities/traverse: added missing check to `eachConnectedPort`
 
 - [#43](https://github.com/x1B/nbe/issues/43): allow to cut/copy/paste nodes and edges from/to the current graph

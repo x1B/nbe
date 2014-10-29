@@ -17,23 +17,17 @@ a {
 
 @mixin vertexPing() {
 
-   $fromMiddle:   0px 0px  5px  3px $graphBgColor;
-   $acrossMiddle: 0px 0px 12px  3px $graphBgColor;
-   $toMiddle:     0px 0px 18px  3px $graphBgColor;
+   $fromMiddle:   0 0  5px  3px $graphBgColor;
+   $acrossMiddle: 0 0 12px  3px $graphBgColor;
+   $toMiddle:     0 0 18px  3px $graphBgColor;
 
-   $fromRing:     0px 0px  0px  0px transparent;
-   $acrossRing:   0px 0px 16px  3px $vertexBgColor;
-   $toRing:       0px 0px 24px  3px transparent;
+   $fromRing:     0 0  0    0 transparent;
+   $acrossRing:   0 0 16px  3px $vertexBgColor;
+   $toRing:       0 0 24px  3px transparent;
 
    $regularShadow: 4px 4px 4px $gray0;
 
    @keyframes vertex-ping {
-      from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
-      20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
-      to { box-shadow: $toMiddle, $toRing, $regularShadow; }
-   }
-
-   @-webkit-keyframes vertex-ping {
       from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
       20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
       to { box-shadow: $toMiddle, $toRing, $regularShadow; }
@@ -80,8 +74,6 @@ a {
 
    * {
       user-select: none;
-      -moz-user-select: none;
-      -webkit-user-select: none;
       cursor: default;
    }
 
@@ -127,21 +119,17 @@ a {
          box-shadow: 4px 4px 6px $shadowColor;
 
          border-radius: $vertexBorderRadius;
-         background: -moz-linear-gradient(left top, $vertexBgColor 0%, darken($vertexBgColor, 30%) 100%);
-         background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, $vertexBgColor), color-stop(100%, darken($vertexBgColor, 30%)));
+         background: linear-gradient(to right bottom, $vertexBgColor, darken($vertexBgColor, 30%));
 
          // Creation animation
          &.ping {
             animation-name: vertex-ping;
             animation-duration: 0.3s;
             animation-iteration-count: 1;
-            -webkit-animation-name: vertex-ping;
-            -webkit-animation-duration: 0.4s;
-            -webkit-animation-iteration-count: 1;
          }
 
          .header {
-            border-radius: $vertexBorderRadius $vertexBorderRadius 0px 0px;
+            border-radius: $vertexBorderRadius $vertexBorderRadius 0 0;
             text-align: center;
             background: rgba(0, 0, 0, 0.15);
             font-family: $fontFamilyLabel;
@@ -160,27 +148,27 @@ a {
 
          .ports {
             // Flex item:
-            -webkit-flex: 0 1 auto;
+            flex: 0 1 auto;
 
             // Flex container:
-            display: -webkit-flex;
-            -webkit-flex-flow: column;
-            -webkit-justify-content: stretch;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-between;
 
             &.inbound {
                border-right: 1px solid $gray4;
-               -webkit-align-items: flex-start;
+               align-items: flex-start;
                .port { text-align: left; padding-right: 9px; }
             }
 
             &.outbound {
-               -webkit-align-items: flex-end;
+               align-items: flex-end;
                .port { text-align: right; padding-left: 9px; }
             }
          }
 
          .port {
-            -webkit-flex: 0 1 auto;
+            flex: 0 1 auto;
             padding-top: 0;
             color: $portTextColor;
             font-family: $fontFamilyPort;
@@ -203,7 +191,7 @@ a {
       }
 
       &.selected {
-         box-shadow: 0px 0px 8px #fff, 4px 4px 4px $gray0;
+         box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
       }
    }
 

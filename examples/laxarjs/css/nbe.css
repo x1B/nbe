@@ -16,50 +16,59 @@ a {
   display: none !important;
 }
 
-@keyframes vertex-ping {
+@-webkit-keyframes vertex-ping {
   from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
 
   20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
-@-webkit-keyframes vertex-ping {
+@keyframes vertex-ping {
   from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
 
   20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 .graph {
   background: #333333;
+  box-sizing: border-box;
+  margin: 2px;
 }
 .graph .graph-contents {
   background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
   width: 100%;
   height: 100%;
 }
+.graph:focus {
+  margin-top: 1px;
+  margin-left: 1px;
+  border: 1px dotted #f5c680;
+  outline: none;
+}
 .graph svg {
   width: 100%;
   height: 100%;
 }
 .graph * {
-  user-select: none;
-  -moz-user-select: none;
   -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   cursor: default;
 }
 .graph .selection {
@@ -93,19 +102,18 @@ a {
 .graph .node.vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 5px;
-  background: -moz-linear-gradient(left top, #f5c680 0%, #cc8010 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
+  background: linear-gradient(to right bottom, #f5c680, #cc8010);
 }
 .graph .node.vertex.ping {
-  animation-name: vertex-ping;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
   -webkit-animation-name: vertex-ping;
-  -webkit-animation-duration: 0.4s;
+          animation-name: vertex-ping;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
 }
 .graph .node.vertex .header {
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.15);
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
@@ -120,13 +128,23 @@ a {
 }
 .graph .node.vertex .ports {
   -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
   display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-flex-flow: column;
-  -webkit-justify-content: stretch;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 .graph .node.vertex .ports.inbound {
   border-right: 1px solid #a0a0a0;
   -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 .graph .node.vertex .ports.inbound .port {
   text-align: left;
@@ -134,6 +152,8 @@ a {
 }
 .graph .node.vertex .ports.outbound {
   -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
 }
 .graph .node.vertex .ports.outbound .port {
   text-align: right;
@@ -141,6 +161,8 @@ a {
 }
 .graph .node.vertex .port {
   -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
   padding-top: 0;
   color: #202020;
   font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
@@ -157,7 +179,7 @@ a {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
 }
 .graph .node.selected {
-  box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
+  box-shadow: 0 0 8px white, 4px 4px 4px #202020;
 }
 .graph .GHOST {
   position: absolute;

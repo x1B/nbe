@@ -13,6 +13,9 @@ module.exports = function( grunt ) {
       ]
    };
 
+
+   var autoprefixer = require( 'autoprefixer-core' );
+
    grunt.initConfig( {
       requirejs: {
          'nbe_examples_laxarjs': {
@@ -28,11 +31,27 @@ module.exports = function( grunt ) {
                out: 'dist/' + pkg.name + '.js'
             }
          }
+      },
+      compass: {
+         'nbe_examples_laxarjs': {
+            options: {
+            }
+         }
+      },
+      postcss: {
+         options: {
+            processors: [
+               autoprefixer( { browsers: [ 'last 2 version' ] } ).postcss
+            ]
+         },
+         dist: { src: 'css/*.css' }
       }
    } );
 
+   grunt.loadNpmTasks( 'grunt-postcss' );
+   grunt.loadNpmTasks( 'grunt-contrib-compass' );
    grunt.loadNpmTasks( 'grunt-contrib-requirejs' );
 
-   grunt.registerTask( 'build', [ 'requirejs' ] );
-   grunt.registerTask( 'default', [ 'build' ] );
+   grunt.registerTask( 'build', ['requirejs', 'compass', 'postcss'] );
+   grunt.registerTask( 'default', ['build'] );
 };

@@ -5,16 +5,15 @@
   background: #c3669c;
 }
 .graph.laxar-app .node.edge.FLAG {
-  background: -moz-linear-gradient(left top, #c3669c 0%, #8c3768 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c3669c), color-stop(100%, #67294d));
+  background: linear-gradient(to right bottom, #c3669c, #8c3768);
 }
 .graph.laxar-app .node.edge.FLAG.ping {
-  animation-name: edge-ping-laxar-app-FLAG;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-laxar-app-FLAG;
-  -webkit-animation-duration: 0.4s;
+          animation-name: edge-ping-laxar-app-FLAG;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
 }
 .graph.laxar-app .link.FLAG {
   stroke: #c3669c;
@@ -39,7 +38,7 @@
   display: none;
 }
 
-@keyframes edge-ping-laxar-app-FLAG {
+@-webkit-keyframes edge-ping-laxar-app-FLAG {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -53,7 +52,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-laxar-app-FLAG {
+@keyframes edge-ping-laxar-app-FLAG {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -71,16 +70,15 @@
   background: #c2e578;
 }
 .graph.laxar-app .node.edge.ACTION {
-  background: -moz-linear-gradient(left top, #c2e578 0%, #99cf28 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #c2e578), color-stop(100%, #7aa420));
+  background: linear-gradient(to right bottom, #c2e578, #99cf28);
 }
 .graph.laxar-app .node.edge.ACTION.ping {
-  animation-name: edge-ping-laxar-app-ACTION;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-laxar-app-ACTION;
-  -webkit-animation-duration: 0.4s;
+          animation-name: edge-ping-laxar-app-ACTION;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
 }
 .graph.laxar-app .link.ACTION {
   stroke: #c2e578;
@@ -105,7 +103,7 @@
   display: none;
 }
 
-@keyframes edge-ping-laxar-app-ACTION {
+@-webkit-keyframes edge-ping-laxar-app-ACTION {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -119,7 +117,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-laxar-app-ACTION {
+@keyframes edge-ping-laxar-app-ACTION {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -137,16 +135,15 @@
   background: #626ca8;
 }
 .graph.laxar-app .node.edge.RESOURCE {
-  background: -moz-linear-gradient(left top, #626ca8 0%, #3a416a 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #626ca8), color-stop(100%, #282d49));
+  background: linear-gradient(to right bottom, #626ca8, #3a416a);
 }
 .graph.laxar-app .node.edge.RESOURCE.ping {
-  animation-name: edge-ping-laxar-app-RESOURCE;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-laxar-app-RESOURCE;
-  -webkit-animation-duration: 0.4s;
+          animation-name: edge-ping-laxar-app-RESOURCE;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
 }
 .graph.laxar-app .link.RESOURCE {
   stroke: #626ca8;
@@ -171,7 +168,7 @@
   display: none;
 }
 
-@keyframes edge-ping-laxar-app-RESOURCE {
+@-webkit-keyframes edge-ping-laxar-app-RESOURCE {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -185,7 +182,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-laxar-app-RESOURCE {
+@keyframes edge-ping-laxar-app-RESOURCE {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -203,16 +200,15 @@
   background: #f5c680;
 }
 .graph.laxar-app .node.edge.CONTAINER {
-  background: -moz-linear-gradient(left top, #f5c680 0%, #ee9c21 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, #f5c680), color-stop(100%, #cc8010));
+  background: linear-gradient(to right bottom, #f5c680, #ee9c21);
 }
 .graph.laxar-app .node.edge.CONTAINER.ping {
-  animation-name: edge-ping-laxar-app-CONTAINER;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
   -webkit-animation-name: edge-ping-laxar-app-CONTAINER;
-  -webkit-animation-duration: 0.4s;
+          animation-name: edge-ping-laxar-app-CONTAINER;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
 }
 .graph.laxar-app .link.CONTAINER {
   stroke: #f5c680;
@@ -237,7 +233,7 @@
   display: none;
 }
 
-@keyframes edge-ping-laxar-app-CONTAINER {
+@-webkit-keyframes edge-ping-laxar-app-CONTAINER {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -251,7 +247,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-laxar-app-CONTAINER {
+@keyframes edge-ping-laxar-app-CONTAINER {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
