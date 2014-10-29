@@ -5,6 +5,7 @@
   background: #c3669c;
 }
 .graph.logic-app .node.edge.WIRE {
+  background: linear-gradient(to right bottom, #c3669c, #8c3768);
 }
 .graph.logic-app .node.edge.WIRE.ping {
   -webkit-animation-name: edge-ping-logic-app-WIRE;
@@ -13,9 +14,6 @@
           animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
           animation-iteration-count: 1;
-  -webkit-animation-name: edge-ping-logic-app-WIRE;
-  -webkit-animation-duration: 0.4s;
-  -webkit-animation-iteration-count: 1;
 }
 .graph.logic-app .link.WIRE {
   stroke: #c3669c;
@@ -40,7 +38,7 @@
   display: none;
 }
 
-@keyframes edge-ping-logic-app-WIRE {
+@-webkit-keyframes edge-ping-logic-app-WIRE {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -54,7 +52,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-logic-app-WIRE {
+@keyframes edge-ping-logic-app-WIRE {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -72,6 +70,7 @@
   background: #f5c680;
 }
 .graph.logic-app .node.edge.CHANNEL {
+  background: linear-gradient(to right bottom, #f5c680, #ee9c21);
 }
 .graph.logic-app .node.edge.CHANNEL.ping {
   -webkit-animation-name: edge-ping-logic-app-CHANNEL;
@@ -80,9 +79,6 @@
           animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
           animation-iteration-count: 1;
-  -webkit-animation-name: edge-ping-logic-app-CHANNEL;
-  -webkit-animation-duration: 0.4s;
-  -webkit-animation-iteration-count: 1;
 }
 .graph.logic-app .link.CHANNEL {
   stroke: #f5c680;
@@ -107,7 +103,7 @@
   display: none;
 }
 
-@keyframes edge-ping-logic-app-CHANNEL {
+@-webkit-keyframes edge-ping-logic-app-CHANNEL {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }
@@ -121,7 +117,7 @@
   }
 }
 
-@-webkit-keyframes edge-ping-logic-app-CHANNEL {
+@keyframes edge-ping-logic-app-CHANNEL {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
   }

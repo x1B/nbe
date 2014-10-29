@@ -18,29 +18,29 @@ a {
 
 @keyframes vertex-ping {
   from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
 
   20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
 @-webkit-keyframes vertex-ping {
   from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
 
   20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
   }
 
   to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
   }
 }
 
@@ -65,10 +65,10 @@ a {
   height: 100%;
 }
 .graph * {
+  -ms-user-select: none;
+      user-select: none;
+  -moz-user-select: none;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
   cursor: default;
 }
 .graph .selection {
@@ -102,6 +102,7 @@ a {
 .graph .node.vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 5px;
+  background: linear-gradient(to right bottom, #f5c680, #cc8010);
 }
 .graph .node.vertex.ping {
   -webkit-animation-name: vertex-ping;
@@ -110,12 +111,9 @@ a {
           animation-duration: 0.3s;
   -webkit-animation-iteration-count: 1;
           animation-iteration-count: 1;
-  -webkit-animation-name: vertex-ping;
-  -webkit-animation-duration: 0.4s;
-  -webkit-animation-iteration-count: 1;
 }
 .graph .node.vertex .header {
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.15);
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
@@ -167,7 +165,7 @@ a {
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
 }
 .graph .node.selected {
-  box-shadow: 0px 0px 8px white, 4px 4px 4px #202020;
+  box-shadow: 0 0 8px white, 4px 4px 4px #202020;
 }
 .graph .GHOST {
   position: absolute;
