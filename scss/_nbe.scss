@@ -32,12 +32,6 @@ a {
       20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
       to { box-shadow: $toMiddle, $toRing, $regularShadow; }
    }
-
-   @-webkit-keyframes vertex-ping {
-      from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
-      20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
-      to { box-shadow: $toMiddle, $toRing, $regularShadow; }
-   }
 }
 
 @include vertexPing();
@@ -154,27 +148,27 @@ a {
 
          .ports {
             // Flex item:
-            -webkit-flex: 0 1 auto;
+            flex: 0 1 auto;
 
             // Flex container:
-            display: -webkit-flex;
-            -webkit-flex-flow: column;
-            -webkit-justify-content: stretch;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-between;
 
             &.inbound {
                border-right: 1px solid $gray4;
-               -webkit-align-items: flex-start;
+               align-items: flex-start;
                .port { text-align: left; padding-right: 9px; }
             }
 
             &.outbound {
-               -webkit-align-items: flex-end;
+               align-items: flex-end;
                .port { text-align: right; padding-left: 9px; }
             }
          }
 
          .port {
-            -webkit-flex: 0 1 auto;
+            flex: 0 1 auto;
             padding-top: 0;
             color: $portTextColor;
             font-family: $fontFamilyPort;

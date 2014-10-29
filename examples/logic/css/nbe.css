@@ -16,7 +16,7 @@ a {
   display: none !important;
 }
 
-@keyframes vertex-ping {
+@-webkit-keyframes vertex-ping {
   from {
     box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
@@ -30,7 +30,7 @@ a {
   }
 }
 
-@-webkit-keyframes vertex-ping {
+@keyframes vertex-ping {
   from {
     box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
   }
@@ -65,10 +65,10 @@ a {
   height: 100%;
 }
 .graph * {
-  -ms-user-select: none;
-      user-select: none;
-  -moz-user-select: none;
   -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   cursor: default;
 }
 .graph .selection {
@@ -128,13 +128,23 @@ a {
 }
 .graph .node.vertex .ports {
   -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
   display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-flex-flow: column;
-  -webkit-justify-content: stretch;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 .graph .node.vertex .ports.inbound {
   border-right: 1px solid #a0a0a0;
   -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 .graph .node.vertex .ports.inbound .port {
   text-align: left;
@@ -142,6 +152,8 @@ a {
 }
 .graph .node.vertex .ports.outbound {
   -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
 }
 .graph .node.vertex .ports.outbound .port {
   text-align: right;
@@ -149,6 +161,8 @@ a {
 }
 .graph .node.vertex .port {
   -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
   padding-top: 0;
   color: #202020;
   font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
