@@ -2,10 +2,10 @@
 
 A node-based-editing control based on web technologies
 
-NBE is a _library_ to help develop node-based-editing applications using AngularJS.
+NBE is a library to help develop node-based-editing applications using AngularJS.
 It is implemented as a set of AngularJS _directives_ which collaborate to implement a node-based editor.
-Links between vertices and edges are rendered using SVG, so only fairly recent browsers are supported.
-Chrome and Firefox are known to work.
+Links between vertices and edges are rendered using SVG, so only fairly recent browsers are supported:
+Chrome and Firefox, Safari 7.1+ and MSIE 11+ should work decently well.
 Applications speak to NBE by binding its graph model (see below) and potentially a layout and edge-type model (see below).
 
 
@@ -23,27 +23,26 @@ The model of NBE is a directed (hyper-)graph consisting of vertices and typed ed
 The project is still relatively immature, but already has a couple of nice features that might justify having a closer look.
 New features and bugfixes are tracked in the [CHANGELOG](CHANGELOG.md).
 
-#### What NBE can do
-- models can be displayed
-- vertices can be moved around
-- edges (links between vertices) can be created and destroyed
-- undo/redo of structural operations using the keyboard
+#### What NBE offers
+- display and manipulate directed (hyper-)graph models
+- undo/redo structural operations using the keyboard
+- select and cut/copy/paste graph parts
 - changes to the model (triggered by the host application) are observed by the editor
 - automatic layout using the [dagre library](https://github.com/cpettitt/dagre)
 - edges for a given type are either simple edges (1:n, n:1) or complex _hyperedges_ (n:m)
-- hyper-edges have multiple incoming and outgoing links, and are represented by circles
-
-#### Known Bugs
-- rendering needs to be fixed for MSIE11+ (issue #14)
-- SVG rendering in Safari seems to be broken, not sure what is the reason (issue #35)
-- [more bugs](https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+- vertex types, to destinguish between different classes of vertices
+- hyperedges have multiple incoming and outgoing links, and are represented by circles
+- zoom in and out
+- customize the appearance of the editor using (S)CSS
 
 #### Planned Features
 - undo/redo of layout operations
-- cut/copy/paste of nodes
 - specs and spec-tests for the graph controller operations which are exposed as an API
-- vertex types, to destinguish between different classes of vertices
 - [more planned features](https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)
+
+#### Known Bugs
+_no bugs on record at time of release_
+- [more bugs](https://github.com/x1B/nbe/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
 
 
 ## Getting Started
@@ -74,7 +73,8 @@ npm install
 ### Using the Node-Based Editor
 
 Try adding logic signals and gates to the demo circuit, and connect them by dragging wires between the nodes.
-Hit _'Run Simulation'_ to view state changes of the probed wires as the discrete clock drives the simulation.
+Hit _'Flatten Main Circuit'_ to expand circuit compositions within the graph into a flattened model.
+Use _'Run Simulation'_ to view state changes of the probed wires as the discrete clock drives the simulation.
 The boxes represent vertices in the hypergraph, and the curved lines (_link_) make up the edges.
 Hit _'Auto Layout'_ to tidy up the graph.
 In this example, each _wire_ edge may have one source and multiple outgoing links (1:n), while log _channels_ are n:m hyperedges, which may (for the sake of demonstration) have multiple sinks.
@@ -90,8 +90,8 @@ Here is a quick walk-through of the API based on the `logic` example application
 #### The Graph
 
 The graph model is a JavaScript object containing two maps, `edges` and `vertices`.
-As the example shows (in file `lib/data/dummy_model.json`), edges and vertices are stored under their respective IDs, occupying separate namespaces.
-Edges have the string properties `type` and `label`, while vertices have a `label` as well as a list of `ports`.
+As the example shows (entry `main` in file `lib/data/dummy_model.json`), edges and vertices are stored under their respective IDs, occupying separate namespaces.
+Edges have the string properties `type` and `label`, while vertices have a `label` as well as two lists of _ports_ (`in` and `out`).
 Each port is an object with a `label`, an `id` (unique within the vertex), an optional `direction` which is either `"out"` or `"in`" (default), and an optional `edgeId` referencing the edge a port is connected to (if any). 
 
 Applications instantiate a node-based editor using the AngularJS directive `nbeGraph`, which should be referenced as `data-nbe-graph`.

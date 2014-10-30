@@ -35,6 +35,7 @@ define( [
          currentComponentId: null,
          newComponentId: null,
          flattened: {
+            show: false,
             model: {},
             layout: {}
          }
@@ -51,15 +52,18 @@ define( [
          $scope.view.newComponentId = null;
       };
 
-      $scope.run = function () {
+      $scope.flatten = function () {
          var flatModel = flatten( $scope.model.main ).using( $scope.model.components );
-         $scope.view.flattened.layout = { vertices: {}, edges: {} };
+         $scope.view.flattened.layout = null;
          $scope.view.flattened.model = flatModel;
+         $scope.view.flattened.show = true;
+      };
 
+      $scope.run = function () {
          $scope.messages.splice( 0, $scope.messages.length );
          var sim = simulator( scheduler.instant(), settings, log, $scope.model.components );
          $scope.$evalAsync( function () {
-            sim.run( flatModel );
+            sim.run( $scope.view.flattened.model );
          } );
 
          function log( msg ) {
@@ -67,6 +71,13 @@ define( [
          }
       };
 
+      $scope.$watch( 'model', function() {
+         // reset flattened representation
+         $scope.view.flattened.layout = null;
+         $scope.view.flattened.model = null;
+         $scope.view.flattened.show = false;
+         $scope.messages = [];
+      }, true );
 
 
       $scope.$on( 'lc.interface.added', function( event, iface, port ) {
