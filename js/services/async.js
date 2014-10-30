@@ -2,9 +2,7 @@
  * Dagre-based graph layout service.
  * Edges and vertices are fed to dagre layouter as nodes, and links are fed as edges.
  */
-define( [
-   'underscore'
-], function( underscore ) {
+define( [], function() {
    'use strict';
 
    function Async( $window, $timeout, nbeAsyncSettings ) {
@@ -15,6 +13,7 @@ define( [
       this.repeatAfter = repeatAfter;
       this.ensure = ensure;
       this.runEventually = runEventually;
+      this.debounce = debounce;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +36,7 @@ define( [
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function ensure( f, delayMs ) {
-         return repeatAfter( underscore.debounce( f, delayMs || debounceDelayMs ), delayMs || fixupDelayMs );
+         return repeatAfter( debounce( f, delayMs || debounceDelayMs ), delayMs || fixupDelayMs );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +74,61 @@ define( [
          } );
       }
 
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * From underscore.js v1.5.2: https://github.com/jashkenas/underscore
+    *
+    * Copyright (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative
+    * Reporters & Editors
+    *
+    * Permission is hereby granted, free of charge, to any person
+    * obtaining a copy of this software and associated documentation
+    * files (the "Software"), to deal in the Software without
+    * restriction, including without limitation the rights to use,
+    * copy, modify, merge, publish, distribute, sublicense, and/or sell
+    * copies of the Software, and to permit persons to whom the
+    * Software is furnished to do so, subject to the following
+    * conditions:
+    *
+    * The above copyright notice and this permission notice shall be
+    * included in all copies or substantial portions of the Software.
+    *
+    * @param {Function} func
+    *   the function to debounce
+    * @param {Number} waitMs
+    * @param {Boolean} immediate
+    * @returns {Function}
+    *   the debounced function
+    */
+   function debounce( func, waitMs, immediate ) {
+      var timeout, args, context, timestamp, result;
+      return function () {
+         context = this;
+         args = arguments;
+         timestamp = new Date();
+         var later = function () {
+            var last = (new Date()) - timestamp;
+            if ( last < waitMs ) {
+               timeout = setTimeout( later, waitMs - last );
+            } else {
+               timeout = null;
+               if ( !immediate ) {
+                  result = func.apply( context, args );
+               }
+            }
+         };
+         var callNow = immediate && !timeout;
+         if ( !timeout ) {
+            timeout = setTimeout( later, waitMs );
+         }
+         if ( callNow ) {
+            result = func.apply( context, args );
+         }
+         return result;
+      };
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

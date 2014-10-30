@@ -1,8 +1,8 @@
 /**
  * Manages the view model for a selection of nodes.
  */
-define( [ 'angular', 'jquery', 'underscore', '../utilities/visual', '../utilities/traverse' ],
-   function( ng, $, _, visual, traverse ) {
+define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
+   function( ng, $, visual, traverse ) {
    'use strict';
 
    var VERTICES = 'vertices';
@@ -29,7 +29,7 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual', '../utilitie
     * @param {Object} layoutModel
     *    the graph layout model (positions of edges, vertices)
     */
-   return function( model, viewModel, layoutModel, edgeTypes, linksController, jqGraph, $document, $scope ) {
+   return function( model, viewModel, layoutModel, edgeTypes, linksController, jqGraph, async, $document, $scope ) {
 
       var selection = viewModel.selection;
       var anchor;
@@ -135,7 +135,7 @@ define( [ 'angular', 'jquery', 'underscore', '../utilities/visual', '../utilitie
       function start( startEvent ) {
          $document.on( 'mousemove', updateSelectionCoords ).on( 'mouseup', finish );
 
-         var updateHits = _.debounce( updateSelectionContentsNow, 10 );
+         var updateHits = async.debounce( updateSelectionContentsNow, 10 );
 
          var jqSelection = $( '.selection', jqGraph );
          var selectionCoords = {};
