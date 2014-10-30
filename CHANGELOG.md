@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v0.2.0
+
 - [#48](https://github.com/x1B/nbe/issues/48): release: prepared documentation and logic demo for v0.2.0
 
 - [#15](https://github.com/x1B/nbe/issues/15): SCSS: removed vendor prefixes, added auto-prefixer to examples

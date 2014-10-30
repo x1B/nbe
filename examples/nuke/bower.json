@@ -1,6 +1,6 @@
 {
    "name": "nbe_examples_nuke",
-   "version": "0.1.0-pre",
+   "version": "0.3.0-pre",
    "description": "Simple NBE visualization of an existing 'theFoundry nuke' project",
    "authors": [],
    "license": "MIT",
