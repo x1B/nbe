@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v0.3.0
+
 - [#49](https://github.com/x1B/nbe/issues/49): footprint: removed underscore
 
 
