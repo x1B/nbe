@@ -14,19 +14,24 @@
 
 
     <h3>Simulation</h3>
-    <p><button data-ng-click="run()">Run Simulation</button></p>
-    <div class="log" data-ng-if="messages.length">
-        <h4>Simulation Log</h4>
-        <ul>
-            <li data-ng-repeat="msg in messages track by $index">{{ msg }}</li>
-        </ul>
-        <h4>Flat Circuit</h4>
+    <p>In order to run a simulation on the main circuit, any complex components (MUX, XOR, NAND, etc.) must be rolled out, substituting them with simple gates (NOT, OR, AND).</p>
+    <p><button title="Create a flattened representation"
+               data-ng-click="flatten()">Flatten Main Circuit</button></p>
+    <div data-ng-if="view.flattened.show">
+        <p><button data-ng-click="run()"
+                   title="Run a logic simuation on the flattened circuit">Run Simulation</button></p>
+        <div class="log" data-ng-if="messages.length">
+            <h4>Simulation Log</h4>
+            <ul>
+                <li data-ng-repeat="msg in messages track by $index">{{ msg }}</li>
+            </ul>
+        </div>
+
+        <h4>Flat Circuit:</h4>
         <div data-lc-editor="view.flattened.model"
              data-lc-editor-components="{}"
              data-lc-editor-layout="view.flattened.layout"></div>
-
     </div>
-
 
     <h2>Component Library</h2>
 
