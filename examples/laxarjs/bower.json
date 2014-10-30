@@ -1,6 +1,6 @@
 {
    "name": "nbe_examples_laxarjs",
-   "version": "0.1.0-pre",
+   "version": "0.2.0",
    "description": "Concept mockup of a basic page editor for the LaxarJS reactive web application framework",
    "authors": [],
    "license": "MIT",
