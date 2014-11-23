@@ -12,10 +12,10 @@ define( [
 ], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
-   var module = ng.module( 'logic-circuit', [ 'nbe' ] );
-   module.run( [ '$templateCache', function( $templateCache ) {
-      $templateCache.put( 'lib/logic_demo.html', htmlDemoTemplate );
-   } ] );
+   var module = ng.module( 'logic-circuit', [ 'nbe' ] )
+      .run( [ '$templateCache', function( $templateCache ) {
+         $templateCache.put( 'lib/demo.html', htmlDemoTemplate );
+      } ] );
 
    lcEditorDirective.define( module );
 

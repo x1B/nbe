@@ -14,7 +14,7 @@
    ],
    "main": "lib/start.js",
    "dependencies": {
-      "nbe": "x1b/nbe#v0.3.0"
+      "nbe": "x1b/nbe#^0.3.x"
    },
    "devDependencies": {
    }

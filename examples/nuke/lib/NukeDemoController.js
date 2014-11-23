@@ -7,10 +7,10 @@ define( [
 ], function( $, ng, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
-   var module = ng.module( 'NukeDemoApp', [ 'nbe' ] );
-   module.run( [ '$templateCache', function( $templateCache ) {
-      $templateCache.put( 'lib/logic_demo.html', htmlDemoTemplate );
-   } ] );
+   var module = ng.module( 'NukeDemoApp', [ 'nbe' ] )
+      .run( [ '$templateCache', function( $templateCache ) {
+         $templateCache.put( 'lib/demo.html', htmlDemoTemplate );
+      } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
