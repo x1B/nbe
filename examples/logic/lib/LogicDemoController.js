@@ -5,13 +5,18 @@ define( [
    './flatten',
    './circuit_simulator',
    './scheduler',
-   'json!./data/primitives.json',
-   'json!./data/dummy_model.json',
-   'json!./data/dummy_layout.json'
-], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout ) {
+   'json!logic/data/primitives.json',
+   'json!logic/data/dummy_model.json',
+   'json!logic/data/dummy_layout.json',
+   'text!logic/demo.html'
+], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
-   var module = ng.module( 'logic-circuit', [ 'nbe' ] );
+   var module = ng.module( 'logic-circuit', [ 'nbe' ] )
+      .run( [ '$templateCache', function( $templateCache ) {
+         $templateCache.put( 'lib/demo.html', htmlDemoTemplate );
+      } ] );
+
    lcEditorDirective.define( module );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

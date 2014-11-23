@@ -3,16 +3,6 @@ module.exports = function( grunt ) {
    'use strict';
 
    var pkg = grunt.file.readJSON( 'package.json' );
-   var src = {
-      gruntfile: 'Gruntfile.js',
-      require: 'require_config.js',
-      'nbe_examples_logic': [
-         'nbe_examples_logic.js',
-         'lib/**/*.js',
-         'lib/data/*.json'
-      ]
-   };
-
 
    var autoprefixer = require( 'autoprefixer-core' );
 
@@ -20,15 +10,15 @@ module.exports = function( grunt ) {
       requirejs: {
          'nbe_examples_logic': {
             options: {
-               baseUrl: './',
-               mainConfigFile: src.require,
+               baseUrl: 'bower_components/',
+               mainConfigFile: 'require_config.js',
+               include: [ 'requirejs/require' ],
+               name: '../init',
+               insertRequire: [ '../init' ],
+               out: 'dist/' + pkg.name + '.js',
                optimize: 'uglify2',
-               preserveLicenseComments: false,
-               generateSourceMaps: false,
-               include: [ 'bower_components/requirejs/require.js' ],
-               exclude: [ '' ],
-               name: pkg.name,
-               out: 'dist/' + pkg.name + '.js'
+               stubmodules: ['text', 'json'],
+               preserveLicenseComments: false
             }
          }
       },

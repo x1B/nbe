@@ -6,8 +6,8 @@
 define( [
    'jquery',
    'angular',
-   'text!./logic_circuit_editor.html',
-   'json!./data/primitives.json'
+   'text!logic/logic_circuit_editor.html',
+   'json!logic/data/primitives.json'
 ], function( $, ng, htmlTemplate, primitives ) {
    'use strict';
 

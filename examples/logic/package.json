@@ -9,7 +9,7 @@
       "url": "https://github.com/x1b/nbe.git"
    },
    "scripts": {
-      "prepublish": "bower install && grunt build"
+      "prepublish": "bower install && grunt"
    },
    "devDependencies": {
       "bower": "~1.3.12",

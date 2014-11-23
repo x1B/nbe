@@ -1,10 +1,10 @@
 define( [
    'angular',
    'nbe',
-   './lib/LaxarjsDemoController'
+   'logic'
 ], function start( ng ) {
    'use strict';
 
-   ng.bootstrap( document, [ 'LaxarjsDemoApp' ] );
+   ng.bootstrap( document, [ 'logic-circuit' ] );
 
 } );
