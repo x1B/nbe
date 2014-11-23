@@ -5,9 +5,9 @@ define( [
    './flatten',
    './circuit_simulator',
    './scheduler',
-   'json!./data/primitives.json',
-   'json!./data/dummy_model.json',
-   'json!./data/dummy_layout.json'
+   'json!logic/data/primitives.json',
+   'json!logic/data/dummy_model.json',
+   'json!logic/data/dummy_layout.json'
 ], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout ) {
    'use strict';
 
