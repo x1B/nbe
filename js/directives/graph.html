@@ -9,7 +9,7 @@
       </div>
 
       <div class="port GHOST" style="display: none;"><i></i></div>
-      <div class="selection" style="display: none;"></div>
+      <div class="selection" style="position: absolute; display: none;"></div>
 
       <div data-ng-repeat="(edgeId, edge) in model.edges track by edgeId"
            data-ng-if="!types[ edge.type ].simple"

@@ -1,4 +1,5 @@
-<div data-ng-style="{ left: (layout.vertices[ vertexId ].left * view.zoom.factor) + 'px',
+<div data-ng-style="{ position: 'absolute',
+                      left: (layout.vertices[ vertexId ].left * view.zoom.factor) + 'px',
                       top: (layout.vertices[ vertexId ].top * view.zoom.factor) + 'px' }"
      data-ng-click="handleVertexClick( $event )"
      data-ng-class="{ 'selected': view.selection.vertices[ vertexId ], 'zoom-100': vertex.over }"
