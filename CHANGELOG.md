@@ -2,7 +2,8 @@
 
 ## Last Changes
 
-- [#52](https://github.com/x1B/nbe/issues/52): footprint: removed underscore
+- [#55](https://github.com/x1B/nbe/issues/55): prepared codebase for release
+- [#52](https://github.com/x1B/nbe/issues/52): refactoring: compatibility with to AngularJS 1.3.x
 
 
 ## v0.3.0
