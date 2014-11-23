@@ -1,5 +1,5 @@
 @import '../../../scss/nbe_variables';
-@import './nbe';
+@import '../../../scss/nbe';
 
 @include edgeType( 'logic-app', 'WIRE', $typeColor1 );
 @include edgeType( 'logic-app', 'CHANNEL', $typeColor4 );

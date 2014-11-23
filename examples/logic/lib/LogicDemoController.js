@@ -8,7 +8,7 @@ define( [
    'json!logic/data/primitives.json',
    'json!logic/data/dummy_model.json',
    'json!logic/data/dummy_layout.json',
-   'text!logic/logic_demo.html'
+   'text!logic/demo.html'
 ], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 

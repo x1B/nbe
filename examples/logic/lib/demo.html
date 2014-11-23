@@ -4,7 +4,8 @@
  Compose a logic circuit from simple gates and user-defined components, and calculate its output using a simple discrete event simulation.<br>
  The node-based editor is implemented using <a href="http://github.com/x1b/nbe" title="NBE on GitHub">NBE</a>.
  Use the buttons to add components.
- Drag the ports to modify connections.
+ Drag the ports to create or modify connections.
+ Basic keyboard commands are supported (delete, undo, redo; copy/paste ist still a bit buggy)
 </p>
 
 <div data-ng-controller="LogicDemoController" data-ng-cloak>
@@ -35,7 +36,6 @@
  </div>
 
  <h2>Component Library</h2>
-
  <p>
   <label>Create New Component:
   <input type="text"

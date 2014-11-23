@@ -12,11 +12,12 @@ module.exports = function( grunt ) {
             options: {
                baseUrl: 'bower_components/',
                mainConfigFile: 'require_config.js',
-               name: '../' + pkg.name,
-               out: 'dist/' + pkg.name + '.js',
                include: [ 'requirejs/require' ],
-               insertRequire: [ '../nbe_examples_logic' ],
+               name: '../init',
+               insertRequire: [ '../init' ],
+               out: 'dist/' + pkg.name + '.js',
                optimize: 'uglify2',
+               stubmodules: ['text', 'json'],
                preserveLicenseComments: false
             }
          }

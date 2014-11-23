@@ -17,11 +17,11 @@ var require = {
       }
    ],
    paths: {
-      'text': 'requirejs-plugins/lib/text',
-      'json': 'requirejs-plugins/src/json',
+      'angular': '../../../bower_components/angular/angular',
+      'dagre': 'dagre/index',
       'jquery': 'jquery/dist/jquery',
       'jquery_ui': 'jquery_ui/ui',
-      'angular': 'angular/angular',
-      'dagre': 'dagre/index'
+      'json': 'requirejs-plugins/src/json',
+      'text': 'requirejs-plugins/lib/text'
    }
 };

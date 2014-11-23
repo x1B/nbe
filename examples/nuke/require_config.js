@@ -1,5 +1,5 @@
-require.config( {
-   baseUrl: './',
+var require = {
+   baseUrl: './bower_components/',
    shim: {
       dagre: { exports: 'dagre' },
       angular: { exports: 'angular' }
@@ -7,16 +7,21 @@ require.config( {
    packages: [
       {
          name: 'nbe',
-         location: '../../js',
+         location: 'nbe/js',
          main: 'nbe'
+      },
+      {
+         name: 'nuke',
+         location: '../lib/',
+         main: 'NukeDemoController'
       }
    ],
    paths: {
-      'text': '../../bower_components/requirejs-plugins/lib/text',
-      'json': '../../bower_components/requirejs-plugins/src/json',
-      'jquery': '../../bower_components/jquery/dist/jquery',
-      'jquery_ui': '../../bower_components/jquery_ui/ui',
-      'angular': '../../bower_components/angular/angular',
-      'dagre': '../../bower_components/dagre/index'
+      'text': 'requirejs-plugins/lib/text',
+      'json': 'requirejs-plugins/src/json',
+      'jquery': 'jquery/dist/jquery',
+      'jquery_ui': 'jquery_ui/ui',
+      'angular': 'angular/angular',
+      'dagre': 'dagre/index'
    }
-} );
+};

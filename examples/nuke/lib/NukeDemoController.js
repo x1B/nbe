@@ -1,22 +1,22 @@
 define( [
    'jquery',
    'angular',
-   'json!./data/dummy_model.json',
-   'json!./data/dummy_layout.json'
-], function( $, ng, dummyModel, dummyLayout ) {
+   'json!nuke/data/dummy_model.json',
+   'json!nuke/data/dummy_layout.json',
+   'text!nuke/demo.html'
+], function( $, ng, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
    var module = ng.module( 'NukeDemoApp', [ 'nbe' ] );
+   module.run( [ '$templateCache', function( $templateCache ) {
+      $templateCache.put( 'lib/logic_demo.html', htmlDemoTemplate );
+   } ] );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function NukeDemoController( $scope, $timeout ) {
       $scope.model = dummyModel;
       $scope.layout = dummyLayout;
-      // $scope.layout = { edges: {}, vertices: {} };
-      // $timeout( function() {
-      // $scope.nbeController.calculateLayout()
-      // } );
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
