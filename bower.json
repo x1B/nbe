@@ -3,7 +3,7 @@
    "version": "0.4.0-pre",
    "main": "js/nbe.js",
    "description": "Node-based-editing for the Web",
-   "authors": [],
+   "authors": [ "Michael Kurze" ],
    "license": "MIT",
    "ignore": [
       ".*",
@@ -13,12 +13,12 @@
       "docs"
    ],
    "dependencies": {
+      "angular": "angular/bower-angular#^1.2.x",
+      "dagre": "http://cpettitt.github.io/project/dagre/v0.4.5/dagre.js",
       "jquery": "jquery/jquery#1.11.x",
       "jquery_ui": "components/jqueryui#1.11.x",
-      "angular": "angular/bower-angular#1.2.x",
       "requirejs": "jrburke/requirejs#2.1.x",
-      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x",
-      "dagre": "http://cpettitt.github.io/project/dagre/v0.4.5/dagre.js"
+      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x"
    },
    "devDependencies": {
    }

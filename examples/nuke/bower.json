@@ -2,7 +2,8 @@
    "name": "nbe_examples_nuke",
    "version": "0.3.0-pre",
    "description": "Simple NBE visualization of an existing 'theFoundry nuke' project",
-   "authors": [],
+   "private": true,
+   "authors": [ "Michael Kurze" ],
    "license": "MIT",
    "ignore": [
       ".*",
@@ -13,7 +14,7 @@
    ],
    "main": "lib/start.js",
    "dependencies": {
-      "nbe": "x1b/nbe#master"
+      "nbe": "x1b/nbe#^0.3.x"
    },
    "devDependencies": {
    }
