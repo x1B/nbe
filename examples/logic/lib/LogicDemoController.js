@@ -7,11 +7,16 @@ define( [
    './scheduler',
    'json!logic/data/primitives.json',
    'json!logic/data/dummy_model.json',
-   'json!logic/data/dummy_layout.json'
-], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout ) {
+   'json!logic/data/dummy_layout.json',
+   'text!logic/logic_demo.html'
+], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
    var module = ng.module( 'logic-circuit', [ 'nbe' ] );
+   module.run( [ '$templateCache', function( $templateCache ) {
+      $templateCache.put( 'lib/logic_demo.html', htmlDemoTemplate );
+   } ] );
+
    lcEditorDirective.define( module );
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
