@@ -1,6 +1,208 @@
 /**
  * Use this to declare user-defined edge types.
  */
+/**
+ * Use this to declare user-defined edge types.
+ */
+body {
+  background: #444444;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  color: #e0e0e0;
+}
+
+a {
+  color: #626ca8;
+  text-decoration: none;
+}
+
+[data-ng-cloak] {
+  display: none !important;
+}
+
+@-webkit-keyframes vertex-ping {
+  from {
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
+  }
+
+  20% {
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
+  }
+
+  to {
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
+  }
+}
+
+@keyframes vertex-ping {
+  from {
+    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
+  }
+
+  20% {
+    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
+  }
+
+  to {
+    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
+  }
+}
+
+.graph {
+  background: #333333;
+  box-sizing: border-box;
+  margin: 2px;
+}
+.graph .graph-contents {
+  background: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+  width: 100%;
+  height: 100%;
+}
+.graph:focus {
+  margin-top: 1px;
+  margin-left: 1px;
+  border: 1px dotted #f5c680;
+  outline: none;
+}
+.graph svg {
+  width: 100%;
+  height: 100%;
+}
+.graph * {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: default;
+}
+.graph .selection {
+  border: 1px dashed #f4f4c0;
+  background: rgba(244, 244, 192, 0.1);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 100px;
+  height: 100px;
+}
+.graph .port i {
+  background: #c3669c;
+  border: solid #444444 1px;
+  display: inline-block;
+  position: relative;
+}
+.graph .port i:hover {
+  border-color: #f9f9f9;
+}
+.graph.highlight-inbound .ports.outbound .port i {
+  background-color: #646464;
+}
+.graph.highlight-outbound .ports.inbound .port i {
+  background-color: #646464;
+}
+.graph .node {
+  position: absolute;
+  border: solid #c8c8c8 1.5px;
+}
+.graph .node.vertex {
+  box-shadow: 4px 4px 6px #202020;
+  border-radius: 5px;
+  background: linear-gradient(to right bottom, #f5c680, #cc8010);
+}
+.graph .node.vertex.ping {
+  -webkit-animation-name: vertex-ping;
+          animation-name: vertex-ping;
+  -webkit-animation-duration: 0.3s;
+          animation-duration: 0.3s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+}
+.graph .node.vertex .header {
+  border-radius: 5px 5px 0 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+  text-shadow: 1px 1px 0.5px #444444;
+}
+.graph .node.vertex .port-group {
+  background: rgba(0, 0, 0, 0.05);
+  border-top: solid #c8c8c8 1px;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  -webkit-align-items: flex-start;
+}
+.graph .node.vertex .ports {
+  -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.graph .node.vertex .ports.inbound {
+  border-right: 1px solid #a0a0a0;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.graph .node.vertex .ports.inbound .port {
+  text-align: left;
+  padding-right: 9px;
+}
+.graph .node.vertex .ports.outbound {
+  -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+.graph .node.vertex .ports.outbound .port {
+  text-align: right;
+  padding-left: 9px;
+}
+.graph .node.vertex .port {
+  -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto;
+  padding-top: 0;
+  color: #202020;
+  font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
+  text-shadow: 0 0 2px #f9f9f9;
+  white-space: nowrap;
+}
+.graph .node.edge {
+  background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
+}
+.graph .node.edge label {
+  display: block;
+  position: relative;
+  text-align: center;
+  font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
+}
+.graph .node.selected {
+  box-shadow: 0 0 8px white, 4px 4px 4px #202020;
+}
+.graph .GHOST {
+  position: absolute;
+}
+.graph .link {
+  position: absolute;
+  fill: transparent;
+}
+.graph .tools {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+.graph .tools button {
+  opacity: 0.5;
+}
+.graph .tools button:hover {
+  opacity: 1;
+}
+
 .graph.logic-app .port.WIRE > i {
   background: #c3669c;
 }

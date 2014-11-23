@@ -5,7 +5,7 @@ module.exports = function( grunt ) {
    var pkg = grunt.file.readJSON( 'package.json' );
    var src = {
       gruntfile: 'Gruntfile.js',
-      require: 'require_config.js',
+      require_config: 'require_config.js',
       'nbe_examples_logic': [
          'nbe_examples_logic.js',
          'lib/**/*.js',
@@ -20,15 +20,16 @@ module.exports = function( grunt ) {
       requirejs: {
          'nbe_examples_logic': {
             options: {
-               baseUrl: './',
-               mainConfigFile: src.require,
-               optimize: 'uglify2',
-               preserveLicenseComments: false,
-               generateSourceMaps: false,
-               include: [ 'bower_components/requirejs/require.js' ],
-               exclude: [ '' ],
-               name: pkg.name,
-               out: 'dist/' + pkg.name + '.js'
+               baseUrl: 'bower_components/',
+               mainConfigFile: 'require_config.js',
+               name: '../' + pkg.name,
+               out: 'dist/' + pkg.name + '.js',
+               include: [ 'requirejs/require', '../' + pkg.name ],
+               insertRequire: [ '../nbe_examples_logic' ]
+               // optimize: 'uglify2',
+               // preserveLicenseComments: false,
+               // generateSourceMaps: false,
+               // include: [ 'requirejs/require' ]
             }
          }
       },
