@@ -7,7 +7,7 @@ var require = {
    packages: [
       {
          name: 'nbe',
-         location: '../../../../nbe/js',
+         location: 'nbe/js',
          main: 'nbe'
       },
       {

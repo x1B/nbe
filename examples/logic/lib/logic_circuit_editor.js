@@ -1,14 +1,8 @@
-/**
- * An edge is a node which has no named ports, but can have 0..n input links and 0..n output links itself.
- *
- * It represents a multi-edge in a directed graph model, and may connect an arbitrary number of vertices.
- */
 define( [
-   'jquery',
    'angular',
    'text!logic/logic_circuit_editor.html',
    'json!logic/data/primitives.json'
-], function( $, ng, htmlTemplate, primitives ) {
+], function( ng, htmlTemplate, primitives ) {
    'use strict';
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////

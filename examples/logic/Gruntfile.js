@@ -2,8 +2,6 @@
 module.exports = function( grunt ) {
    'use strict';
 
-   var pkg = grunt.file.readJSON( 'package.json' );
-
    var autoprefixer = require( 'autoprefixer-core' );
 
    grunt.initConfig( {
@@ -15,9 +13,9 @@ module.exports = function( grunt ) {
                include: [ 'requirejs/require' ],
                name: '../init',
                insertRequire: [ '../init' ],
-               out: 'dist/' + pkg.name + '.js',
+               out: 'dist/init.js',
                optimize: 'uglify2',
-               stubmodules: ['text', 'json'],
+               stubmodules: [ 'text', 'json' ],
                preserveLicenseComments: false
             }
          }

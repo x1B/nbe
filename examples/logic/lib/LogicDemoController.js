@@ -1,5 +1,4 @@
 define( [
-   'jquery',
    'angular',
    './logic_circuit_editor',
    './flatten',
@@ -9,7 +8,7 @@ define( [
    'json!logic/data/dummy_model.json',
    'json!logic/data/dummy_layout.json',
    'text!logic/demo.html'
-], function( $, ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
+], function( ng, lcEditorDirective, flatten, simulator, scheduler, primitives, dummyModel, dummyLayout, htmlDemoTemplate ) {
    'use strict';
 
    var module = ng.module( 'logic-circuit', [ 'nbe' ] )

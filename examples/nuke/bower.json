@@ -1,8 +1,7 @@
 {
    "name": "nbe_examples_nuke",
-   "version": "0.3.0-pre",
+   "version": "0.4.0-alpha.0",
    "description": "Simple NBE visualization of an existing 'theFoundry nuke' project",
-   "private": true,
    "authors": [ "Michael Kurze" ],
    "license": "MIT",
    "ignore": [
@@ -12,9 +11,11 @@
       "bower_components",
       "docs"
    ],
-   "main": "lib/start.js",
    "dependencies": {
-      "nbe": "x1b/nbe#^0.3.x"
+      "angular": "angular/bower-angular#1.3.x",
+      "nbe": "x1b/nbe#^0.4.0-alpha.0",
+      "requirejs": "jrburke/requirejs#2.1.x",
+      "requirejs-plugins": "millermedeiros/requirejs-plugins#1.0.x"
    },
    "devDependencies": {
    }
