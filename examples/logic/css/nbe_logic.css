@@ -19,20 +19,6 @@ a {
   display: none !important;
 }
 
-@-webkit-keyframes vertex-ping {
-  from {
-    box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
-  }
-
-  20% {
-    box-shadow: 0 0 12px 3px #333333, 0 0 16px 3px #f5c680, 4px 4px 4px #202020;
-  }
-
-  to {
-    box-shadow: 0 0 18px 3px #333333, 0 0 24px 3px transparent, 4px 4px 4px #202020;
-  }
-}
-
 @keyframes vertex-ping {
   from {
     box-shadow: 0 0 5px 3px #333333, 0 0 0 0 transparent, 4px 4px 4px #202020;
@@ -68,10 +54,7 @@ a {
   height: 100%;
 }
 .graph * {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
   cursor: default;
 }
 .graph .selection {
@@ -108,12 +91,9 @@ a {
   background: linear-gradient(to right bottom, #f5c680, #cc8010);
 }
 .graph .node.vertex.ping {
-  -webkit-animation-name: vertex-ping;
-          animation-name: vertex-ping;
-  -webkit-animation-duration: 0.3s;
-          animation-duration: 0.3s;
-  -webkit-animation-iteration-count: 1;
-          animation-iteration-count: 1;
+  animation-name: vertex-ping;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
 }
 .graph .node.vertex .header {
   border-radius: 5px 5px 0 0;
@@ -130,42 +110,28 @@ a {
   -webkit-align-items: flex-start;
 }
 .graph .node.vertex .ports {
-  -webkit-flex: 0 1 auto;
-      -ms-flex: 0 1 auto;
-          flex: 0 1 auto;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  flex: 0 1 auto;
   display: flex;
-  -webkit-flex-flow: column;
-      -ms-flex-flow: column;
-          flex-flow: column;
-  -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-flow: column;
+  justify-content: space-between;
 }
 .graph .node.vertex .ports.inbound {
   border-right: 1px solid #a0a0a0;
-  -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  align-items: flex-start;
 }
 .graph .node.vertex .ports.inbound .port {
   text-align: left;
   padding-right: 9px;
 }
 .graph .node.vertex .ports.outbound {
-  -webkit-align-items: flex-end;
-      -ms-flex-align: end;
-          align-items: flex-end;
+  align-items: flex-end;
 }
 .graph .node.vertex .ports.outbound .port {
   text-align: right;
   padding-left: 9px;
 }
 .graph .node.vertex .port {
-  -webkit-flex: 0 1 auto;
-      -ms-flex: 0 1 auto;
-          flex: 0 1 auto;
+  flex: 0 1 auto;
   padding-top: 0;
   color: #202020;
   font-family: "Gill Sans", "Helvetica Neue", "Arial", sans-serif;
@@ -181,7 +147,7 @@ a {
   text-align: center;
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
 }
-.graph .node.selected {
+.graph .node.edge.selected, .graph .node.vertex.selected {
   box-shadow: 0 0 8px white, 4px 4px 4px #202020;
 }
 .graph .GHOST {
@@ -210,12 +176,9 @@ a {
   background: linear-gradient(to right bottom, #c3669c, #8c3768);
 }
 .graph.logic-app .node.edge.WIRE.ping {
-  -webkit-animation-name: edge-ping-logic-app-WIRE;
-          animation-name: edge-ping-logic-app-WIRE;
-  -webkit-animation-duration: 0.3s;
-          animation-duration: 0.3s;
-  -webkit-animation-iteration-count: 1;
-          animation-iteration-count: 1;
+  animation-name: edge-ping-logic-app-WIRE;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
 }
 .graph.logic-app .link.WIRE {
   stroke: #c3669c;
@@ -240,20 +203,6 @@ a {
   display: none;
 }
 
-@-webkit-keyframes edge-ping-logic-app-WIRE {
-  from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
-  }
-
-  20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #c3669c, 4px 4px 4px #202020;
-  }
-
-  to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
-  }
-}
-
 @keyframes edge-ping-logic-app-WIRE {
   from {
     box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
@@ -275,12 +224,9 @@ a {
   background: linear-gradient(to right bottom, #f5c680, #ee9c21);
 }
 .graph.logic-app .node.edge.CHANNEL.ping {
-  -webkit-animation-name: edge-ping-logic-app-CHANNEL;
-          animation-name: edge-ping-logic-app-CHANNEL;
-  -webkit-animation-duration: 0.3s;
-          animation-duration: 0.3s;
-  -webkit-animation-iteration-count: 1;
-          animation-iteration-count: 1;
+  animation-name: edge-ping-logic-app-CHANNEL;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
 }
 .graph.logic-app .link.CHANNEL {
   stroke: #f5c680;
@@ -303,20 +249,6 @@ a {
 }
 .graph.logic-app.hide-CHANNEL .edge.CHANNEL {
   display: none;
-}
-
-@-webkit-keyframes edge-ping-logic-app-CHANNEL {
-  from {
-    box-shadow: 0px 0px 5px 3px #333333, 0px 0px 0px 0px transparent, 4px 4px 4px #202020;
-  }
-
-  20% {
-    box-shadow: 0px 0px 12px 3px #333333, 0px 0px 16px 3px #f5c680, 4px 4px 4px #202020;
-  }
-
-  to {
-    box-shadow: 0px 0px 18px 3px #333333, 0px 0px 24px 3px transparent, 4px 4px 4px #202020;
-  }
 }
 
 @keyframes edge-ping-logic-app-CHANNEL {
