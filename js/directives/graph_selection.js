@@ -134,17 +134,22 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
 
       function start( startEvent ) {
          $document.on( 'mousemove', updateSelectionCoords ).on( 'mouseup', finish );
+         var finished = false;
+         var visible = false;
 
          var updateHits = async.debounce( updateSelectionContentsNow, 10 );
 
          var jqSelection = $( '.selection', jqGraph );
-         var selectionCoords = {};
+         var selectionCoords = { width: '0', height: '0', left: '0', top: '0' };
          var referenceX = startEvent.pageX;
          var referenceY = startEvent.pageY;
-         var fromX = startEvent.offsetX || startEvent.layerX;
-         var fromY = startEvent.offsetY || startEvent.layerY;
+
+         var rect = startEvent.target.getBoundingClientRect();
+         var fromX = startEvent.clientX - rect.left;
+         var fromY = startEvent.clientY - rect.top;
+
          updateSelectionCoords( startEvent );
-         jqSelection.show();
+         startEvent.preventDefault();
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -156,17 +161,25 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
             selectionCoords.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
             selectionCoords.top = ( dy < 0 ? fromY + dy : fromY ) + 'px';
             updateHits();
+            event.preventDefault();
             window.requestAnimationFrame( updateSelectionBox );
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function updateSelectionBox() {
+            if( finished ) {
+               return;
+            }
             var domSelection = jqSelection[ 0 ];
             domSelection.style.width = selectionCoords.width;
             domSelection.style.height = selectionCoords.height;
             domSelection.style.left = selectionCoords.left;
             domSelection.style.top = selectionCoords.top;
+            if( !visible ) {
+               jqSelection.show();
+               visible = true;
+            }
          }
 
          /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -205,6 +218,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function finish() {
+            finished = true;
             $document.off( 'mousemove', updateSelectionCoords ).off( 'mouseup', finish );
             jqSelection.hide();
          }
