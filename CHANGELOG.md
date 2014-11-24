@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+
+## v0.4.1
+
 - [#58](https://github.com/x1B/nbe/issues/58): selection: fixed flickering in safari and positioning in firefox
 
 
