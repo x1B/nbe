@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#60](https://github.com/x1B/nbe/issues/60): selection: fixed highlighting implicitly selected edges
+
 - [#59](https://github.com/x1B/nbe/issues/59): selection: fixed style priority
 
 
