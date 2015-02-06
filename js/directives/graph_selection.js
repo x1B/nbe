@@ -116,6 +116,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          }
          var selected = selection.edges[ edgeId ];
          selection.edges[ edgeId ] = !selected;
+         updateImplicitEdges();
          updateLinks();
       }
 
@@ -127,6 +128,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          }
          var selected = selection.vertices[ vertexId ];
          selection.vertices[ vertexId ] = !selected;
+         updateImplicitEdges();
          updateLinks();
       }
 
@@ -282,9 +284,10 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
 
       /**
        * Make sure that the selection contains 1:n (n:1) edges if their source (dest) vertices are part of
-       * the selecion.
+       * the selection. These edges are called "implicitly selected".
        */
       function updateImplicitEdges() {
+         // mark implicitly selected edges
          var implicitEdges = {};
          ng.forEach( selection.vertices, function( _, vertexId ) {
             var vertex = model.vertices[ vertexId ];
@@ -298,6 +301,8 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
                }
             } );
          } );
+
+         // sweep unmarked edges from selection
          ng.forEach( selection.edges, function( _, edgeId ) {
             if( implicitEdges[ edgeId ] ) { return; }
             var type = edgeTypes[ model.edges[ edgeId ].type ];
@@ -305,6 +310,8 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
                delete selection.edges[ edgeId ];
             }
          } );
+
+         // apply implicit selection to selection state
          ng.forEach( implicitEdges, function( _, edgeId ) {
             selection.edges[ edgeId ] = true;
          } );
