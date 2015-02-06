@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#59](https://github.com/x1B/nbe/issues/59): selection: fixed style priority
+
 
 ## v0.4.1
 

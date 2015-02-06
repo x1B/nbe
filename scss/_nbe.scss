@@ -190,7 +190,8 @@ a {
          }
       }
 
-      &.selected {
+      &.edge.selected,
+      &.vertex.selected{
          box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
       }
    }
