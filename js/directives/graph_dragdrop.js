@@ -48,6 +48,10 @@ define( [], function() {
             return transaction;
          },
 
+         canConnect: function( dropRef ) {
+            return dragRef && dropRef.port.type === dragRef.port.type && dropRef.direction !== dragRef.direction;
+         },
+
          setDropRef: function( ref ) {
             dropRef = ref;
          },

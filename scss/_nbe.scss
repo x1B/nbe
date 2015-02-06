@@ -99,14 +99,24 @@ a {
       }
    }
 
+   .vertex .drop-hover i {
+      border-color: $gray7;
+   }
+
+   .node.vertex .port.drop-hover {
+      color: white;
+      text-shadow: black 0 0 1px;
+   }
+
+
    &.highlight-inbound {
-      .ports.outbound .port i {
+      .ports.outbound i {
          background-color: $unHighlightColor;
       }
    }
 
    &.highlight-outbound {
-      .ports.inbound .port i {
+      .ports.inbound i {
          background-color: $unHighlightColor;
       }
    }
@@ -114,87 +124,88 @@ a {
    .node {
       position: absolute;
       border: solid $nodeBorderColor 1.5px;
+   }
 
-      &.vertex {
-         box-shadow: 4px 4px 6px $shadowColor;
+   .vertex {
+      box-shadow: 4px 4px 6px $shadowColor;
 
-         border-radius: $vertexBorderRadius;
-         background: linear-gradient(to right bottom, $vertexBgColor, darken($vertexBgColor, 30%));
+      border-radius: $vertexBorderRadius;
+      background: linear-gradient(to right bottom, $vertexBgColor, darken($vertexBgColor, 30%));
 
-         // Creation animation
-         &.ping {
-            animation-name: vertex-ping;
-            animation-duration: 0.3s;
-            animation-iteration-count: 1;
-         }
-
-         .header {
-            border-radius: $vertexBorderRadius $vertexBorderRadius 0 0;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.15);
-            font-family: $fontFamilyLabel;
-            text-shadow: 1px 1px 0.5px $gray2;
-         }
-
-         .port-group {
-            background: rgba(0, 0, 0, 0.05);
-            border-top: solid $nodeBorderColor 1px;
-
-            // Flex container:
-            display: -webkit-flex;
-            -webkit-flex-direction: row;
-            -webkit-align-items: flex-start;
-         }
-
-         .ports {
-            // Flex item:
-            flex: 0 1 auto;
-
-            // Flex container:
-            display: flex;
-            flex-flow: column;
-            justify-content: space-between;
-
-            &.inbound {
-               border-right: 1px solid $gray4;
-               align-items: flex-start;
-               .port { text-align: left; padding-right: 9px; }
-            }
-
-            &.outbound {
-               align-items: flex-end;
-               .port { text-align: right; padding-left: 9px; }
-            }
-         }
-
-         .port {
-            flex: 0 1 auto;
-            padding-top: 0;
-            color: $portTextColor;
-            font-family: $fontFamilyPort;
-            text-shadow: 0 0 2px $gray7;
-            white-space: nowrap;
-         }
-
+      // Creation animation
+      &.ping {
+         animation-name: vertex-ping;
+         animation-duration: 0.3s;
+         animation-iteration-count: 1;
       }
 
-      // Default edge-node style;
-      &.edge {
-         background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
+      .header {
+         border-radius: $vertexBorderRadius $vertexBorderRadius 0 0;
+         text-align: center;
+         background: rgba(0, 0, 0, 0.15);
+         font-family: $fontFamilyLabel;
+         text-shadow: 1px 1px 0.5px $gray2;
+      }
 
-         label {
-            display: block;
-            position: relative;
-            text-align: center;
-            font-family: $fontFamilyLabel;
+      .port-group {
+         background: rgba(0, 0, 0, 0.05);
+         border-top: solid $nodeBorderColor 1px;
+
+         // Flex container:
+         display: -webkit-flex;
+         -webkit-flex-direction: row;
+         -webkit-align-items: flex-start;
+      }
+
+      .ports {
+         // Flex item:
+         flex: 0 1 auto;
+
+         // Flex container:
+         display: flex;
+         flex-flow: column;
+         justify-content: space-between;
+
+         &.inbound {
+            border-right: 1px solid $gray4;
+            align-items: flex-start;
+            .port { text-align: left; padding-right: 9px; }
+         }
+
+         &.outbound {
+            align-items: flex-end;
+            .port { text-align: right; padding-left: 9px; }
          }
       }
 
-      &.edge.selected,
-      &.vertex.selected{
-         box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
+      .port {
+         flex: 0 1 auto;
+         padding-top: 0;
+         color: $portTextColor;
+         font-family: $fontFamilyPort;
+         text-shadow: 0 0 2px $gray7;
+         white-space: nowrap;
+      }
+
+   }
+
+   // Default edge-node style;
+   .edge {
+      background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
+
+      label {
+         display: block;
+         position: relative;
+         text-align: center;
+         font-family: $fontFamilyLabel;
       }
    }
+
+   .edge.selected,
+   .vertex.selected{
+      box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
+   }
+
 
    .GHOST {
       position: absolute;
