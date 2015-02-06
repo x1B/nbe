@@ -99,8 +99,9 @@ define( [
                      } );
                      $timeout( self.canvas.repaint );
                   }
+
                   return !!result;
-               }, $scope, 1500 );
+               }, $scope, 500 );
             }
 
          }
@@ -164,7 +165,8 @@ define( [
             self.zoom = canvas.zoom;
 
             canvas.repaint();
-            $scope.$watch( 'layout', async.ensure( canvas.repaint, 50 ), true );
+            // :TODO: 500ms is for LaxarJS debugging (late CSS loading) -- maybe make this configurable
+            $scope.$watch( 'layout', async.ensure( canvas.repaint, 500 ), true );
             $scope.$watch( 'types', updates.updateTypes, true );
             $scope.$watch( 'model.vertices', updates.updateVertices, true );
             $scope.$watch( 'model.edges', updates.updateEdges, true );

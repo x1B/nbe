@@ -48,6 +48,18 @@ define( [], function() {
             return transaction;
          },
 
+         canConnect: function( dropRef ) {
+            if( !dragRef || !dragRef.port ) {
+               return false;
+            }
+            var result = dropRef.port ?
+               ( dropRef.port.type === dragRef.port.type &&
+                 dropRef.direction !== dragRef.direction ) :
+               ( dropRef.edge.type === dragRef.port.type );
+
+            return result;
+         },
+
          setDropRef: function( ref ) {
             dropRef = ref;
          },

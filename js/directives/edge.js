@@ -27,14 +27,24 @@ define( [
          template: edgeHtml,
          controller: [ '$scope', '$element', function EdgeController( $scope, $element ) {
 
-            $( $element[ 0 ] ).draggable( {
+            var jqEdgeIcon = $( '.nbe-edge-icon', $element[ 0 ] );
+            $element.draggable( {
                stack: '.graph *',
                containment: 'parent',
+               handle: jqEdgeIcon,
                start: handleEdgeDragStart,
                drag: nbeAsync.ensure( handleEdgeDrag ),
                stop: handleDrop
-            } ).droppable( {
-               accept: 'i',
+            } );
+
+            jqEdgeIcon.droppable( {
+               accept: function() {
+                  // :TODO:
+                  return graphController.dragDrop.canConnect( {
+                     nodeId: $scope.edgeId,
+                     edge: $scope.$parent.edge
+                  } );
+               },
                hoverClass: 'drop-hover',
                drop: handleDrop
             } );
@@ -84,7 +94,10 @@ define( [
                }
                else {
                   // dropped a port onto this edge
-                  $scope.controller.dragDrop.setDropRef( { nodeId: $scope.edgeId } );
+                  $scope.controller.dragDrop.setDropRef( {
+                     nodeId: $scope.edgeId,
+                     edgeType: $scope.$parent.edge.type
+                  } );
                   visual.pingAnimation( $element );
                }
             }

@@ -83,19 +83,19 @@ $fontSizePort: 11px!default;
          font-size: round( $fontSizeLabel * $f );
       }
 
-      .edge {
+      .nbe-edge-icon {
          width: $edgeNodeSize * $f;
          height: $edgeNodeSize * $f;
          border-radius: $edgeNodeSize * $f;
          box-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+      }
 
-         label {
-            width: 100px*$f;
-            left: (-50px + $edgeNodeSize/2)*$f;
-            text-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
-            top: ($edgeNodeSize + 2px)*$f;
-            font-size: round( $fontSizeLabel * $f );
-         }
+      .nbe-edge-label {
+         width: 100px*$f;
+         left: (-50px + $edgeNodeSize/2)*$f;
+         text-shadow: 4px*$f 4px*$f 4px*$f $shadowColor;
+         top: ($edgeNodeSize + 2px)*$f;
+         font-size: round( $fontSizeLabel * $f );
       }
 
       .link {
@@ -137,12 +137,12 @@ $fontSizePort: 11px!default;
       }
 
       // Colored edge nodes:
-      .node.edge.#{$name} {
+      .#{$name} .nbe-edge-icon {
          background: linear-gradient(to right bottom, $color, darken($color, 20%));
       }
 
       // Creation animation
-      .node.edge.#{$name}.ping {
+      .#{$name}.ping .nbe-edge-icon {
          animation-name: edge-ping-#{$themeName}-#{$name};
          animation-duration: 0.3s;
          animation-iteration-count: 1;

@@ -75,62 +75,72 @@ a {
 .graph .port i:hover {
   border-color: #f9f9f9;
 }
-.graph.highlight-inbound .ports.outbound .port i {
+.graph .node.nbe-edge .nbe-edge-icon.drop-hover,
+.graph .vertex .drop-hover i {
+  border-color: #f9f9f9;
+  box-shadow: 0 0 8px white, 4px 4px 4px #202020;
+}
+.graph .node.vertex .port.drop-hover {
+  color: white;
+  text-shadow: black 0 0 1px;
+}
+.graph.highlight-inbound .ports.outbound i {
   background-color: #646464;
 }
-.graph.highlight-outbound .ports.inbound .port i {
+.graph.highlight-outbound .ports.inbound i {
   background-color: #646464;
 }
-.graph .node {
+.graph .vertex,
+.graph .nbe-edge-icon {
   position: absolute;
   border: solid #c8c8c8 1.5px;
 }
-.graph .node.vertex {
+.graph .vertex {
   box-shadow: 4px 4px 6px #202020;
   border-radius: 5px;
   background: linear-gradient(to right bottom, #f5c680, #cc8010);
 }
-.graph .node.vertex.ping {
+.graph .vertex.ping {
   animation-name: vertex-ping;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
 }
-.graph .node.vertex .header {
+.graph .vertex .header {
   border-radius: 5px 5px 0 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.15);
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
   text-shadow: 1px 1px 0.5px #444444;
 }
-.graph .node.vertex .port-group {
+.graph .vertex .port-group {
   background: rgba(0, 0, 0, 0.05);
   border-top: solid #c8c8c8 1px;
   display: -webkit-flex;
   -webkit-flex-direction: row;
   -webkit-align-items: flex-start;
 }
-.graph .node.vertex .ports {
+.graph .vertex .ports {
   flex: 0 1 auto;
   display: flex;
   flex-flow: column;
   justify-content: space-between;
 }
-.graph .node.vertex .ports.inbound {
+.graph .vertex .ports.inbound {
   border-right: 1px solid #a0a0a0;
   align-items: flex-start;
 }
-.graph .node.vertex .ports.inbound .port {
+.graph .vertex .ports.inbound .port {
   text-align: left;
   padding-right: 9px;
 }
-.graph .node.vertex .ports.outbound {
+.graph .vertex .ports.outbound {
   align-items: flex-end;
 }
-.graph .node.vertex .ports.outbound .port {
+.graph .vertex .ports.outbound .port {
   text-align: right;
   padding-left: 9px;
 }
-.graph .node.vertex .port {
+.graph .vertex .port {
   flex: 0 1 auto;
   padding-top: 0;
   color: #202020;
@@ -138,16 +148,21 @@ a {
   text-shadow: 0 0 2px #f9f9f9;
   white-space: nowrap;
 }
-.graph .node.edge {
+.graph .nbe-edge {
+  display: block;
+  width: 20px;
+  height: 40px;
+}
+.graph .nbe-edge-icon {
   background: linear-gradient(135deg, #c3669c 0%, #8c3768 100%);
 }
-.graph .node.edge label {
-  display: block;
+.graph .nbe-edge-label {
   position: relative;
   text-align: center;
   font-family: "Futura", "Helvetica Neue", "Verdana", sans-serif;
 }
-.graph .node.edge.selected, .graph .node.vertex.selected {
+.graph .nbe-edge.selected .nbe-edge-icon,
+.graph .vertex.selected {
   box-shadow: 0 0 8px white, 4px 4px 4px #202020;
 }
 .graph .GHOST {
@@ -172,10 +187,10 @@ a {
 .graph.logic-app .port.WIRE > i {
   background: #c3669c;
 }
-.graph.logic-app .node.edge.WIRE {
+.graph.logic-app .WIRE .nbe-edge-icon {
   background: linear-gradient(to right bottom, #c3669c, #8c3768);
 }
-.graph.logic-app .node.edge.WIRE.ping {
+.graph.logic-app .WIRE.ping .nbe-edge-icon {
   animation-name: edge-ping-logic-app-WIRE;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -220,10 +235,10 @@ a {
 .graph.logic-app .port.CHANNEL > i {
   background: #f5c680;
 }
-.graph.logic-app .node.edge.CHANNEL {
+.graph.logic-app .CHANNEL .nbe-edge-icon {
   background: linear-gradient(to right bottom, #f5c680, #ee9c21);
 }
-.graph.logic-app .node.edge.CHANNEL.ping {
+.graph.logic-app .CHANNEL.ping .nbe-edge-icon {
   animation-name: edge-ping-logic-app-CHANNEL;
   animation-duration: 0.3s;
   animation-iteration-count: 1;
@@ -288,13 +303,13 @@ a {
   padding: 2px 5px 1px 5px;
   font-size: 12px;
 }
-.graph.zoom-100 .edge {
+.graph.zoom-100 .nbe-edge-icon {
   width: 20px;
   height: 20px;
   border-radius: 20px;
   box-shadow: 4px 4px 4px #202020;
 }
-.graph.zoom-100 .edge label {
+.graph.zoom-100 .nbe-edge-label {
   width: 100px;
   left: -40px;
   text-shadow: 4px 4px 4px #202020;
@@ -328,13 +343,13 @@ a {
   padding: 1.5px 3.75px 0.75px 3.75px;
   font-size: 9px;
 }
-.graph.zoom-75 .edge {
+.graph.zoom-75 .nbe-edge-icon {
   width: 15px;
   height: 15px;
   border-radius: 15px;
   box-shadow: 3px 3px 3px #202020;
 }
-.graph.zoom-75 .edge label {
+.graph.zoom-75 .nbe-edge-label {
   width: 75px;
   left: -30px;
   text-shadow: 3px 3px 3px #202020;
@@ -368,13 +383,13 @@ a {
   padding: 1px 2.5px 0.5px 2.5px;
   font-size: 6px;
 }
-.graph.zoom-50 .edge {
+.graph.zoom-50 .nbe-edge-icon {
   width: 10px;
   height: 10px;
   border-radius: 10px;
   box-shadow: 2px 2px 2px #202020;
 }
-.graph.zoom-50 .edge label {
+.graph.zoom-50 .nbe-edge-label {
   width: 50px;
   left: -20px;
   text-shadow: 2px 2px 2px #202020;
@@ -408,13 +423,13 @@ a {
   padding: 0.5px 1.25px 0.25px 1.25px;
   font-size: 3px;
 }
-.graph.zoom-25 .edge {
+.graph.zoom-25 .nbe-edge-icon {
   width: 5px;
   height: 5px;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #202020;
 }
-.graph.zoom-25 .edge label {
+.graph.zoom-25 .nbe-edge-label {
   width: 25px;
   left: -10px;
   text-shadow: 1px 1px 1px #202020;

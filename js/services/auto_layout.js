@@ -20,7 +20,7 @@ define( [
 
       function calculate( model, types, jqGraph, zoomFactor ) {
          var jqVertices = $( '.vertex', jqGraph[ 0 ] );
-         var jqEdges = $( '.edge', jqGraph[ 0 ] );
+         var jqEdges = $( '.nbe-edge', jqGraph[ 0 ] );
          if( !jqVertices.length ) {
             return false;
          }

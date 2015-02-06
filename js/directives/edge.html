@@ -1,8 +1,9 @@
-<div class="node edge {{ edge.type }}"
+<div class="node nbe-edge {{ edge.type }}"
      data-ng-class="{ selected: view.selection.edges[ edgeId ] }"
-     data-ng-click="handleEdgeClick( $event )"
      data-ng-style="{ position: 'absolute',
                       left: (layout.edges[ edgeId ].left * view.zoom.factor) + 'px',
                       top: (layout.edges[ edgeId ].top * view.zoom.factor) + 'px' }"
-        ><label>{{ edge.label }}</label
+><div data-ng-click="handleEdgeClick( $event )"
+      class="nbe-edge-icon"></div
+><div class="nbe-edge-label">{{ edge.label }}</div
 ></div>
