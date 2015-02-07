@@ -54,11 +54,15 @@ define( [
                stop: handlePortDragStop,
                addClasses: false,
                appendTo: jqGraph
-            } ).droppable( {
-               accept: 'i',
+            } ).on( 'dblclick', handlePortDoubleClick );
+
+            element.droppable( {
+               accept: function() {
+                  return graphController.dragDrop.canConnect( ref );
+               },
                hoverClass: 'drop-hover',
                drop: handlePortDrop
-            } ).on( 'dblclick', handlePortDoubleClick );
+            } );
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 

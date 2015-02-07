@@ -2,7 +2,9 @@
 
 ## Last Changes
 
-- [#60](https://github.com/x1B/nbe/issues/60): selection: fixed highlighting implicitly selected edges
+- [#60](https://github.com/x1B/nbe/issues/60): drag/drop: make it easier to connect ports
+
+- [#61](https://github.com/x1B/nbe/issues/61): selection: fixed highlighting implicitly selected edges
 
 - [#59](https://github.com/x1B/nbe/issues/59): selection: fixed style priority
 
