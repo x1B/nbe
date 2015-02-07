@@ -99,8 +99,10 @@ a {
       }
    }
 
+   .node.nbe-edge .nbe-edge-icon.drop-hover,
    .vertex .drop-hover i {
       border-color: $gray7;
+      box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
    }
 
    .node.vertex .port.drop-hover {
@@ -121,7 +123,8 @@ a {
       }
    }
 
-   .node {
+   .vertex,
+   .nbe-edge-icon {
       position: absolute;
       border: solid $nodeBorderColor 1.5px;
    }
@@ -189,19 +192,24 @@ a {
 
    }
 
-   // Default edge-node style;
-   .edge {
-      background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
-
-      label {
-         display: block;
-         position: relative;
-         text-align: center;
-         font-family: $fontFamilyLabel;
-      }
+   .nbe-edge {
+      display: block;
+      width: $edgeNodeSize;
+      height: $edgeNodeSize*2;
    }
 
-   .edge.selected,
+   // Default edge-node style;
+   .nbe-edge-icon {
+      background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
+   }
+
+   .nbe-edge-label {
+      position: relative;
+      text-align: center;
+      font-family: $fontFamilyLabel;
+   }
+
+   .nbe-edge.selected .nbe-edge-icon,
    .vertex.selected{
       box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
    }
@@ -229,4 +237,3 @@ a {
       }
    }
 }
-

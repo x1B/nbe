@@ -192,7 +192,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
             [ VERTICES, EDGES ].forEach( function( collection ) {
                var selectionState = selection[ collection ];
                var identity = collection === VERTICES ? 'nbeVertex' : 'nbeEdge';
-               var selector = collection === VERTICES ? '.vertex' : '.edge';
+               var selector = collection === VERTICES ? '.vertex' : '.nbe-edge';
                var tmpBox = {};
                $( selector, jqGraph[ 0 ] ).each( function( _, domNode ) {
                   var jqNode = $( domNode );
