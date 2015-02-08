@@ -7,7 +7,7 @@ var require = {
    packages: [
       {
          name: 'nbe',
-         location: 'nbe/js',
+         location: '../../../js',
          main: 'nbe'
       },
       {
@@ -17,7 +17,7 @@ var require = {
       }
    ],
    paths: {
-      'angular': '../../../bower_components/angular/angular',
+      'angular': 'angular/angular',
       'dagre': 'dagre/index',
       'jquery': 'jquery/dist/jquery',
       'jquery_ui': 'jquery_ui/ui',

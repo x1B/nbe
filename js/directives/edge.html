@@ -1,5 +1,5 @@
-<div class="node nbe-edge {{ edge.type }}"
-     data-ng-class="{ selected: view.selection.edges[ edgeId ] }"
+<div class="nbe-node nbe-edge nbe-type-{{ edge.type }}"
+     data-ng-class="{ 'nbe-selected': view.selection.edges[ edgeId ] }"
      data-ng-style="{ position: 'absolute',
                       left: (layout.edges[ edgeId ].left * view.zoom.factor) + 'px',
                       top: (layout.edges[ edgeId ].top * view.zoom.factor) + 'px' }"

@@ -25,8 +25,8 @@ define( [], function() {
       var onCancel;
 
       function clear() {
-         jqGraph.removeClass( 'highlight-' + dragRef.port.type );
-         jqGraph.removeClass( 'highlight-' + (dragRef.direction === IN ? OUT : IN) );
+         jqGraph.removeClass( 'nbe-highlight-type-' + dragRef.port.type );
+         jqGraph.removeClass( 'nbe-highlight-' + (dragRef.direction === IN ? OUT : IN) );
          dropRef = dragRef = transaction = null;
       }
 
@@ -35,8 +35,8 @@ define( [], function() {
             onCancel = cancel;
             transaction = ops.startTransaction();
             dragRef = { nodeId: ref.nodeId, port: ref.port, direction: ref.direction };
-            jqGraph.addClass( 'highlight-' + ref.port.type );
-            jqGraph.addClass( 'highlight-' + (ref.direction === IN ? OUT : IN) );
+            jqGraph.addClass( 'nbe-highlight-type-' + ref.port.type );
+            jqGraph.addClass( 'nbe-highlight-' + (ref.direction === IN ? OUT : IN) );
             return transaction;
          },
 

@@ -141,7 +141,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
 
          var updateHits = async.debounce( updateSelectionContentsNow, 10 );
 
-         var jqSelection = $( '.selection', jqGraph );
+         var jqSelection = $( '.nbe-selection', jqGraph );
          var selectionCoords = { width: '0', height: '0', left: '0', top: '0' };
          var referenceX = startEvent.pageX;
          var referenceY = startEvent.pageY;
@@ -192,7 +192,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
             [ VERTICES, EDGES ].forEach( function( collection ) {
                var selectionState = selection[ collection ];
                var identity = collection === VERTICES ? 'nbeVertex' : 'nbeEdge';
-               var selector = collection === VERTICES ? '.vertex' : '.nbe-edge';
+               var selector = collection === VERTICES ? '.nbe-vertex' : '.nbe-edge';
                var tmpBox = {};
                $( selector, jqGraph[ 0 ] ).each( function( _, domNode ) {
                   var jqNode = $( domNode );
@@ -237,7 +237,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
 
       function setAnchor( domNode ) {
          var pos = $( domNode ).position();
-         var followers = $( '.selected:not(.ui-draggable-dragging):not(.link)', jqGraph[ 0 ] );
+         var followers = $( '.nbe-selected:not(.ui-draggable-dragging):not(.nbe-link)', jqGraph[ 0 ] );
          anchor = {
             domNode: domNode,
             left: pos.left,

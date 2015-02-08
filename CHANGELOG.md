@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#62](https://github.com/x1B/nbe/issues/62): refactored and simplified CSS classes, added prefix `nbe`
+
 - [#60](https://github.com/x1B/nbe/issues/60): drag/drop: make it easier to connect ports
 
 - [#61](https://github.com/x1B/nbe/issues/61): selection: fixed highlighting implicitly selected edges

@@ -2,23 +2,23 @@
                       left: (layout.vertices[ vertexId ].left * view.zoom.factor) + 'px',
                       top: (layout.vertices[ vertexId ].top * view.zoom.factor) + 'px' }"
      data-ng-click="handleVertexClick( $event )"
-     data-ng-class="{ 'selected': view.selection.vertices[ vertexId ], 'zoom-100': vertex.over }"
-     class="node vertex {{vertex.classes}}">
-   <div class="header">{{ vertex.label }}</div>
-   <div class="port-group">
-      <div class="ports inbound">
+     data-ng-class="{ 'nbe-selected': view.selection.vertices[ vertexId ], 'nbe-zoom-100': vertex.over }"
+     class="nbe-node nbe-vertex {{vertex.classes}}">
+   <div class="nbe-vertex-header">{{ vertex.label }}</div>
+   <div class="nbe-port-group">
+      <div class="nbe-ports nbe-inbound">
          <div data-ng-repeat="port in vertex.ports.inbound track by port.id"
-              class="port"
-              data-ng-class="port.type"
+              class="nbe-port"
+              data-ng-class="'nbe-type-' + port.type"
               data-nbe-port="{{ port.id }}"
-              data-nbe-port-direction="inbound"><i></i>{{ port.label || port.id }}</div>
+              data-nbe-port-direction="inbound"><i class="nbe-port-handle"></i>{{ port.label || port.id }}</div>
       </div>
-      <div class="ports outbound">
+      <div class="nbe-ports nbe-outbound">
          <div data-ng-repeat="port in vertex.ports.outbound track by port.id"
-              class="port"
-              data-ng-class="port.type"
+              class="nbe-port"
+              data-ng-class="'nbe-type-' + port.type"
               data-nbe-port="{{ port.id }}"
-              data-nbe-port-direction="outbound">{{ port.label || port.id }}<i></i></div>
+              data-nbe-port-direction="outbound">{{ port.label || port.id }}<i class="nbe-port-handle"></i></div>
       </div>
    </div>
 </div>

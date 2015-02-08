@@ -32,8 +32,8 @@ define( [
 
             var vertexId = scope[ ATTR_VERTEX_ID ];
             var jqGraph = graphController.jqGraph;
-            var jqPortGhost = $( '.port.GHOST', jqGraph );
-            var jqLinkGhost = $( '.link.GHOST', jqGraph );
+            var jqPortGhost = $( '.nbe-port.nbe-ghost', jqGraph );
+            var jqLinkGhost = $( '.nbe-link.nbe-ghost', jqGraph );
             // Drag starting position, relative to graph canvas.
             var fromLeft, fromTop, fromBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
@@ -46,7 +46,7 @@ define( [
             $( 'i', element[ 0 ] ).draggable( {
                opacity: 0.8,
                helper: function() {
-                  return $( '.GHOST.port', jqGraph ).clone().show();
+                  return $( '.nbe-port.nbe-ghost', jqGraph ).clone().show();
                },
                zIndex: 1000,
                start: handlePortDragStart,
@@ -60,7 +60,7 @@ define( [
                accept: function() {
                   return graphController.dragDrop.canConnect( ref );
                },
-               hoverClass: 'drop-hover',
+               hoverClass: 'nbe-drop-hover',
                drop: handlePortDrop
             } );
 
@@ -111,8 +111,8 @@ define( [
                fromTop = p.top - graphOffset.top + dragOffset;
                scope.nbeVertex.calculateBox( fromBox );
 
-               ui.helper.addClass( scope.port.type ).show();
-               jqLinkGhost.attr( 'class', basicLinkClass + scope.port.type ).show();
+               ui.helper.addClass( 'nbe-type-' + scope.port.type ).show();
+               jqLinkGhost.attr( 'class', basicLinkClass + 'nbe-type-' + scope.port.type ).show();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function handlePortDragStop() {
-               jqPortGhost.removeClass( scope.port.type );
+               jqPortGhost.removeClass( 'nbe-type-' + scope.port.type );
                jqLinkGhost.attr( 'class', basicLinkClass ).hide();
 
                var dd = graphController.dragDrop;

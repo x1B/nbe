@@ -1,13 +1,24 @@
 @import '../../../scss/nbe_variables';
 @import '../../../scss/nbe';
 
-@include edgeType( 'logic-app', 'WIRE', $typeColor1 );
-@include edgeType( 'logic-app', 'CHANNEL', $typeColor4 );
+@include nbeEdgeType( 'logic-app', 'WIRE', $typeColor1 );
+@include nbeEdgeType( 'logic-app', 'CHANNEL', $typeColor4 );
 
-@include graphSizes( 'zoom-100', 1.0 );
-@include graphSizes( 'zoom-75', 0.75 );
-@include graphSizes( 'zoom-50', 0.50 );
-@include graphSizes( 'zoom-25', 0.25 );
+@include nbeGraphSizes( '100', 1.0 );
+@include nbeGraphSizes( '75', 0.75 );
+@include nbeGraphSizes( '50', 0.50 );
+@include nbeGraphSizes( '25', 0.25 );
+
+body {
+   background: $gray0;
+   font-family: $fontFamilyLabel;
+   color: $textColor;
+}
+
+a {
+   color: $paletteC;
+   text-decoration: none;
+}
 
 .logic-app {
 
@@ -30,15 +41,15 @@
       }
    }
 
-   .node.vertex.monitoring {
+   .nbe-node.nbe-vertex.monitoring {
       background: $gray4;
    }
 
-   .node.vertex.interface {
+   .nbe-node.nbe-vertex.interface {
       background: desaturate( $typeColor2, 10 );
    }
 
-   .node.vertex.component {
+   .nbe-node.nbe-vertex.component {
       background: desaturate( $typeColor3, 10 );
    }
 }

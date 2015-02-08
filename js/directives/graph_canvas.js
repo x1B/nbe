@@ -92,7 +92,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          var height = offsetContainer.height() - yScrollbarSpace;
 
          var padding = layoutSettings.graphPadding;
-         $( '.vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
+         $( '.nbe-vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
             var jqVertex = $( domNode );
             var pos = jqVertex.offset();
             width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );

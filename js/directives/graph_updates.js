@@ -21,7 +21,7 @@ define( [
       function updateTypes( newTypes ) {
          Object.keys( newTypes ).forEach( function( type ) {
             var hideType = !!( newTypes[ type ] && newTypes[ type ].hidden );
-            jqGraph.toggleClass( 'hide-' + type, hideType );
+            jqGraph.toggleClass( 'nbe-hide-type-' + type, hideType );
          } );
          canvasController.repaint();
       }
