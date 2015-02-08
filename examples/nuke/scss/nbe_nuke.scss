@@ -1,7 +1,19 @@
 @import '../../../scss/nbe_variables';
 
-@include edgeType( 'nuke-app', 'WIRE', $typeColor1 );
-@include edgeType( 'nuke-app', 'CHANNEL', $typeColor4 );
+@include nbeEdgeType( 'nuke-app', 'WIRE', $typeColor1 );
+@include nbeEdgeType( 'nuke-app', 'CHANNEL', $typeColor4 );
+
+body {
+   background: $gray1;
+   font-family: $fontFamilyLabel;
+   color: $textColor;
+}
+
+a {
+   color: $paletteC;
+   text-decoration: none;
+}
+
 
 .nuke-app {
    .log {
@@ -34,10 +46,10 @@ h2 {
 }
 
 
-@include graphSizes( 'zoom-100', 1.0 );
-@include graphSizes( 'zoom-75', 0.75 );
-@include graphSizes( 'zoom-50', 0.50 );
-@include graphSizes( 'zoom-25', 0.25 );
-@include graphSizes( 'zoom-10', 0.10 );
+@include nbeGraphSizes( '100', 1.0 );
+@include nbeGraphSizes( '75', 0.75 );
+@include nbeGraphSizes( '50', 0.50 );
+@include nbeGraphSizes( '25', 0.25 );
+@include nbeGraphSizes( '10', 0.10 );
 
 @import '../../../scss/nbe';

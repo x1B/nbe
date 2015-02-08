@@ -29,7 +29,7 @@ define( [
 
             var jqEdgeIcon = $( '.nbe-edge-icon', $element[ 0 ] );
             $element.draggable( {
-               stack: '.graph *',
+               stack: '.nbe-graph *',
                containment: 'parent',
                handle: jqEdgeIcon,
                start: handleEdgeDragStart,
@@ -39,13 +39,12 @@ define( [
 
             jqEdgeIcon.droppable( {
                accept: function() {
-                  // :TODO:
                   return graphController.dragDrop.canConnect( {
                      nodeId: $scope.edgeId,
                      edge: $scope.$parent.edge
                   } );
                },
-               hoverClass: 'drop-hover',
+               hoverClass: 'nbe-drop-hover',
                drop: handleDrop
             } );
 
@@ -58,7 +57,7 @@ define( [
 
             function handleEdgeDragStart() {
                linksToRepaint = graphController.links.controllers( [], [ $scope.edgeId ] );
-               if( $element.hasClass( 'selected' ) ) {
+               if( $element.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.setAnchor( $element[ 0 ] );
                }
             }
@@ -70,7 +69,7 @@ define( [
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
-               if( $element.hasClass( 'selected' ) ) {
+               if( $element.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.followAnchor();
                }
             }
@@ -79,7 +78,7 @@ define( [
 
             // noinspection JSUnusedLocalSymbols
             function handleDrop( event, ui ) {
-               if( $( ui.helper ).hasClass( 'edge' ) ) {
+               if( $( ui.helper ).hasClass( 'nbe-edge' ) ) {
                   // stopped dragging this edge
                   $scope.$apply( function() {
                      var zoomFactor = $scope.view.zoom.factor;
@@ -88,7 +87,7 @@ define( [
                      edgeLayout.top = ui.position.top / zoomFactor;
                      linksToRepaint = [];
                   } );
-                  if( $element.hasClass( 'selected' ) ) {
+                  if( $element.hasClass( 'nbe-selected' ) ) {
                      graphController.selection.clearAnchor();
                   }
                }

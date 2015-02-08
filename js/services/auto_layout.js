@@ -19,7 +19,7 @@ define( [
       var graphPadding = nbeLayoutSettings.graphPadding;
 
       function calculate( model, types, jqGraph, zoomFactor ) {
-         var jqVertices = $( '.vertex', jqGraph[ 0 ] );
+         var jqVertices = $( '.nbe-vertex', jqGraph[ 0 ] );
          var jqEdges = $( '.nbe-edge', jqGraph[ 0 ] );
          if( !jqVertices.length ) {
             return false;

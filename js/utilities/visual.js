@@ -23,8 +23,8 @@ define( [], function() {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function runAnimation( jqElement, animation ) {
-      animation = animation || 'ping';
+   function pingAnimation( jqElement, animation ) {
+      animation = animation || 'nbe-ping';
       var events = 'animationend webkitAnimationEnd oAnimationEnd';
       jqElement.on( events, cleanup );
       jqElement.addClass( animation );
@@ -38,7 +38,7 @@ define( [], function() {
 
    return {
       boundingBox: boundingBox,
-      pingAnimation: runAnimation
+      pingAnimation: pingAnimation
    };
 
 } );

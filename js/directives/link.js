@@ -43,7 +43,7 @@ define( [
             // API to be called when attached edges or vertices have been moved:
             self.repaint = function(){};
             self.toggleSelect = function toggleSelect( state ) {
-               $element.toggleClass( 'selected', state );
+               $element.toggleClass( 'nbe-selected', state );
             };
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

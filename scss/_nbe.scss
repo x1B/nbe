@@ -1,21 +1,10 @@
 @import 'nbe_variables';
 
-body {
-   background: $bgColor;
-   font-family: $fontFamilyLabel;
-   color: $textColor;
-}
-
-a {
-   color: $paletteC;
-   text-decoration: none;
-}
-
 [data-ng-cloak] {
    display: none !important;
 }
 
-@mixin vertexPing() {
+@mixin nbeVertexPing() {
 
    $fromMiddle:   0 0  5px  3px $graphBgColor;
    $acrossMiddle: 0 0 12px  3px $graphBgColor;
@@ -27,38 +16,21 @@ a {
 
    $regularShadow: 4px 4px 4px $gray0;
 
-   @keyframes vertex-ping {
+   @keyframes nbe-vertex-ping {
       from { box-shadow: $fromMiddle, $fromRing, $regularShadow; }
       20% { box-shadow: $acrossMiddle, $acrossRing, $regularShadow; }
       to { box-shadow: $toMiddle, $toRing, $regularShadow; }
    }
 }
 
-@include vertexPing();
+@include nbeVertexPing();
 
 
-.graph {
-
+// The graph contains the entire NBE ui.
+.nbe-graph {
    background: $graphBgColor;
    box-sizing: border-box;
    margin: 2px;
-
-   .graph-contents {
-      background:
-      linear-gradient(
-                      0deg,
-                      transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
-                      transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
-                      transparent),
-      linear-gradient(
-                      90deg,
-                      transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
-                      transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
-                      transparent);
-      width: 100%;
-      height: 100%;
-
-   }
 
    &:focus {
       margin-top: 1px;
@@ -67,173 +39,202 @@ a {
       outline: none;
    }
 
+   &.nbe-highlight-inbound {
+      .nbe-ports.nbe-outbound .nbe-port-handle {
+         background-color: $unHighlightColor;
+      }
+   }
+
+   &.nbe-highlight-outbound {
+      .nbe-ports.nbe-inbound .nbe-port-handle {
+         background-color: $unHighlightColor;
+      }
+   }
+
    svg {
       width: 100%;
       height: 100%;
    }
 
-   * {
-      user-select: none;
-      cursor: default;
-   }
+}
 
-   .selection {
-      border: 1px dashed rgb(244, 244, 192);
-      background: rgba(244, 244, 192, 0.1);
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 100px;
-      height: 100px;
-   }
+.nbe-graph,
+.nbe-graph * {
+   user-select: none;
+   cursor: default;
+}
 
-   .port {
-      i {
-         background: $typeColor1;
-         border: solid $gray2 1px;
-         display: inline-block;
-         position: relative;
+// These cannot be combined
+.nbe-graph *::selection { background:transparent; }
+.nbe-graph *::-moz-selection { background:transparent; }
+.nbe-graph *::-webkit-selection { background:transparent; }
+
+.nbe-graph-contents {
+   background:
+   linear-gradient(
+         0deg,
+         transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+         transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+         transparent),
+   linear-gradient(
+         90deg,
+         transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%,
+         transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%,
+         transparent);
+   width: 100%;
+   height: 100%;
+
+}
+
+.nbe-tools {
+   position: absolute;
+   top: 4px;
+   left: 4px;
+
+   button {
+      opacity: 0.5;
+      &:hover {
+         opacity: 1;
       }
-      i:hover {
-         border-color: $gray7;
-      }
    }
+}
 
-   .node.nbe-edge .nbe-edge-icon.drop-hover,
-   .vertex .drop-hover i {
+.nbe-link {
+   position: absolute;
+   fill: transparent;
+}
+
+// ghost elements visualize element creation and positioning through drag & drop
+.nbe-ghost {
+   position: absolute;
+}
+
+.nbe-edge {
+   display: block;
+   width: $edgeNodeSize;
+   height: $edgeNodeSize*2;
+}
+
+.nbe-edge-icon {
+   background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
+}
+
+.nbe-edge-label {
+   position: relative;
+   text-align: center;
+   font-family: $fontFamilyLabel;
+}
+
+.nbe-edge.nbe-selected div.nbe-edge-icon,
+.nbe-vertex.nbe-selected {
+   box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
+}
+
+.nbe-selection {
+   border: 1px dashed rgb(244, 244, 192);
+   background: rgba(244, 244, 192, 0.1);
+   position: absolute;
+   top: 10px;
+   left: 10px;
+   width: 100px;
+   height: 100px;
+}
+
+.nbe-port-handle {
+   background: $typeColor1;
+   border: solid $gray2 1px;
+   display: inline-block;
+   position: relative;
+
+   &:hover {
       border-color: $gray7;
-      box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
    }
+}
 
-   .node.vertex .port.drop-hover {
-      color: white;
-      text-shadow: black 0 0 1px;
+.nbe-node.nbe-edge > .nbe-edge-icon.nbe-drop-hover,
+.nbe-vertex .nbe-drop-hover .nbe-port-handle {
+   border-color: $gray7;
+   box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
+}
+
+.nbe-node.nbe-vertex .nbe-port.nbe-drop-hover {
+   color: white;
+   text-shadow: black 0 0 1px;
+}
+
+.nbe-vertex,
+.nbe-edge-icon {
+   position: absolute;
+   border: solid $nodeBorderColor 1.5px;
+}
+
+.nbe-vertex {
+   box-shadow: 4px 4px 6px $shadowColor;
+   border-radius: $vertexBorderRadius;
+   background: linear-gradient(to right bottom, $vertexBgColor, darken($vertexBgColor, 30%));
+
+   // creation animation
+   &.nbe-ping {
+      animation-name: nbe-vertex-ping;
+      animation-duration: 0.3s;
+      animation-iteration-count: 1;
    }
+}
 
 
-   &.highlight-inbound {
-      .ports.outbound i {
-         background-color: $unHighlightColor;
-      }
+.nbe-vertex-header {
+   border-radius: $vertexBorderRadius $vertexBorderRadius 0 0;
+   text-align: center;
+   background: rgba(0, 0, 0, 0.15);
+   font-family: $fontFamilyLabel;
+   text-shadow: 1px 1px 0.5px $gray2;
+}
+
+.nbe-port-group {
+   background: rgba(0, 0, 0, 0.05);
+   border-top: solid $nodeBorderColor 1px;
+
+   // Flex container:
+   display: -webkit-flex;
+   -webkit-flex-direction: row;
+   -webkit-align-items: flex-start;
+}
+
+.nbe-ports {
+   // Flex item:
+   flex: 0 1 auto;
+
+   // Flex container:
+   display: flex;
+   flex-flow: column;
+   justify-content: space-between;
+}
+
+
+.nbe-inbound {
+   border-right: 1px solid $gray4;
+   align-items: flex-start;
+
+   .nbe-port {
+      text-align: left;
+      padding-right: 9px;
    }
+}
 
-   &.highlight-outbound {
-      .ports.inbound i {
-         background-color: $unHighlightColor;
-      }
+.nbe-outbound {
+   align-items: flex-end;
+
+   .nbe-port {
+      text-align: right;
+      padding-left: 9px;
    }
+}
 
-   .vertex,
-   .nbe-edge-icon {
-      position: absolute;
-      border: solid $nodeBorderColor 1.5px;
-   }
-
-   .vertex {
-      box-shadow: 4px 4px 6px $shadowColor;
-
-      border-radius: $vertexBorderRadius;
-      background: linear-gradient(to right bottom, $vertexBgColor, darken($vertexBgColor, 30%));
-
-      // Creation animation
-      &.ping {
-         animation-name: vertex-ping;
-         animation-duration: 0.3s;
-         animation-iteration-count: 1;
-      }
-
-      .header {
-         border-radius: $vertexBorderRadius $vertexBorderRadius 0 0;
-         text-align: center;
-         background: rgba(0, 0, 0, 0.15);
-         font-family: $fontFamilyLabel;
-         text-shadow: 1px 1px 0.5px $gray2;
-      }
-
-      .port-group {
-         background: rgba(0, 0, 0, 0.05);
-         border-top: solid $nodeBorderColor 1px;
-
-         // Flex container:
-         display: -webkit-flex;
-         -webkit-flex-direction: row;
-         -webkit-align-items: flex-start;
-      }
-
-      .ports {
-         // Flex item:
-         flex: 0 1 auto;
-
-         // Flex container:
-         display: flex;
-         flex-flow: column;
-         justify-content: space-between;
-
-         &.inbound {
-            border-right: 1px solid $gray4;
-            align-items: flex-start;
-            .port { text-align: left; padding-right: 9px; }
-         }
-
-         &.outbound {
-            align-items: flex-end;
-            .port { text-align: right; padding-left: 9px; }
-         }
-      }
-
-      .port {
-         flex: 0 1 auto;
-         padding-top: 0;
-         color: $portTextColor;
-         font-family: $fontFamilyPort;
-         text-shadow: 0 0 2px $gray7;
-         white-space: nowrap;
-      }
-
-   }
-
-   .nbe-edge {
-      display: block;
-      width: $edgeNodeSize;
-      height: $edgeNodeSize*2;
-   }
-
-   // Default edge-node style;
-   .nbe-edge-icon {
-      background: linear-gradient(135deg, $typeColor1 0%, darken($typeColor1, 20%) 100%);
-   }
-
-   .nbe-edge-label {
-      position: relative;
-      text-align: center;
-      font-family: $fontFamilyLabel;
-   }
-
-   .nbe-edge.selected .nbe-edge-icon,
-   .vertex.selected{
-      box-shadow: 0 0 8px #fff, 4px 4px 4px $gray0;
-   }
-
-
-   .GHOST {
-      position: absolute;
-   }
-
-   .link {
-      position: absolute;
-      fill: transparent;
-   }
-
-   .tools {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-
-      button {
-         opacity: 0.5;
-         &:hover {
-            opacity: 1;
-         }
-      }
-   }
+.nbe-port {
+   flex: 0 1 auto;
+   padding-top: 0;
+   color: $portTextColor;
+   font-family: $fontFamilyPort;
+   text-shadow: 0 0 2px $gray7;
+   white-space: nowrap;
 }

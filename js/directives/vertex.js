@@ -32,7 +32,7 @@ define( [
 
             var jqVertex = $( $element[ 0 ] );
             jqVertex.draggable( {
-               stack: '.graph *',
+               stack: '.nbe-graph *',
                containment: 'parent',
                start: handleVertexDragStart,
                drag: nbeAsync.ensure( handleVertexDrag ),
@@ -53,7 +53,7 @@ define( [
 
             function handleVertexDragStart() {
                linksToRepaint = graphController.links.controllers( [id] );
-               if( jqVertex.hasClass( 'selected' ) ) {
+               if( jqVertex.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.setAnchor( $element[ 0 ] );
                }
             }
@@ -65,14 +65,14 @@ define( [
                ng.forEach( linksToRepaint, function( linkController ) {
                   linkController.repaint();
                } );
-               if( jqVertex.hasClass( 'selected' ) ) {
+               if( jqVertex.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.followAnchor();
                }
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            function handleVertexDragStop( event, ui ) {
+            function handleVertexDragStop( _, ui ) {
                $scope.$apply( function() {
                   linksToRepaint = [];
                   var zoomFactor = $scope.view.zoom.factor;
@@ -80,7 +80,7 @@ define( [
                   layout.left = ui.position.left / zoomFactor;
                   layout.top = ui.position.top / zoomFactor;
                } );
-               if( jqVertex.hasClass( 'selected' ) ) {
+               if( jqVertex.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.clearAnchor();
                }
             }
