@@ -30,18 +30,17 @@ define( [
 
       /** Update the view model after nodes have been added/removed */
       function updateVertices( newVertices, previousVertices ) {
-         if( newVertices == null ) {
+
+         // rebuild link model (calculating a delta would be possible, but probably not worth it)
+         ng.forEach( previousVertices, function( vertex, vId ) {
+            traverse.eachConnectedPort( vertex, function( port ) {
+               linksController.byPort( vId, port ).forEach( linksController.destroy );
+            } );
+         } );
+
+         if( !newVertices ) {
             return;
          }
-
-         // Handle removed vertices:
-         ng.forEach( previousVertices, function( vertex, vId ) {
-            if( !newVertices[ vId ] ) {
-               traverse.eachConnectedPort( vertex, function( port ) {
-                  linksController.byPort( vId, port ).forEach( linksController.destroy );
-               } );
-            }
-         } );
 
          // Track added vertices:
          var outputRefsByEdge = {};
@@ -55,7 +54,7 @@ define( [
          } );
 
          ng.forEach( newVertices, function( vertex, vId ) {
-            if( !previousVertices[ vId ] ) {
+            if( !previousVertices[ vId ] && previousVertices !== newVertices ) {
                nextTick( function() {
                   var jqNew = $( '[data-nbe-vertex="' + vId + '"]' );
                   visual.pingAnimation( jqNew );
@@ -90,11 +89,13 @@ define( [
          if( newEdges == null ) {
             return;
          }
-         Object.keys( newEdges ).forEach( function( edgeId ) {
-            if( !previousEdges[ edgeId ] ) {
-               canvasController.pingEdge( edgeId );
-            }
-         } );
+         if( newEdges === previousEdges ) {
+            Object.keys( newEdges ).forEach( function ( edgeId ) {
+               if ( !previousEdges[edgeId] ) {
+                  canvasController.pingEdge( edgeId );
+               }
+            } );
+         }
       }
 
    };
