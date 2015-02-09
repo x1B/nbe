@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#64](https://github.com/x1B/nbe/issues/64): updates: fixed cleanup of link view model
+
 - [#63](https://github.com/x1B/nbe/issues/63): selection: fixed clearing by click on canvas (firefox)
 
 - [#60](https://github.com/x1B/nbe/issues/60): selection: fixed highlighting implicitly selected edges
