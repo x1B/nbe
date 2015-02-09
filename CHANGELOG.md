@@ -2,6 +2,8 @@
 
 ## Last Changes
 
+- [#63](https://github.com/x1B/nbe/issues/63): selection: fixed clearing by click on canvas (firefox)
+
 - [#60](https://github.com/x1B/nbe/issues/60): selection: fixed highlighting implicitly selected edges
 
 - [#59](https://github.com/x1B/nbe/issues/59): selection: fixed style priority
