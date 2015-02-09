@@ -139,7 +139,9 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          var finished = false;
          var visible = false;
 
-         var updateHits = async.debounce( updateSelectionContentsNow, 10 );
+         var updateHits = function() {
+            window.requestAnimationFrame( updateSelectionContentsNow );
+         };
 
          var jqSelection = $( '.nbe-selection', jqGraph );
          var selectionCoords = { width: '0', height: '0', left: '0', top: '0' };
@@ -158,6 +160,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          function updateSelectionCoords( event ) {
             var dx = event.pageX - referenceX;
             var dy = event.pageY - referenceY;
+
             selectionCoords.width = Math.abs( dx ) + 'px';
             selectionCoords.height = Math.abs( dy ) + 'px';
             selectionCoords.left = ( dx < 0 ? fromX + dx : fromX ) + 'px';
@@ -187,7 +190,10 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
          /////////////////////////////////////////////////////////////////////////////////////////////////////
 
          function updateSelectionContentsNow() {
+
             var selectionBox = visual.boundingBox( jqSelection, jqGraph, {} );
+            var test = finished ? function() { return false; } : doesIntersect;
+
             var modificationDetected = false;
             [ VERTICES, EDGES ].forEach( function( collection ) {
                var selectionState = selection[ collection ];
@@ -197,7 +203,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
                $( selector, jqGraph[ 0 ] ).each( function( _, domNode ) {
                   var jqNode = $( domNode );
                   visual.boundingBox( jqNode, jqGraph, tmpBox );
-                  var selected = doesIntersect( tmpBox, selectionBox );
+                  var selected = test( tmpBox, selectionBox );
                   var id = domNode.dataset[ identity ];
                   if( selected ) {
                      modificationDetected = modificationDetected || !selectionState[ id ];
