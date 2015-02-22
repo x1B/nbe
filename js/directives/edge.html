@@ -1,6 +1,7 @@
 <div class="nbe-node nbe-edge nbe-type-{{ edge.type }}"
      data-ng-class="{ 'nbe-selected': view.selection.edges[ edgeId ] }"
      data-ng-style="{ position: 'absolute',
+                      visibility: layout.edges[ edgeId ] ? 'visible' : 'hidden',
                       left: (layout.edges[ edgeId ].left * view.zoom.factor) + 'px',
                       top: (layout.edges[ edgeId ].top * view.zoom.factor) + 'px' }"
 ><div data-ng-click="handleEdgeClick( $event )"

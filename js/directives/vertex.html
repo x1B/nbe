@@ -1,4 +1,5 @@
 <div data-ng-style="{ position: 'absolute',
+                      visibility: layout.vertices[ vertexId ] ? 'visible' : 'hidden',
                       left: (layout.vertices[ vertexId ].left * view.zoom.factor) + 'px',
                       top: (layout.vertices[ vertexId ].top * view.zoom.factor) + 'px' }"
      data-ng-click="handleVertexClick( $event )"

@@ -54,7 +54,7 @@ define( [
          } );
 
          ng.forEach( newVertices, function( vertex, vId ) {
-            if( !previousVertices[ vId ] && previousVertices !== newVertices ) {
+            if( !previousVertices[ vId ] && previousVertices === newVertices ) {
                nextTick( function() {
                   var jqNew = $( '[data-nbe-vertex="' + vId + '"]' );
                   visual.pingAnimation( jqNew );
