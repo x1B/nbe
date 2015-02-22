@@ -2,6 +2,7 @@
      data-ng-class="{ selected: view.selection.edges[ edgeId ] }"
      data-ng-click="handleEdgeClick( $event )"
      data-ng-style="{ position: 'absolute',
+                      visibility: layout.edges[ edgeId ] ? 'visible' : 'hidden',
                       left: (layout.edges[ edgeId ].left * view.zoom.factor) + 'px',
                       top: (layout.edges[ edgeId ].top * view.zoom.factor) + 'px' }"
         ><label>{{ edge.label }}</label
