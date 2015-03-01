@@ -18,6 +18,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
     */
    return function( layoutModel, viewModel, layoutSettings, jqGraph, nextTick ) {
 
+      var repaintRequested = false;
       var repaintHandlers = [ adjustCanvasSize ];
 
       return {
@@ -37,7 +38,14 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function repaint() {
-         repaintHandlers.forEach( function( _ ) { _(); } );
+         if( repaintRequested ) {
+            return;
+         }
+         repaintRequested = true;
+         window.requestAnimationFrame( function() {
+            repaintHandlers.forEach( function ( _ ) { _(); } );
+            repaintRequested = false;
+         } );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -48,7 +48,8 @@ define( [
                model: '=' + DIRECTIVE_NAME,
                controller: '=' + DIRECTIVE_NAME + 'Controller',
                layout: '=' + DIRECTIVE_NAME + 'Layout',
-               types: '=' + DIRECTIVE_NAME + 'Types'
+               types: '=' + DIRECTIVE_NAME + 'Types',
+               updateOn: '=' + DIRECTIVE_NAME + 'UpdateOn'
             },
             transclude: true,
             controller: [ '$scope', '$element', GraphController ]
@@ -68,6 +69,11 @@ define( [
             setupModel( $scope, self );
 
             setupControllers( $scope, self );
+
+            if( $scope.layout.needsLayout ) {
+               self.calculateLayout();
+               $scope.layout.needsLayout = false;
+            }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -97,7 +103,7 @@ define( [
                      Object.keys( result.vertices ).forEach( function( vertexId ) {
                         layoutVertices[ vertexId ] = result.vertices[ vertexId ];
                      } );
-                     $timeout( self.canvas.repaint );
+                     self.canvas.repaint();
                   }
 
                   return !!result;
@@ -111,8 +117,7 @@ define( [
          function setupModel( $scope, self ) {
             $scope.types = $scope.types || {};
             if( !$scope.layout ) {
-               $scope.layout = { edges: {}, vertices: {} };
-               self.calculateLayout();
+               $scope.layout = { needsLayout: true, edges: {}, vertices: {} };
             }
             $scope.view = {
                hasFocus: false,
@@ -164,14 +169,77 @@ define( [
             self.operations = operations;
             self.zoom = canvas.zoom;
 
-            canvas.repaint();
-            // :TODO: 500ms is for LaxarJS debugging (late CSS loading) -- maybe make this configurable
-            $scope.$watch( 'layout', async.ensure( canvas.repaint, 500 ), true );
-            $scope.$watch( 'types', updates.updateTypes, true );
-            $scope.$watch( 'model.vertices', updates.updateVertices, true );
-            $scope.$watch( 'model.edges', updates.updateEdges, true );
-         }
+            watchUpdates();
 
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function watchUpdates() {
+
+               var updateOn = $scope.updateOn;
+               if( !updateOn ) {
+                  // fallback to watchers:
+                  $scope.$watch( 'types', updates.updateTypes, true );
+                  $scope.$watch( 'layout', canvas.repaint, true );
+                  $scope.$watch( 'model.edges', updates.updateEdges, true );
+                  $scope.$watch( 'model.vertices', function( newVertices, previousVertices ) {
+                     selection.clear();
+                     updates.updateVertices( newVertices, previousVertices );
+                  }, true );
+                  return;
+               }
+
+               // enable reactive updates:
+               var updateBuffer = {
+                  edges: $scope.model.edges,
+                  vertices: $scope.model.vertices,
+                  layout: $scope.layout,
+                  types: $scope.types
+               };
+
+               if( ng.isString( updateOn ) ) {
+                  $scope.$on( updateOn, updateAll );
+               }
+               else {
+                  if( updateOn.model ) {
+                     $scope.$on( updateOn.model, updateModel );
+                  }
+                  if( updateOn.layout ) {
+                     $scope.$on( updateOn.layout, updateLayout );
+                  }
+                  if( updateOn.types ) {
+                     $scope.$on( updateOn.types, updateTypes );
+                  }
+               }
+
+               $scope.$evalAsync( updateAll );
+
+               function updateLayout() {
+                  canvas.repaint();
+               }
+
+               function updateTypes() {
+                  updates.updateTypes( $scope.types, updateBuffer.types );
+                  updateBuffer.types = ng.copy( $scope.types );
+               }
+
+               function updateModel() {
+                  selection.clear();
+                  updates.updateEdges( $scope.model.edges, updateBuffer.edges );
+                  updateBuffer.edges = ng.copy( $scope.model.edges );
+                  updates.updateVertices( $scope.model.vertices, updateBuffer.vertices );
+                  updateBuffer.vertices = ng.copy( $scope.model.vertices );
+               }
+
+               function updateAll() {
+                  updateTypes();
+                  updateModel();
+                  updateLayout();
+               }
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+         }
       }
    ];
 
