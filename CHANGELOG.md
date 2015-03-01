@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+- [#50](https://github.com/x1B/nbe/issues/50): operations: allow graph model to be readonly
+    * _New feature:_ see ticket for details
+
 - [#44](https://github.com/x1B/nbe/issues/44): performance: allow to trigger graph updates through AngularJS events
     * _New feature:_ see ticket for details
 

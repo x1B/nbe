@@ -49,6 +49,7 @@ define( [
                controller: '=' + DIRECTIVE_NAME + 'Controller',
                layout: '=' + DIRECTIVE_NAME + 'Layout',
                types: '=' + DIRECTIVE_NAME + 'Types',
+               readonly: '=' + DIRECTIVE_NAME + 'Readonly',
                updateOn: '=' + DIRECTIVE_NAME + 'UpdateOn'
             },
             transclude: true,
@@ -156,7 +157,7 @@ define( [
                $scope.model, $scope.view, $scope.layout, $scope.types, links, jqGraph, async, $document, $scope );
 
             var operations = createGraphOperationsController(
-               $scope.model, $scope.layout, $scope.types, ops, canvas, links, selection, idGenerator );
+               $scope.readonly, $scope.model, $scope.layout, $scope.types, ops, canvas, links, selection, idGenerator );
 
             createKeysController( $scope.view, jqGraph, $document, ops, operations, dragDrop, selection );
 

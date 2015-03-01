@@ -43,26 +43,28 @@ define( [
                direction: direction
             };
 
-            $( 'i', element[ 0 ] ).draggable( {
-               opacity: 0.8,
-               helper: function() {
-                  return $( '.nbe-port.nbe-ghost', jqGraph ).clone().show();
-               },
-               zIndex: 1000,
-               start: handlePortDragStart,
-               drag: handlePortDrag,
-               stop: handlePortDragStop,
-               addClasses: false,
-               appendTo: jqGraph
-            } ).on( 'dblclick', handlePortDoubleClick );
+            if( !scope.readonly ) {
+               $( 'i', element[0] ).draggable( {
+                  opacity: 0.8,
+                  helper: function () {
+                     return $( '.nbe-port.nbe-ghost', jqGraph ).clone().show();
+                  },
+                  zIndex: 1000,
+                  start: handlePortDragStart,
+                  drag: handlePortDrag,
+                  stop: handlePortDragStop,
+                  addClasses: false,
+                  appendTo: jqGraph
+               } ).on( 'dblclick', handlePortDoubleClick );
 
-            element.droppable( {
-               accept: function() {
-                  return graphController.dragDrop.canConnect( ref );
-               },
-               hoverClass: 'nbe-drop-hover',
-               drop: handlePortDrop
-            } );
+               element.droppable( {
+                  accept: function() {
+                     return graphController.dragDrop.canConnect( ref );
+                  },
+                  hoverClass: 'nbe-drop-hover',
+                  drop: handlePortDrop
+               } );
+            }
 
             var basicLinkClass = jqLinkGhost.attr( 'class' ) + ' ';
 

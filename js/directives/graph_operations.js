@@ -7,6 +7,8 @@ define( [ 'angular', '../utilities/traverse' ], function( ng, traverse ) {
    var IN = 'inbound';
 
    /**
+    * @param {boolean} readonly
+    *    if true, model-changing operations may be performed
     * @param {object} model
     *    the graph model to operate on
     * @param {object} types
@@ -22,7 +24,7 @@ define( [ 'angular', '../utilities/traverse' ], function( ng, traverse ) {
     * @param {Function} nextTick
     *    a helper to apply functions asynchronously
     */
-   return function( model, layoutModel, typesModel, ops, canvasController, linksController, selectionController, idGenerator ) {
+   return function( readonly, model, layoutModel, typesModel, ops, canvasController, linksController, selectionController, idGenerator ) {
 
       var generateEdgeId = idGenerator.create(
          Object.keys( typesModel ).map( function( _ ) {
@@ -36,7 +38,8 @@ define( [ 'angular', '../utilities/traverse' ], function( ng, traverse ) {
          model.vertices
       );
 
-      return {
+
+      var api = {
          perform: ops.perform,
          connect: makeConnectOp,
          disconnect: makeDisconnectOp,
@@ -45,6 +48,14 @@ define( [ 'angular', '../utilities/traverse' ], function( ng, traverse ) {
          insert: makeInsertOp,
          deleteSelected: deleteSelected
       };
+
+      if( readonly ) {
+         Object.keys( api ).forEach( function ( k ) {
+            api[ k ] = ops.noOp;
+         } );
+      }
+
+      return api;
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
