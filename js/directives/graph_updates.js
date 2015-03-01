@@ -30,7 +30,6 @@ define( [
 
       /** Update the view model after nodes have been added/removed */
       function updateVertices( newVertices, previousVertices ) {
-
          // rebuild link model (calculating a delta would be possible, but probably not worth it)
          ng.forEach( previousVertices, function( vertex, vId ) {
             traverse.eachConnectedPort( vertex, function( port ) {

@@ -41,7 +41,7 @@ define( [
             var jqDestNode, jqDestHandle;
 
             // API to be called when attached edges or vertices have been moved:
-            self.repaint = function(){};
+            self.repaint = function() {};
             self.toggleSelect = function toggleSelect( state ) {
                $element.toggleClass( 'nbe-selected', state );
             };
@@ -79,7 +79,8 @@ define( [
                   }
                }
 
-               function update() {
+               function repaint() {
+
                   var zoomFactor = $scope.view.zoom.factor;
                   calculateLinkEnd( jqSourceNode, jqSourceHandle, from, zoomFactor );
                   calculateLinkEnd( jqDestNode, jqDestHandle, to, zoomFactor );
@@ -89,7 +90,7 @@ define( [
                   $element.attr( 'd', path );
                }
 
-               return update;
+               return repaint;
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,6 +128,12 @@ define( [
                   if( !jqDestNode.length ) {
                      return false;
                   }
+               }
+
+               // During development, CSS might not be ready yet, preventing layout calculations:
+               if( $element.css( 'stroke' ) === 'none' ) {
+                  // Delay display until CSS available
+                  return false;
                }
 
                self.repaint = pathUpdater();

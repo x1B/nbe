@@ -2,6 +2,9 @@
 
 ## Last Changes
 
+- [#44](https://github.com/x1B/nbe/issues/44): performance: allow to trigger graph updates through AngularJS events
+    * _New feature:_ see ticket for details
+
 - [#66](https://github.com/x1B/nbe/issues/66): layout: fixed glitch before initial layout
 
 - [#64](https://github.com/x1B/nbe/issues/64): updates: fixed cleanup of link view model
