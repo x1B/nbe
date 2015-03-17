@@ -71,6 +71,8 @@ define( [
 
             setupControllers( $scope, self );
 
+            $scope.$on( 'nbeRepaint', self.canvas.repaint );
+
             if( $scope.layout.needsLayout ) {
                self.calculateLayout();
                $scope.layout.needsLayout = false;
@@ -133,6 +135,14 @@ define( [
                   percent: 100,
                   levels: [ 25, 50, 75, 100 ],
                   level: 3
+               },
+               canvas: {
+                  width: null,
+                  height: null
+               },
+               viewport: {
+                  width: null,
+                  height: null
                }
             };
          }
@@ -154,7 +164,7 @@ define( [
             var dragDrop = createDragDropController( ops, jqGraph );
 
             var selection = createSelectionController(
-               $scope.model, $scope.view, $scope.layout, $scope.types, links, jqGraph, async, $document, $scope );
+               $scope.model, $scope.view, $scope.layout, $scope.types, links, jqGraph, canvas, $document, $scope );
 
             var operations = createGraphOperationsController(
                $scope.readonly, $scope.model, $scope.layout, $scope.types, ops, canvas, links, selection, idGenerator );

@@ -69,7 +69,7 @@
 .nbe-graph *::-moz-selection { background:transparent; }
 .nbe-graph *::-webkit-selection { background:transparent; }
 
-.nbe-graph-contents {
+.nbe-graph-canvas {
    background:
    linear-gradient(
          0deg,
@@ -237,4 +237,14 @@
    font-family: $fontFamilyPort;
    text-shadow: 0 0 2px $gray7;
    white-space: nowrap;
+}
+
+
+.nbe-minimap {
+   position: absolute;
+   width: 200px;
+   height: 100px;
+   right: 0;
+   bottom: 100px;
+   background: #1c1c1c;
 }

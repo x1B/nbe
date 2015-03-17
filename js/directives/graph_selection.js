@@ -29,7 +29,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
     * @param {Object} layoutModel
     *    the graph layout model (positions of edges, vertices)
     */
-   return function( model, viewModel, layoutModel, edgeTypes, linksController, jqGraph, async, $document, $scope ) {
+   return function( model, viewModel, layoutModel, edgeTypes, linksController, jqGraph, canvasController, $document, $scope ) {
 
       var selection = viewModel.selection;
       var anchor;
@@ -269,7 +269,7 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
             domNode.style.left = nodeLayout.left * zoomFactor + dx + 'px';
             domNode.style.top = nodeLayout.top * zoomFactor + dy + 'px';
          } );
-         linksController.repaint();
+         $scope.$emit( 'nbeRepaint' );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

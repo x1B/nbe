@@ -137,7 +137,7 @@ define( [
                }
 
                self.repaint = pathUpdater();
-               self.repaint();
+               $scope.$emit( 'nbeRepaint' );
                return true;
 
                ///////////////////////////////////////////////////////////////////////////////////////////////

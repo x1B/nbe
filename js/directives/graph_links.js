@@ -51,8 +51,8 @@ define( [ 'angular' ], function( ng ) {
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       function repaint() {
-         ng.forEach( linkControllers, function( controller ) {
-            controller.repaint();
+         ng.forEach( linkControllers, function( _ ) {
+            _.repaint();
          } );
       }
 

@@ -8,8 +8,9 @@ define( [
    './directives/graph',
    './directives/link',
    './directives/port',
-   './directives/vertex'
-], function( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port, vertex ) {
+   './directives/vertex',
+   './directives/minimap'
+], function( ng, settings, async, autoLayout, idGenerator, edge, graph, link, port, vertex, minimap ) {
    'use strict';
 
    var nbe = ng.module( 'nbe', [] );
@@ -30,6 +31,7 @@ define( [
    link.define( nbe );
    port.define( nbe );
    vertex.define( nbe );
+   minimap.define( nbe );
 
    return nbe;
 

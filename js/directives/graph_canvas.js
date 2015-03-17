@@ -18,6 +18,11 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
     */
    return function( layoutModel, viewModel, layoutSettings, jqGraph, nextTick ) {
 
+      // graph clipping box
+      var jqViewport = $( '.nbe-graph-viewport', jqGraph );
+      // graph canvas (foreground)
+      var jqNodes = $( '.nbe-graph-canvas', jqGraph );
+
       var repaintRequested = false;
       var repaintHandlers = [ adjustCanvasSize ];
 
@@ -88,16 +93,16 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
       /**
        * Ensure the following conditions:
        *
-       * - The graph drawing canvas must fill the available container, but leave space for scroll bars.
+       * - The graph drawing canvas must fill the available container (for the grid).
+       * - The canvas must not cause scrollbars to be shown unless required.
        * - The canvas must contain all nodes in the graph model.
        */
       function adjustCanvasSize() {
-         var offsetContainer = jqGraph.offsetParent();
          var graphOffset = jqGraph.offset();
-         var yScrollbarSpace = Math.max( 15, offsetContainer.height() - offsetContainer.get( 0 ).clientHeight );
-         var xScrollbarSpace = Math.max( 15, offsetContainer.width() - offsetContainer.get( 0 ).clientWidth );
-         var width = offsetContainer.width() - xScrollbarSpace;
-         var height = offsetContainer.height() - yScrollbarSpace;
+         var yScrollbarSpace = Math.max( 18, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
+         var xScrollbarSpace = Math.max( 18, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
+         var width = jqGraph.width() - xScrollbarSpace;
+         var height = jqGraph.height() - yScrollbarSpace;
 
          var padding = layoutSettings.graphPadding;
          $( '.nbe-vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
@@ -107,7 +112,8 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             height = Math.max( height, pos.top - graphOffset.top + jqVertex.height() + padding );
          } );
 
-         jqGraph.width( width ).height( height );
+         console.log( 'WIDTH: %o -> %o', jqViewport.width(), width );
+         jqNodes.css( 'min-width', width+'px' ).css( 'min-height', height+'px' );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

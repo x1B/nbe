@@ -60,7 +60,7 @@ $fontSizePort: 11px!default;
       font-size: round( $fontSizeLabel * $f );
       border-radius: round( $graphBorderRadius * $f );
 
-      .nbe-graph-contents {
+      .nbe-graph-canvas {
          background-size: round(50px * $f) round(50px * $f);
       }
 

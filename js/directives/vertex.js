@@ -32,7 +32,7 @@ define( [
 
             var jqVertex = $( $element[ 0 ] );
             jqVertex.draggable( {
-               stack: '.nbe-graph *',
+               stack: '.nbe-graph-nodes *',
                containment: 'parent',
                start: handleVertexDragStart,
                drag: nbeAsync.ensure( handleVertexDrag ),
