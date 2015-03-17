@@ -113,8 +113,6 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             height = Math.max( height, pos.top + jqVertex.height() + padding );
          } );
 
-         console.log( 'WIDTH: %o -> %o', jqViewport.width(), width );
-         console.log( 'HEIGHT: %o -> %o', jqViewport.height(), height );
          jqNodes.css( 'min-width', width+'px' ).css( 'min-height', height+'px' );
       }
 

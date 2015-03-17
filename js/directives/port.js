@@ -55,7 +55,7 @@ define( [
                   drag: handlePortDrag,
                   stop: handlePortDragStop,
                   addClasses: false,
-                  appendTo: $( '.nbe-graph-viewport', jqGraph )
+                  appendTo: $( '.nbe-graph-canvas', jqGraph )
                } ).on( 'dblclick', handlePortDoubleClick );
 
                element.droppable( {
@@ -120,13 +120,12 @@ define( [
 
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
-            // noinspection JSUnusedLocalSymbols
             function handlePortDrag( _, ui ) {
                var zoomFactor = scope.view.zoom.factor;
-               var pos = ui.offset;
-               console.log( 'ui.offset: ', ui.offset );
-               var toLeft = pos.left - graphOffset.left + (dragOffset*zoomFactor);
-               var toTop = pos.top - graphOffset.top + (dragOffset*zoomFactor);
+               var pos = ui.position;
+               console.log( 'ui.position: ', ui.position );
+               var toLeft = pos.left + dragOffset;
+               var toTop = pos.top + dragOffset;
                jqLinkGhost.attr( 'd',
                   pathing.cubic(
                      [fromLeft, fromTop],
