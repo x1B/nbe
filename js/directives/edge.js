@@ -71,6 +71,7 @@ define( [
                if( $element.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.followAnchor();
                }
+               $scope.$emit( 'nbeRepaint' );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -270,7 +270,6 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
             domNode.style.left = nodeLayout.left * zoomFactor + dx + 'px';
             domNode.style.top = nodeLayout.top * zoomFactor + dy + 'px';
          } );
-         $scope.$emit( 'nbeRepaint' );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,8 @@ define( [
 
             function repaint() {
 
+               console.log( 'repaint!' );
+
             }
          } ]
       };

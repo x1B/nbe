@@ -102,6 +102,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          var yScrollBarSpace = Math.max( 4, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
          var width = jqViewport.width() - xScrollBarSpace;
          var height = jqViewport.height() - yScrollBarSpace;
+         viewModel.viewport.width = width;
+         viewModel.viewport.height = height;
+         viewModel.viewport.left = jqViewport.scrollLeft();
+         viewModel.viewport.top = jqViewport.scrollTop();
 
          var padding = layoutSettings.graphPadding;
          $( '.nbe-vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
@@ -110,6 +114,13 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             width = Math.max( width, pos.left + jqVertex.width() + padding );
             height = Math.max( height, pos.top + jqVertex.height() + padding );
          } );
+
+
+         viewModel.canvas.width = width;
+         viewModel.canvas.height = height;
+
+
+         console.log( 'VIEW MODEL: canvas: %o, viewport: %o', viewModel.canvas, viewModel.viewport );
 
          jqNodes.css( 'width', width+'px' ).css( 'height', height+'px' );
       }

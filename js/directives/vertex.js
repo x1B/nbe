@@ -67,6 +67,7 @@ define( [
                if( jqVertex.hasClass( 'nbe-selected' ) ) {
                   graphController.selection.followAnchor();
                }
+               $scope.$emit( 'nbeRepaint' );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

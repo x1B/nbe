@@ -141,6 +141,8 @@ define( [
                   height: null
                },
                viewport: {
+                  top: null,
+                  left: null,
                   width: null,
                   height: null
                }
