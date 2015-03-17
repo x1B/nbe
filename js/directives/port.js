@@ -25,7 +25,6 @@ define( [
 
             // Quick access to essential data for drawing links:
             var graphController = scope.controller;
-            var graphOffset;
             var direction = attrs[ ATTR_PORT_DIRECTION ];
             var isInput = direction === 'inbound';
             var stubDirection = isInput ? -1 : 1;
@@ -107,12 +106,11 @@ define( [
                   transaction.perform( disconnectOp );
                }
 
-               var p = jqHandle.offset();
-               graphOffset = jqGraph.offset();
+               var p = jqHandle.position();
 
-               fromLeft = p.left - graphOffset.left + dragOffset;
-               fromTop = p.top - graphOffset.top + dragOffset;
                scope.nbeVertex.calculateBox( fromBox );
+               fromLeft = p.left + fromBox.left + dragOffset;
+               fromTop = p.top + fromBox.top + dragOffset;
 
                ui.helper.addClass( 'nbe-type-' + scope.port.type ).show();
                jqLinkGhost.attr( 'class', basicLinkClass + 'nbe-type-' + scope.port.type ).show();

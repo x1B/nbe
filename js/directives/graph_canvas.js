@@ -98,12 +98,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
        * - The canvas must contain all nodes in the graph model.
        */
       function adjustCanvasSize() {
-         var graphOffset = jqGraph.offset();
-         console.log( 'graphOffset', graphOffset.left );
-         var yScrollbarSpace = Math.max( 18, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
-         var xScrollbarSpace = Math.max( 18, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
-         var width = jqGraph.width() - xScrollbarSpace;
-         var height = jqGraph.height() - yScrollbarSpace;
+         var xScrollBarSpace = Math.max( 2, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
+         var yScrollBarSpace = Math.max( 4, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
+         var width = jqViewport.width() - xScrollBarSpace;
+         var height = jqViewport.height() - yScrollBarSpace;
 
          var padding = layoutSettings.graphPadding;
          $( '.nbe-vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
@@ -113,7 +111,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             height = Math.max( height, pos.top + jqVertex.height() + padding );
          } );
 
-         jqNodes.css( 'min-width', width+'px' ).css( 'min-height', height+'px' );
+         jqNodes.css( 'width', width+'px' ).css( 'height', height+'px' );
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
