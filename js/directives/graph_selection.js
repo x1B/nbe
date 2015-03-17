@@ -35,12 +35,13 @@ define( [ 'angular', 'jquery', '../utilities/visual', '../utilities/traverse' ],
       var anchor;
 
       var svgBackground = $( 'svg', jqGraph )[0];
+      var canvas = $( '.nbe-graph-canvas', jqGraph )[0];
       $document.on( 'mousedown', function( event ) {
          viewModel.hasFocus = jqGraph.is( ':hover' );
          if( viewModel.hasFocus ) {
             jqGraph.focus();
          }
-         if( viewModel.hasFocus && (event.target === svgBackground || event.target === jqGraph[0]) ) {
+         if( viewModel.hasFocus && (event.target === svgBackground || event.target === canvas) ) {
             start( event );
          }
       } );

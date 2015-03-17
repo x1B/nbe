@@ -98,7 +98,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
        * - The canvas must contain all nodes in the graph model.
        */
       function adjustCanvasSize() {
-         var xScrollBarSpace = Math.max( 2, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
+         var xScrollBarSpace = Math.max( 15, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
          var yScrollBarSpace = Math.max( 4, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
          var width = jqViewport.width() - xScrollBarSpace;
          var height = jqViewport.height() - yScrollBarSpace;
