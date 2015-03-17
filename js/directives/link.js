@@ -34,7 +34,7 @@ define( [
             var self = this;
 
             $scope.controller.links.registerController( $scope.link.id, self );
-            var jqGraph = $scope.controller.jqGraph;
+            var offsetContainer = $( '.nbe-graph-canvas', $scope.controller.jqGraph );
 
             // Cache information that frequently accessed when repainting (during drag/drop):
             var jqSourceNode, jqSourceHandle;
@@ -66,7 +66,7 @@ define( [
                   var portOffset = round( nbeLayoutSettings.portOffset * zoomFactor ),
                       edgeOffset = round( nbeLayoutSettings.edgeOffset * zoomFactor );
 
-                  var graphOffset = jqGraph.offset();
+                  var graphOffset = offsetContainer.offset();
                   if( jqHandle ) {
                      var portPos = jqHandle.offset();
                      coords[ 0 ] = portPos.left - graphOffset.left + portOffset;
@@ -84,8 +84,8 @@ define( [
                   var zoomFactor = $scope.view.zoom.factor;
                   calculateLinkEnd( jqSourceNode, jqSourceHandle, from, zoomFactor );
                   calculateLinkEnd( jqDestNode, jqDestHandle, to, zoomFactor );
-                  boundingBox( jqSourceNode, jqGraph, fromBox );
-                  boundingBox( jqDestNode, jqGraph, toBox );
+                  boundingBox( jqSourceNode, offsetContainer, fromBox );
+                  boundingBox( jqDestNode, offsetContainer, toBox );
                   var path = svgLinkPath.cubic( from, to, null, zoomFactor, [fromBox, toBox], true );
                   $element.attr( 'd', path );
                }
@@ -143,7 +143,7 @@ define( [
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                function jqVertexPlusHandle( ref ) {
-                  var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', jqGraph );
+                  var jqNode = $( '[data-nbe-vertex="' + ref.nodeId + '"]', offsetContainer );
                   var jqHandle = $( '[data-nbe-port="' + ref.port.id + '"] i', jqNode );
                   return [ jqNode, jqHandle ];
                }
@@ -151,7 +151,7 @@ define( [
                ///////////////////////////////////////////////////////////////////////////////////////////////
 
                function jqEdge( ref ) {
-                  return $( '[data-nbe-edge="' + ref.nodeId + '"]', jqGraph );
+                  return $( '[data-nbe-edge="' + ref.nodeId + '"]', offsetContainer );
                }
             }
 

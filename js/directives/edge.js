@@ -29,8 +29,7 @@ define( [
 
             var jqEdgeIcon = $( '.nbe-edge-icon', $element[ 0 ] );
             $element.draggable( {
-               // stack: '.nbe-graph-canvas *',
-               containment: 'parent',
+               stack: '.nbe-graph-nodes *',
                handle: jqEdgeIcon,
                start: handleEdgeDragStart,
                drag: nbeAsync.ensure( handleEdgeDrag ),

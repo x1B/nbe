@@ -5,12 +5,12 @@ define( [], function() {
     * Calculate a bounding box of graph-relative coordinates for a given dom node.
     * @param jqNode
     *   A vertex node ob, wrapped in a jQuery.
-    * @param jqGraph
+    * @param offsetContainer
     * @param box
     */
-   function boundingBox( jqNode, jqGraph, box ) {
+   function boundingBox( jqNode, offsetContainer, box ) {
       var v = jqNode.offset();
-      var graphOffset = jqGraph.offset();
+      var graphOffset = offsetContainer.offset();
       var top = v.top - graphOffset.top;
       var left = v.left - graphOffset.left;
       box = box || {};

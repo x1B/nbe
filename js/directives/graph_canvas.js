@@ -99,6 +99,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
        */
       function adjustCanvasSize() {
          var graphOffset = jqGraph.offset();
+         console.log( 'graphOffset', graphOffset.left );
          var yScrollbarSpace = Math.max( 18, jqViewport.height() - jqViewport.get( 0 ).clientHeight );
          var xScrollbarSpace = Math.max( 18, jqViewport.width() - jqViewport.get( 0 ).clientWidth );
          var width = jqGraph.width() - xScrollbarSpace;
@@ -107,12 +108,13 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
          var padding = layoutSettings.graphPadding;
          $( '.nbe-vertex, .nbe-edge', jqGraph[ 0 ] ).each( function( i, domNode ) {
             var jqVertex = $( domNode );
-            var pos = jqVertex.offset();
-            width = Math.max( width, pos.left - graphOffset.left + jqVertex.width() + padding );
-            height = Math.max( height, pos.top - graphOffset.top + jqVertex.height() + padding );
+            var pos = jqVertex.position();
+            width = Math.max( width, pos.left + jqVertex.width() + padding );
+            height = Math.max( height, pos.top + jqVertex.height() + padding );
          } );
 
          console.log( 'WIDTH: %o -> %o', jqViewport.width(), width );
+         console.log( 'HEIGHT: %o -> %o', jqViewport.height(), height );
          jqNodes.css( 'min-width', width+'px' ).css( 'min-height', height+'px' );
       }
 

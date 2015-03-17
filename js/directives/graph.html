@@ -4,19 +4,8 @@
    <div data-nbe-minimap></div>
 
    <div class="nbe-graph-viewport">
-      <div class="nbe-graph-canvas">
 
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-             class="nbe-links">
-          <path data-ng-repeat="(id, link) in view.links track by id"
-                data-nbe-link
-                stroke-linejoin="round"
-                class="nbe-link nbe-type-{{ link.type }} {{ view.selection.links[ id ] && 'nbe-selected' }}"
-                d="M0 0 L0 0"></path>
-
-          <path class="nbe-link nbe-ghost"></path>
-        </svg>
-
+     <div class="nbe-graph-canvas">
 
         <div class="nbe-graph-nodes">
 
@@ -33,7 +22,18 @@
 
         </div>
 
-      </div>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+             class="nbe-links">
+          <path data-ng-repeat="(id, link) in view.links track by id"
+                data-nbe-link
+                stroke-linejoin="round"
+                class="nbe-link nbe-type-{{ link.type }} {{ view.selection.links[ id ] && 'nbe-selected' }}"
+                d="M0 0 L0 0"></path>
+
+          <path class="nbe-link nbe-ghost"></path>
+        </svg>
+
+     </div>
    </div>
 
 </div>

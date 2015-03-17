@@ -33,7 +33,6 @@ define( [
             var jqVertex = $( $element[ 0 ] );
             jqVertex.draggable( {
                stack: '.nbe-graph-nodes *',
-               containment: 'parent',
                start: handleVertexDragStart,
                drag: nbeAsync.ensure( handleVertexDrag ),
                stop: handleVertexDragStop
@@ -43,7 +42,7 @@ define( [
             var cancelClick = false;
 
             // When dragging from a port, it gets access to the bounding box for path rendering:
-            var jqGraph = jqVertex.parent();
+            var offsetContainer = jqVertex.parent();
             this.calculateBox = calculateBox;
             $scope.nbeVertex = this;
             // Keep track of links that need repainting
@@ -88,7 +87,7 @@ define( [
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             function calculateBox( box ) {
-               visual.boundingBox( jqVertex, jqGraph, box );
+               visual.boundingBox( jqVertex, offsetContainer, box );
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////////////

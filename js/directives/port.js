@@ -32,6 +32,7 @@ define( [
 
             var vertexId = scope[ ATTR_VERTEX_ID ];
             var jqGraph = graphController.jqGraph;
+
             var jqPortGhost = $( '.nbe-port.nbe-ghost', jqGraph );
             var jqLinkGhost = $( '.nbe-link.nbe-ghost', jqGraph );
             // Drag starting position, relative to graph canvas.
@@ -54,7 +55,7 @@ define( [
                   drag: handlePortDrag,
                   stop: handlePortDragStop,
                   addClasses: false,
-                  appendTo: jqGraph
+                  appendTo: $( '.nbe-graph-viewport', jqGraph )
                } ).on( 'dblclick', handlePortDoubleClick );
 
                element.droppable( {
@@ -123,6 +124,7 @@ define( [
             function handlePortDrag( _, ui ) {
                var zoomFactor = scope.view.zoom.factor;
                var pos = ui.offset;
+               console.log( 'ui.offset: ', ui.offset );
                var toLeft = pos.left - graphOffset.left + (dragOffset*zoomFactor);
                var toTop = pos.top - graphOffset.top + (dragOffset*zoomFactor);
                jqLinkGhost.attr( 'd',
