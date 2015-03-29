@@ -30,7 +30,10 @@ define( [
             wrapper.appendChild( svg );
 
             var viewBox = document.createElementNS( xmlns, 'rect' );
+            viewBox.setAttributeNS( null, 'class', 'nbe-minimap-viewbox' );
             svg.appendChild( viewBox );
+
+            var map;
 
             $scope.controller.canvas.addRepaintHandler( repaint );
 
@@ -95,7 +98,55 @@ define( [
                viewBox.setAttribute( 'y', viewPort.top );
                viewBox.setAttribute( 'width', viewPort.width );
                viewBox.setAttribute( 'height', viewPort.height );
+
+               // :TODO: figure out when to repaint the graph:
+               repaintGraph();
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function repaintGraph() {
+               var domGraph = wrapper.parentNode;
+
+               if( map ) {
+                  svg.removeChild( map );
+                  map = null;
+               }
+
+               // :TODO: reuse DOM:
+               map = document.createElementNS( xmlns, 'g' );
+               svg.appendChild( map );
+
+               var domVertices = domGraph.querySelectorAll( '.nbe-vertex' );
+               ng.forEach( domVertices, function( domVertex ) {
+                  var jqVertex = $( domVertex );
+                  var v = document.createElementNS( xmlns, 'rect' );
+                  v.setAttribute( 'x', jqVertex.position().left );
+                  v.setAttribute( 'y', jqVertex.position().top );
+                  v.setAttribute( 'width', jqVertex.width() );
+                  v.setAttribute( 'height', jqVertex.height() );
+                  v.setAttribute( 'class', 'nbe-minimap-vertex' );
+                  v.setAttribute( 'rx', 10 );
+                  v.setAttribute( 'ry', 10 );
+
+                  map.appendChild( v );
+               } );
+
+               var domEdges = domGraph.querySelectorAll( '.nbe-edge' );
+               ng.forEach( domEdges, function( domVertex ) {
+                  var jqEdge = $( domVertex );
+                  var e = document.createElementNS( xmlns, 'circle' );
+                  var r = jqEdge.width();
+                  e.setAttribute( 'cx', jqEdge.position().left + r/2 );
+                  e.setAttribute( 'cy', jqEdge.position().top + r/2 );
+                  e.setAttribute( 'r', r );
+                  e.setAttribute( 'class', 'nbe-minimap-edge' );
+                  map.appendChild( e );
+               } );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
          } ]
       };
    }
