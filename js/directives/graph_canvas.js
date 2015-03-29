@@ -18,6 +18,8 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
     */
    return function( layoutModel, viewModel, layoutSettings, jqGraph, nextTick ) {
 
+      var win = window;
+
       // graph clipping box
       var jqViewport = $( '.nbe-graph-viewport', jqGraph );
       // graph canvas (foreground)
@@ -25,6 +27,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
 
       var repaintRequested = false;
       var repaintHandlers = [ adjustCanvasSize ];
+
+      win.addEventListener( 'resize', repaint );
+      jqViewport.on( 'scroll', repaint );
+
 
       return {
          repaint: repaint,
@@ -47,7 +53,7 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             return;
          }
          repaintRequested = true;
-         window.requestAnimationFrame( function() {
+         win.requestAnimationFrame( function() {
             repaintHandlers.forEach( function ( _ ) { _(); } );
             repaintRequested = false;
          } );
@@ -115,12 +121,10 @@ define( [ 'jquery', '../utilities/visual' ], function( $, visual ) {
             height = Math.max( height, pos.top + jqVertex.height() + padding );
          } );
 
-
          viewModel.canvas.width = width;
          viewModel.canvas.height = height;
 
-
-         console.log( 'VIEW MODEL: canvas: %o, viewport: %o', viewModel.canvas, viewModel.viewport );
+         // console.log( 'VIEW MODEL: canvas: %o, viewport: %o', viewModel.canvas, viewModel.viewport );
 
          jqNodes.css( 'width', width+'px' ).css( 'height', height+'px' );
       }
