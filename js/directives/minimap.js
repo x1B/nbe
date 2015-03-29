@@ -1,8 +1,7 @@
 define( [
    'jquery',
    'angular',
-   'text!./minimap.html',
-   'jquery_ui/draggable'
+   'text!./minimap.html'
 ], function( $, ng, minimapHtml ) {
    'use strict';
 
@@ -14,32 +13,38 @@ define( [
 
    function createMinimapDirective( nbeLayoutSettings ) {
 
-      var floor = Math.floor;
-      var max = Math.max;
-      var min = Math.min;
-
       return {
          restrict: 'A',
          replace: true,
          template: minimapHtml,
          controller: [ '$scope', '$element', function( $scope, $element ) {
+            var wrapper = $element[ 0 ];
+            wrapper.style.display = 'none';
+            var hidden = true;
 
-            var xmlns = "http://www.w3.org/2000/svg";
             var svg = document.createElementNS( xmlns, 'svg' );
             svg.setAttributeNS( null, 'viewBox', '0 0 10 10' );
             svg.setAttributeNS( null, 'class', 'nbe-minimap-graph' );
-
-            var wrapper = $element[ 0 ];
-            wrapper.style.display = 'none';
+            svg.addEventListener( 'click', centerAt );
+            svg.addEventListener( 'mousedown', follow );
             wrapper.appendChild( svg );
 
             var viewBox = document.createElementNS( xmlns, 'rect' );
             svg.appendChild( viewBox );
 
             $scope.controller.canvas.addRepaintHandler( repaint );
-            svg.addEventListener( 'click', centerAt );
 
-            var hidden = true;
+            //////////////////////////////////////////////////////////////////////////////////////////////////
+
+            function follow( e ) {
+               centerAt( e );
+               svg.addEventListener( 'mousemove', centerAt );
+               $( document ).one( 'mouseup', function() {
+                  svg.removeEventListener( 'mousemove', centerAt );
+               } );
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////
 
             /** Center the canvas viewport at the target coordinate implied by the given mouse event. */
             function centerAt( e ) {
@@ -96,6 +101,11 @@ define( [
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   var floor = Math.floor;
+   var max = Math.max;
+   var min = Math.min;
+   var xmlns = 'http://www.w3.org/2000/svg';
 
    return {
       define: function( module ) {
